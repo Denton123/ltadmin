@@ -1,0 +1,21 @@
+/* 使用: @include mixins(params) */
+@mixin backgroundImages ($url: '', $size: 100% 100%, $repeat: no-repeat){
+    background: url($url);
+    background-size: $size;
+    background-repeat: $repeat;
+}
+@mixin color {
+    color: red;
+}
+@mixin mgR($num) {
+    margin-right: $num;
+}
+@mixin mgL($num) {
+    margin-left: $num;
+}
+@mixin mgT($num) {
+    margin-top: $num;
+}
+@mixin mgB($num) {
+    margin-bottom: $num;
+}

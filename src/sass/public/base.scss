@@ -1,0 +1,36 @@
+html, body{
+	height: 100%;
+    font-size: $baseFontSize;
+}
+#{$comonElements} {
+	box-sizing: border-box;
+}
+
+input[type=text] {
+    -webkit-appearance: none;
+}
+
+.clearfix:after {
+    display: block;
+    content: "\20";
+    height: 0;
+    clear: both;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.inlineBlock {
+    display: inline-block;
+}
+/*ie8+*/
+.clearfix {
+    *zoom: 1; 
+}
