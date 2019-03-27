@@ -15,13 +15,14 @@
 
 <script>
 import BasicModel from '@/views/basicModel/basic-model'
-import message from '../basicMsg/message'
+import hotelMsg from '../basicMsg/hotelMsg'
+import adminMsg from '../basicMsg/adminMsg'
 
 export default {
     name: 'BasicContent',
     data () {
         let modelObj = {}
-        Object.assign(modelObj, message)
+        Object.assign(modelObj, hotelMsg, adminMsg)
         return {
             models: modelObj
         }
@@ -36,7 +37,7 @@ export default {
         }
     },
     mounted() {
-        console.log(message)
+        // console.log(this.models)
     }
 }
  </script>

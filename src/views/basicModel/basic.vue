@@ -7,7 +7,7 @@
  * 
  */ 
 <template>
-  <div class="basic">
+  <div class="basic mrT10">
     <basic-content/>
   </div>
 </template>
@@ -23,11 +23,5 @@ export default {
 </script>
 
  <style lang="scss">
- @import '@/sass/mixins/_mixins.scss';
-.basic {
-  // float: right;
-  // width: calc(100% - 210px);
-  @include mgT(10px);
-}
 </style>
  

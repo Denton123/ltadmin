@@ -26,9 +26,24 @@ input[type=text] {
 .fr {
     float: right;
 }
-
+.mrR10 {
+    margin-right: 10px;
+}
+.mrL10 {
+    margin-left: 10px;
+}
+.mrT10 {
+    margin-top: 10px;
+}
+.mrB10 {
+    margin-bottom: 10px;
+}
+ 
 .inlineBlock {
     display: inline-block;
+}
+.block {
+    display: block;
 }
 /*ie8+*/
 .clearfix {

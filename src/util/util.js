@@ -12,5 +12,7 @@ export default {
             url = url.replace(regx, '')
             return host + '/api/' + url
         }
+
     }
+    
 }

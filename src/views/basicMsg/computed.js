@@ -1,19 +1,40 @@
 export default {
     computed: {
-        theads () {
+        theads() {
             return this.models[this.modelIndex].theads
         },
-        props () {
+        props() {
             return this.models[this.modelIndex].props
         },
-        widths () {
+        widths() {
             return this.models[this.modelIndex].widths
         },
-        typeComponent () {
+        typeComponent() {
             return this.models[this.modelIndex].typeComponent
         },
-        SearchComponent () {
+        SearchComponent() {
             return this.models[this.modelIndex].SearchComponent
+        },
+        breadcrumb() {
+            return this.models[this.modelIndex].tab
+        },
+        searchResultMsg() {
+            return this.models[this.modelIndex].searchResultMsg
+        },
+        tableOperate() {
+            return this.models[this.modelIndex].tableOperate
+        },
+        searchInput() {
+            return this.models[this.modelIndex].searchInput
+        },
+        newComponent() {
+            return this.models[this.modelIndex].newComponent
+        },
+        editComponent() {
+            return this.models[this.modelIndex].editComponent
+        },
+        url() {
+            return this.models[this.modelIndex].url
         }
     },
 }

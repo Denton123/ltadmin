@@ -20,9 +20,9 @@ export default {
         @param url
         @param params
        */
-       Vue.prototype.$dataGet = (vm, url, params) => {
+       Vue.prototype.$dataGet = (vm, url, params={}) => {
            return new Promise((resolve, reject) => {
-               axios.get(url, {params: params})
+               axios.get(vm.$adminUrl(url), {params: params})
                 .then((responce) => {
                     resolve(responce)
                 })

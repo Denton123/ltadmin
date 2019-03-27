@@ -8,86 +8,112 @@
 
  <template>
   <div class="basic_model">
-    <!-- tab栏 -->
-    <el-tabs v-model="activeName" @tab-click="tabClick" type="card">
-      <el-tab-pane
-        v-for="(model, index) in models"
-        :label="model.tab"
-        :key="model.tab"
-        :name="'index'+index"
-      ></el-tab-pane>
-    </el-tabs>
+    <a-breadcrumb class="index_breadcrumb" separator=">">
+      <a-breadcrumb-item>
+        <a-icon type="home" class="mrR10"/>首页
+      </a-breadcrumb-item>
+      <a-breadcrumb-item>{{breadcrumb}}</a-breadcrumb-item>
+    </a-breadcrumb>
+    <div class="basic_model_content">
+      <!-- 管理系统操作按钮 -->
+      <div class="search_input">
+        <searchInput :searchInput="searchInput" @handleSearch="handleSearch" v-if="searchInput"/>
+        <component
+          v-for="typeOperate in typeComponent"
+          :is="typeOperate.components"
+          class="mrL10 mrB10"
+          :params="typeOperate.params"
+        />
+      </div>
+      <!-- 操作模块 -->
+      <div class="basic_model_operate">
+        <!-- 搜索表单 -->
+        <searchForm v-if="SearchComponent" :SearchComponent="SearchComponent"/>
+      </div>
+      <!-- 搜索结果 -->
+      <div class="mrT10 mrB10">
+        <searchResult
+          v-if="searchResultMsg"
+          :searchResultMsg="searchResultMsg"
+          :searchData="searchData"
+        />
+      </div>
 
-    <!-- 操作模块 -->
-    <div class="basic_model_operate">
-      <!-- 搜索框 -->
-      <!-- <div class="operate_search_wrap">
-            <el-input class="operate_search_input" placeholder="请输入搜索内容"/>
-            <el-button type="primary" @click="handleSearch">
-                搜索
-            </el-button>
-      </div>-->
-      <!-- <div>
-          <component 
-            v-for="typeOperate in typeComponent"
-            :is="typeOperate.component"
-            :inputSearch="typeOperate.inputSearch"
-            class="fl operate_slefComponent"
-          />
-          <el-button type="primary" @click="handleSearch">
-                查询
-          </el-button>
-          <el-button>重置</el-button>
-      </div>-->
-      <!-- 搜索表单 -->
-      <searchForm v-if="SearchComponent" :SearchComponent="SearchComponent"/>
+      <!-- 表格 -->
+      <a-table :columns="columns" :dataSource="tableData" :rowSelection="rowSelection">
+        <template v-for="tablecomponent in tableOperate" class="tableOperate">
+          <a-button
+            slot="action"
+            type="primary"
+            :key="tablecomponent.title"
+            @click="handleTableOperate(tablecomponent.title)"
+          >{{tablecomponent.title}}</a-button>
+        </template>
+        <span slot="tags" slot-scope="tags" v-if="tags!==undefined">
+          <a-tag color="blue">{{tags}}</a-tag>
+        </span>
+      </a-table>
+
+      <!-- 新增表单 -->
+      <new-form
+        :newFormTitle="`新增` + breadcrumb"
+        :newFormVisible="newFormVisible"
+        @closeNewForm="closeNewForm"
+        :newComponent="newComponent"
+        @handleNewForm="handleNewForm"
+      />
+      <!-- 编辑表单 -->
+      <edit-form
+        :editFormTitle="`编辑` + breadcrumb"
+        :editFormVisible="editFormVisible"
+        @closeEditForm="closeEditForm"
+        :fields="fields"
+        :editComponent="editComponent"
+        v-if="editFormVisible"
+      />
     </div>
-
-    <!-- 列表 -->
-    <el-table :data="tableData" border>
-      <el-table-column type="selection" width="55"/>
-      <el-table-column label="序号" width="80" type="index"/>
-      <template v-for="(item, index) in theads">
-        <el-table-column
-          :label="item"
-          :prop="props[index]"
-          :min-width="widths[index]"
-          :sortable="true"
-          show-overflow-tooltip
-          :key="props[index]"
-        >
-          <template slot-scope="scope">{{scope.row[props[index]]}}</template>
-        </el-table-column>
-      </template>
-    </el-table>
-
-    <!-- 表格 -->
-    <a-table :columns="columns" :dataSource="data" :rowSelection="rowSelection">
-      <a-button slot="action" type="primary">酒店详情</a-button>
-    </a-table>
   </div>
 </template>
 
 <script>
 import computed from "../basicMsg/computed";
 import searchForm from "@/components/public/searchForm";
+import searchResult from "@/components/public/searchResult";
+import searchInput from "@/components/public/searchInput";
+import newForm from "@/components/public/newForm";
+import editForm from "@/components/public/editForm";
+import { constants } from "fs";
+
 export default {
   name: "BasicModel",
   data() {
     return {
-      tableData: [],
       modelIndex: 0,
       activeName: "index0",
       loading: false,
       columns: [],
-      data: [
+      tableData: [
         {
-          date: "2018",
-          name: "ckc",
-          address: "红红火火恍恍惚惚",
-          key: 1
+          key: "1",
+          name: "John Brown",
+          age: 32,
+          address: "New York No. 1 Lake Park",
+          tags: ["nice", "developer"]
         }
-      ]
+      ],
+      searchData: {
+        hotelMatchTotal: 115215,
+        hotelOpenTotal: 5458787,
+        hotelSyncTotal: 87815,
+        hotelTotal: 458712,
+        hotelUsableTotal: 478812389
+      },
+      selectedRowKeys: [],
+      newFormVisible: false,
+      editFormVisible: false,
+      fields: {},
+      // 表格选中的行的数据
+      selectedRows: {}
     };
   },
   props: {
@@ -100,7 +126,14 @@ export default {
             props: [],
             widths: [],
             typeComponent: [],
-            SearchComponent: []
+            SearchComponent: [],
+            breadcrumb: "",
+            searchResultMsg: [],
+            tableOperate: [],
+            searchInput: {},
+            newComponent: [],
+            editComponent: [],
+            url: ""
           }
         ];
       }
@@ -108,28 +141,7 @@ export default {
   },
   mixins: [computed],
   methods: {
-    tabClick(tab) {
-      this.modelIndex = tab.$data.index;
-    },
-    showSkeleton() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 3000);
-    },
-    handleSearch() {
-      console.log(this.typeComponent);
-      let searchForm = {};
-      this.typeComponent.forEach(element => {
-        console.log(element.inputSearch.label);
-        searchForm[element.inputSearch.label] = element.inputSearch.value;
-      });
-      console.log(searchForm);
-      // 测试ajax请求
-      this.$dataGet(this, 'https://segmentfault.com/api/notice/newest?', {_: '1119745598a1c045b9044b2e43496270'}).then((responce) => {
-        console.log(responce)
-      })
-    },
+    // 表格数据处理
     handleTabelColumns() {
       this.columns = [];
       this.theads.forEach(v => {
@@ -139,39 +151,193 @@ export default {
       });
       for (let i in this.props) {
         this.columns[i].dataIndex = this.props[i];
+        if (this.props[i] == "action") {
+          this.columns[i].scopedSlots = { customRender: "action" };
+        } else if (this.props[i] == "tags") {
+          this.columns[i].scopedSlots = { customRender: "tags" };
+        }
       }
-      this.columns[this.props.length].scopedSlots = { customRender: "action" };
+      // console.log(this.columns);
+    },
+    // 表格操作按钮
+    handleTableOperate(title) {
+      console.log(title);
+    },
+    // 查询
+    handleSearch(item) {
+      console.log(item);
+    },
+    // 处理表格选中id
+    handleSelectedKeys() {
+      if (this.selectedRowKeys.length > 1) {
+        this.$message.warning("只能选择一条记录");
+      } else if (this.selectedRowKeys.length == 0) {
+        this.$message.warning("请选择一条记录");
+      }
+    },
+    // 新增
+    handleNew() {
+      this.newFormVisible = true;
+      // console.log(this.selectedRowKeys);
+      // this.handleSelectedKeys();
+    },
+    // 编辑
+    handleEdit() {
+      if (this.selectedRowKeys.length == 0 || this.selectedRowKeys.length > 1) {
+        this.editFormVisible = false;
+      } else {
+        this.editFormVisible = true;
+      }
+      console.log(this.selectedRows);
+      this.handleSelectedKeys();
+      this.$nextTick(() => {
+        this.$dataGet(
+          this,
+          `/sys/${this.url}/info/v2/${this.selectedRows.deptId}`
+        ).then(res => {
+          this.fields = res.data.data;
+        });
+      });
+    },
+    // 删除
+    handleDelete() {
+      // console.log(this.selectedRowKeys);
+      this.handleSelectedKeys();
+      let that = this;
+      if (this.selectedRowKeys.length == 1) {
+        this.$confirm({
+          title: "信息",
+          content: "确定要删除记录吗？",
+          okText: "确定",
+          okType: "danger",
+          cancelText: "取消",
+          onOk() {
+            that
+              .$dataGet(that, `sys/${that.url}/delete/v2`, {
+                deptId: that.selectedRows.deptId
+              })
+              .then(res => {
+                if (res.data.code == 200) {
+                  that.$message.success("删除成功");
+                  that.getListData();
+                }
+              });
+          },
+          onCancel() {
+            // console.log("Cancel");
+          }
+        });
+      }
+    },
+    // 暂停
+    handlePause() {
+      this.handleSelectedKeys();
+    },
+    // 恢复
+    handleRenew() {
+      this.handleSelectedKeys();
+    },
+    // 日志列表按钮
+    handleShowLog() {
+      this.$router.push("/companyMenus/logList");
+    },
+    // 文件上传
+    hanldeUpload() {},
+    // 云存储配置
+    handleCloudConfig() {},
+    // 立即执行
+    handleRunNow() {},
+    // 关闭新增表单
+    closeNewForm() {
+      this.newFormVisible = false;
+    },
+    // 关闭编辑表单
+    closeEditForm() {
+      this.editFormVisible = false;
+    },
+    handleNewForm(form) {
+      // console.log(form);
+    },
+    getListData(params = {}) {
+      if (this.url == "role") {
+        this.$dataPost(this, `sys/${this.url}/list/v2`, {limit: 1}, false).then(res => {
+          let resData = res.data.data.list
+          resData.forEach((item, index) => {
+            item.key = index
+          })
+          this.tableData = resData
+        })
+      } else {
+        this.$dataGet(this, `sys/${this.url}/list/v2`).then(res => {
+          if (res.data.code == 200) {
+            let resData = res.data.data;
+            this.tableData = [];
+            resData.forEach((item, index) => {
+              if (item.parentName == null) {
+                item.key = index;
+                this.tableData.push(item);
+              }
+            });
+            let hasChildData = {};
+            resData.forEach((item, index) => {
+              item.key = index;
+              if (item.parentName !== null) {
+                Object.assign(hasChildData, item);
+              }
+            });
+            resData.forEach((item, index) => {
+              if (item.name == hasChildData.parentName) {
+                item.children = [];
+                item.children.push(hasChildData);
+              }
+            });
+            // console.log(this.tableData);
+          }
+        });
+      }
     }
   },
   watch: {
     $route: {
       handler: function() {
         this.handleTabelColumns();
+        console.log(this.tableData);
       },
       deep: true
     },
-    key() {}
+    models() {
+      this.tableData = [];
+      this.getListData();
+    }
   },
   mounted() {
-    console.log(this.models);
     this.handleTabelColumns();
-    this.$dataGet(this, 'https://segmentfault.com/api/notice/newest?', {_: '1119745598a1c045b9044b2e43496270'}).then((responce) => {
-        console.log(responce)
-      })
+    this.getListData();
   },
   components: {
-    searchForm
+    searchForm,
+    searchResult,
+    searchInput,
+    newForm,
+    editForm
   },
   computed: {
     rowSelection() {
       const { selectedRowKeys } = this;
       return {
         onChange: (selectedRowKeys, selectedRows) => {
+          this.selectedRowKeys = selectedRowKeys;
+          if (this.selectedRowKeys.length == 1) {
+            this.selectedRowKeys = this.selectedRowKeys.join("");
+            Object.assign(this.selectedRows, ...selectedRows);
+          }
+          // console.log(this.selectedRowKeys, "selectedRowKeys");
           console.log(
             `selectedRowKeys: ${selectedRowKeys}`,
             "selectedRows: ",
             selectedRows
           );
+          console.log(selectedRows);
         },
         getCheckboxProps: record => ({
           props: {
@@ -189,18 +355,16 @@ export default {
 @import "@/sass/mixins/_mixins.scss";
 
 .basic_model {
-  .basic_model_operate {
-    .operate_search_wrap {
-      float: left;
-    }
-    .operate_search_input {
-      width: 160px;
-      @include mgR(10px);
-    }
-    .operate_slefComponent {
-      @include mgR(10px);
-      //  width: 500px;
-    }
+  .basic_model_content {
+    padding: 16px;
+    background: #fff;
+    min-height: 280px;
+  }
+  .tableOperate {
+  }
+  .search_input {
+    // height: 50px;
+    overflow: hidden;
   }
 }
 </style>

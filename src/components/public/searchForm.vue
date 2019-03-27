@@ -62,11 +62,11 @@
             :wrapper-col="wrapperCol"
           >
             <a-form-item :style="{ display: 'inline-block'}">
-              <a-date-picker v-decorator="[`${item.startDate}`]"/>
+              <a-date-picker v-decorator="[`${item.startDate}`]" placeholder="开始日期"/>
             </a-form-item>
             <span class="desperate">-</span>
             <a-form-item :style="{ display: 'inline-block'}">
-              <a-date-picker v-decorator="[`${item.endDate}`]"/>
+              <a-date-picker v-decorator="[`${item.endDate}`]" placeholder="结束日期"/>
             </a-form-item>
           </a-form-item>
         </a-col>
@@ -87,7 +87,7 @@ export default {
     return {
       form: this.$form.createForm(this),
       labelCol: {
-        span: 6
+        // span: 6,
         // xs: { span: 8},
         // sm: { span: 8, offset: 1}
       },
@@ -135,7 +135,7 @@ export default {
   }
   .search_form .ant-form-item {
     display: flex;
-    margin-bottom: 14px;
+    margin-bottom: 0 !important;
   }
   .ant-form-item-children {
     display: flex;
@@ -147,7 +147,7 @@ export default {
     margin: 0 5px;
   }
   .ant-form-item-label {
-    line-height: 32px;
+    // line-height: 32px;
   }
 }
 </style>

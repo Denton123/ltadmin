@@ -1,16 +1,5 @@
 import axios from 'axios'
 import router from '../router';
-// Vue.use(axios)
-// 全局的axios默认值
-axios.defaults.baseUrl = 'https://api.example.com'
-axios.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-
-// 自定义实例默认值
-// const instance = axios.create({
-//     baseUrl: 'https://api.example.com'
-// })
-// instance.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
 
 // 拦截器
 // 添加请求拦截器

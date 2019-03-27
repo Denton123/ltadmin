@@ -16,16 +16,16 @@ module.exports = {
     // }
   },
   devServer: {
-    // host: 'localhost',
-    // port: 8080,
-    // // 设置开发接口代理
-    // proxy: {
-    //   'api': {
-    //     target: 'http://192.168.1.103:8080/',
-    //     ws: true,
-    //     changeOrigin: false
-    //   }
-    // },
+    proxy: {
+      '/api': {
+        target: 'http://test.b.gdltu.com',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/'
+        }
+      }
+    },
     disableHostCheck: true,
     // 让浏览器overlay时显示警告和错误
     // overlay: {
@@ -34,11 +34,11 @@ module.exports = {
     // }
   },
   productionSourceMap: false,
-  chainWebpack: config => {
-    config.module
-      .rule('images')
-        .use('url-loader')
-          .loader('url-loader')
-            .tap(options => Object.assign(options, {limit: 10240}))
-  }
+  // chainWebpack: config => {
+  //   config.module
+  //     .rule('images')
+  //       .use('url-loader')
+  //         .loader('url-loader')
+  //           .tap(options => Object.assign(options, {limit: 10240}))
+  // }
 }

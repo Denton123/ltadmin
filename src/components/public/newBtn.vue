@@ -4,18 +4,18 @@
 * @date 2019/3/5
 * */
 <template>
-    <div>
-        <!-- <el-button type="primary">新增</el-button> -->
-        <a-button type="primary">新增</a-button>
-    </div>
+  <a-button type="primary" icon="plus" @click="handleNew">新增</a-button>
 </template>
 
 <script>
 export default {
-    name: 'NewBtn',
-    methods: {
-    }
-}
+  name: "NewBtn",
+  methods: {
+      handleNew(){
+          this.$parent.handleNew()
+      }
+  }
+};
 </script>
 
 <style lang="scss">

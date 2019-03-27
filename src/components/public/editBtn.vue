@@ -4,15 +4,18 @@
 * @date 2019/3/5
 * */
 <template>
-    <div>
-        <el-button type="primary">编辑</el-button>
-    </div>
+  <a-button type="primary" icon="edit" @click="handleEdit">修改</a-button>
 </template>
 
 <script>
 export default {
-    name: 'EditBtn'
-}
+  name: "EditBtn",
+  methods: {
+      handleEdit() {
+          this.$parent.handleEdit()
+      }
+  }
+};
 </script>
 
 <style lang="scss">
