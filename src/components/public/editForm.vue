@@ -12,7 +12,7 @@ import { setTimeout } from 'timers';
     <a-modal
       :visible="editFormVisible"
       :title="editFormTitle"
-      @ok="handleOk"
+      @ok="handleEdit"
       @cancel="closeNewForm"
       okText="确认"
       cancelText="取消"
@@ -115,62 +115,49 @@ export default {
       }
     }
   },
+  computed: {
+    monitorTwoProperty() {
+      const { fields, editComponent } = this;
+      return {
+        fields,
+        editComponent
+      };
+    }
+  },
   methods: {
-    handleOk(e) {
-      console.log("");
-      this.handleEdit(e);
-    },
     closeNewForm() {
       this.$emit("closeEditForm");
     },
     handleEdit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
-        // console.log("values");
-        // console.log(values);
+        if (!err) {
+          this.$emit('submitEdit', values)
+        }
       });
     }
-  },
-  created() {
-    // this.form = this.$form.createForm(this, {
-    //   mapPropsToFields: () => {
-    //     let fieldsObj = {};
-    //     console.log(this.editComponent);
-    //     this.editComponent.forEach(v => {
-    //       fieldsObj[v.name] = this.$form.createFormField({
-    //         value: this.fields[v.name]
-    //       });
-    //     });
-    //     console.log(fieldsObj, "-------------");
-    //     return fieldsObj;
-    //   }
-    // });
   },
   watch: {
-    fields() {
+    monitorTwoProperty(val) {
       let fieldsObj = {};
-      this.editComponent.forEach(v => {
-        fieldsObj[v.name] = this.$form.createFormField({
-          value: this.fields[v.name]
-        });
+      const { fields, editComponent } = val;
+      // console.log(fields);
+      // console.log(editComponent);
+      this.form = this.$form.createForm(this, {
+        mapPropsToFields: () => {
+          let fieldsObj = {};
+          editComponent.forEach(v => {
+            fieldsObj[v.name] = this.$form.createFormField({
+              value: fields[v.name]
+            });
+          });
+          // console.log(fieldsObj, "-------------");
+          return fieldsObj;
+        }
       });
     }
   },
-  mounted() {
-    this.form = this.$form.createForm(this, {
-      mapPropsToFields: () => {
-        let fieldsObj = {};
-        console.log(this.editComponent);
-        this.editComponent.forEach(v => {
-          fieldsObj[v.name] = this.$form.createFormField({
-            value: this.fields[v.name]
-          });
-        });
-        console.log(fieldsObj, "-------------");
-        return fieldsObj;
-      }
-    });
-  }
+  mounted() {}
 };
 </script>
 

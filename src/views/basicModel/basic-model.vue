@@ -70,7 +70,9 @@
         :fields="fields"
         :editComponent="editComponent"
         v-if="editFormVisible"
+        @submitEdit="submitEdit"
       />
+      <!-- <a-button type="primary" @click="aa()"></a-button> -->
     </div>
   </div>
 </template>
@@ -113,7 +115,8 @@ export default {
       editFormVisible: false,
       fields: {},
       // 表格选中的行的数据
-      selectedRows: {}
+      selectedRows: {},
+      test: []
     };
   },
   props: {
@@ -258,50 +261,70 @@ export default {
     handleNewForm(form) {
       // console.log(form);
     },
+    // 获取表格列表数据
     getListData(params = {}) {
       if (this.url == "role") {
-        this.$dataPost(this, `sys/${this.url}/list/v2`, {limit: 1}, false).then(res => {
-          let resData = res.data.data.list
+        this.$dataPost(
+          this,
+          `sys/${this.url}/list/v2`,
+          { limit: 1 },
+          false
+        ).then(res => {
+          let resData = res.data.data.list;
           resData.forEach((item, index) => {
-            item.key = index
-          })
-          this.tableData = resData
-        })
+            item.key = index;
+          });
+          this.tableData = resData;
+        });
       } else {
         this.$dataGet(this, `sys/${this.url}/list/v2`).then(res => {
+          // console.log(res.data.data);
           if (res.data.code == 200) {
             let resData = res.data.data;
-            this.tableData = [];
-            resData.forEach((item, index) => {
-              if (item.parentName == null) {
-                item.key = index;
-                this.tableData.push(item);
-              }
-            });
-            let hasChildData = {};
-            resData.forEach((item, index) => {
-              item.key = index;
-              if (item.parentName !== null) {
-                Object.assign(hasChildData, item);
-              }
-            });
-            resData.forEach((item, index) => {
-              if (item.name == hasChildData.parentName) {
-                item.children = [];
-                item.children.push(hasChildData);
-              }
-            });
-            // console.log(this.tableData);
+            let resetData = this.setTreeData(resData)
+            this.tableData = resetData
           }
         });
       }
+    },
+    // 处理为树级数据
+    setTreeData(rowData) {
+      let data = [...rowData]
+      let sortData = []
+      let parentIdArr = []
+      data.filter((item, idx) => {
+        item.children = []
+        data.filter((subitem, subidx) => {
+          parentIdArr.push(subitem['deptId'])
+          if (item['deptId'] === subitem['parentId']) {
+            item.children.push(subitem)
+          }
+        })
+      parentIdArr = [...new Set(parentIdArr)]
+      if (item.children.length == 0) {
+        delete item.children
+      }
+      item.key = idx
+      item.title = item.name
+      parentIdArr.indexOf(item['parentId']) == -1 ? sortData.push(item) : ''
+      })
+      return sortData
+    },
+    submitEdit(form) {
+      console.log(form)
+      this.editFormVisible = false
+      this.test = []
+      console.log(this.test)
+    },
+    aa() {
+      this.test = []
     }
   },
   watch: {
     $route: {
       handler: function() {
         this.handleTabelColumns();
-        console.log(this.tableData);
+        // console.log(this.tableData);
       },
       deep: true
     },
@@ -338,6 +361,7 @@ export default {
             selectedRows
           );
           console.log(selectedRows);
+          this.test = selectedRows
         },
         getCheckboxProps: record => ({
           props: {

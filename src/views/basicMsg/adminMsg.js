@@ -11,10 +11,19 @@ import configBtn from '@/components/public/configBtn';
 import backBtn from '@/components/public/backBtn';
 
 import getAsyncData from '@/util/getDataFn'
+import { resolve } from 'url';
+ var arr =  new Promise(resolve => {
+        resolve(getAsyncData.getDeptData())
+    })
+var test
+arr.then(res => {
+    test=res
+})
+console.log(test)
 export default {
-    adminManage: [{ 
+    adminManage: [{
         key: 'adminManage',
-        url: 'user',
+        url: 'dept',
         tab: '管理员管理',
         theads: ['用户ID', '用户名', '所属部门', '邮箱', '手机号', '状态', '创建时间 '],
         props: ['date', 'name', 'address', 'email', 'phone', 'tags', 'time'],

@@ -35,7 +35,7 @@ import { constants } from 'fs';
               v-decorator="[`${newItem.name}`]"
               :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
               allowClear
-              :treeData="newItem.treeData"
+              :treeData="treeData"
             ></a-tree-select>
             <span v-decorator="[`${newItem.parentName}`, {
                   initialValue: '上级部门'
@@ -90,7 +90,8 @@ export default {
           xs: { span: 16 },
           sm: { span: 16 }
         }
-      }
+      },
+      treeData: []
     };
   },
   props: {

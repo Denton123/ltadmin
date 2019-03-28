@@ -1,51 +1,42 @@
 // 表单获取数据
 import axios from 'axios'
-export default {
-    getDeptData() {
-        // console.log('hhhhh')
-        let treeData = []
-        let arr, testArr = []
-        let obj = {}
-        axios.get('/api/sys/dept/select/v2').then(res => {
-            console.log(res)
-            if (res.data.code == 200) {
-                let hasChildren = {}
-                let resData = res.data.data
-                let l
-                for (var i = 0; i < resData.length; i++) {
-                    for (var j = i + 1; j < resData.length; j++) {
-                        if (resData[i].parentId === resData[j].deptId) {
-                            hasChildren = {
-                                title: resData[j].name,
-                                value: `${resData[j].deptId}`,
-                                key: resData[j].deptId
-                            }
-                            arr.push({
-                                title: resData[i].name,
-                                value: `${resData[i].deptId}`,
-                                key: resData[i].deptId
-                            })
-                            hasChildren.children = arr
-                        } else if (resData[i].deptId == resData[j].parentId) {
-                            console.log(resData[i], '=========')
-                            console.log(resData[j], '父-----------')
-                            // obj = {
-                            //     title: resData[j].name,
-                            //     value: `${resData[j].deptId}`,
-                            //     key: resData[j].deptId
-                            // }
-                            // testArr.push(obj)
-                            // console.log(testArr)
+import {
+    resolve
+} from 'path';
 
-                        }
-
-                    }
-                }
-                console.log(hasChildren)
+function setTreeData(rowData) {
+    let data = [...rowData]
+    let sortData = []
+    let parentIdArr = []
+    data.filter((item, idx) => {
+        item.children = []
+        data.filter((subitem, subidx) => {
+            parentIdArr.push(subitem['deptId'])
+            if (item['deptId'] === subitem['parentId']) {
+                item.children.push(subitem)
             }
         })
+        parentIdArr = [...new Set(parentIdArr)]
+        if (item.children.length == 0) {
+            delete item.children
+        }
+        item.key = idx
+        item.title = item.name
+        parentIdArr.indexOf(item['parentId']) == -1 ? sortData.push(item) : ''
+    })
+    return sortData
+}
+export default {
+    getDeptData() {
+        console.log('hh')
+        return new Promise(resolve => {
+            axios.get('/api/sys/dept/select/v2').then(res => {
+                resolve(setTreeData(res.data.data))
+            })
+        })
+
         // console.log(treeData)
-        return treeData
+        // return []
         // return [{
         //         title: "Node1",
         //         value: "0-0",
