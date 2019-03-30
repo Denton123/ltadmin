@@ -31,8 +31,13 @@ export default {
         console.log('hh')
         return new Promise(resolve => {
             axios.get('/api/sys/dept/select/v2').then(res => {
-                resolve(setTreeData(res.data.data))
+                return setTreeData(res.data.data)
             })
+            // let arr = await 
+            // console.log(arr)
+            // if (arr.length) {
+            //     return arr
+            // }
         })
 
         // console.log(treeData)

@@ -83,7 +83,7 @@ export default {
           this.$dataPost(this, "sys/loginV2", values, false).then(res => {
             if (res.data.code == 200) {
               this.$message.success("登录成功");
-              this.$router.push("/planMenus/inlandRoute");
+              this.$router.push("/hotelMenus/e-longHotelList");
             } else if (res.data.code == 500) {
               this.$message.error(res.data.msg);
             }

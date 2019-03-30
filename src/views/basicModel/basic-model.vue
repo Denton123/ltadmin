@@ -8,12 +8,12 @@
 
  <template>
   <div class="basic_model">
-    <a-breadcrumb class="index_breadcrumb" separator=">">
+    <!-- <a-breadcrumb class="index_breadcrumb" separator=">">
       <a-breadcrumb-item>
         <a-icon type="home" class="mrR10"/>首页
       </a-breadcrumb-item>
       <a-breadcrumb-item>{{breadcrumb}}</a-breadcrumb-item>
-    </a-breadcrumb>
+    </a-breadcrumb> -->
     <div class="basic_model_content">
       <!-- 管理系统操作按钮 -->
       <div class="search_input">
@@ -40,7 +40,11 @@
       </div>
 
       <!-- 表格 -->
-      <a-table :columns="columns" :dataSource="tableData" :rowSelection="rowSelection">
+      <a-table
+        :columns="columns"
+        :dataSource="tableData"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+      >
         <template v-for="tablecomponent in tableOperate" class="tableOperate">
           <a-button
             slot="action"
@@ -49,8 +53,10 @@
             @click="handleTableOperate(tablecomponent.title)"
           >{{tablecomponent.title}}</a-button>
         </template>
-        <span slot="tags" slot-scope="tags" v-if="tags!==undefined">
-          <a-tag color="blue">{{tags}}</a-tag>
+        <span slot="tags" slot-scope="type" v-if="type!==undefined">
+          <a-tag
+            :color="type == 0 ? 'blue' : (type == 1 ? 'green' : 'red')"
+          >{{type == 0 ? '目录' : (type == 1 ? '菜单' : '按钮')}}</a-tag>
         </span>
       </a-table>
 
@@ -60,7 +66,7 @@
         :newFormVisible="newFormVisible"
         @closeNewForm="closeNewForm"
         :newComponent="newComponent"
-        @handleNewForm="handleNewForm"
+        @submitNew="submitNew"
       />
       <!-- 编辑表单 -->
       <edit-form
@@ -72,8 +78,8 @@
         v-if="editFormVisible"
         @submitEdit="submitEdit"
       />
-      <!-- <a-button type="primary" @click="aa()"></a-button> -->
     </div>
+    <a-button type="primary" @click="open">按钮</a-button></router-link>
   </div>
 </template>
 
@@ -116,7 +122,8 @@ export default {
       fields: {},
       // 表格选中的行的数据
       selectedRows: {},
-      test: []
+      test: [],
+      selectedRowKey: []
     };
   },
   props: {
@@ -136,6 +143,7 @@ export default {
             searchInput: {},
             newComponent: [],
             editComponent: [],
+            tag: "",
             url: ""
           }
         ];
@@ -156,7 +164,7 @@ export default {
         this.columns[i].dataIndex = this.props[i];
         if (this.props[i] == "action") {
           this.columns[i].scopedSlots = { customRender: "action" };
-        } else if (this.props[i] == "tags") {
+        } else if (this.props[i] == "type") {
           this.columns[i].scopedSlots = { customRender: "tags" };
         }
       }
@@ -164,17 +172,16 @@ export default {
     },
     // 表格操作按钮
     handleTableOperate(title) {
-      console.log(title);
     },
     // 查询
     handleSearch(item) {
-      console.log(item);
+      this.getListData({ roleName: item });
     },
     // 处理表格选中id
     handleSelectedKeys() {
-      if (this.selectedRowKeys.length > 1) {
+      if (this.selectedRowKey.length > 1) {
         this.$message.warning("只能选择一条记录");
-      } else if (this.selectedRowKeys.length == 0) {
+      } else if (this.selectedRowKey.length == 0) {
         this.$message.warning("请选择一条记录");
       }
     },
@@ -186,28 +193,28 @@ export default {
     },
     // 编辑
     handleEdit() {
-      if (this.selectedRowKeys.length == 0 || this.selectedRowKeys.length > 1) {
+      if (this.selectedRowKey.length == 0 || this.selectedRowKey.length > 1) {
         this.editFormVisible = false;
       } else {
         this.editFormVisible = true;
       }
-      console.log(this.selectedRows);
       this.handleSelectedKeys();
       this.$nextTick(() => {
         this.$dataGet(
           this,
-          `/sys/${this.url}/info/v2/${this.selectedRows.deptId}`
+          `/sys/${this.tag}/info/v2/${this.selectedRows[`${this.tag}Id`]}`
         ).then(res => {
-          this.fields = res.data.data;
+          if (res.data.code == 200) {
+            this.fields = res.data.data;
+          }
         });
       });
     },
     // 删除
     handleDelete() {
-      // console.log(this.selectedRowKeys);
       this.handleSelectedKeys();
       let that = this;
-      if (this.selectedRowKeys.length == 1) {
+      if (this.selectedRowKey.length == 1) {
         this.$confirm({
           title: "信息",
           content: "确定要删除记录吗？",
@@ -215,16 +222,32 @@ export default {
           okType: "danger",
           cancelText: "取消",
           onOk() {
-            that
-              .$dataGet(that, `sys/${that.url}/delete/v2`, {
-                deptId: that.selectedRows.deptId
-              })
-              .then(res => {
-                if (res.data.code == 200) {
-                  that.$message.success("删除成功");
-                  that.getListData();
-                }
-              });
+            let params = {};
+            let paramsKey;
+            if (that.tag === "role") {
+              paramsKey = `${that.tag}Ids`;
+              params[`${paramsKey}`] = [that.selectedRows[`${that.tag}Id`]];
+              that
+                .$dataPost(that, `sys/${that.tag}/delete/v2`, params)
+                .then(res => {
+                  if (res.data.code == 200) {
+                    that.$message.success("删除成功");
+                    that.getListData();
+                  }
+                });
+            } else {
+              paramsKey = `${that.tag}Id`;
+              that
+                .$dataGet(that, `sys/${that.tag}/delete/v2`, {
+                  deptId: that.selectedRows[`${that.tag}Id`]
+                })
+                .then(res => {
+                  if (res.data.code == 200) {
+                    that.$message.success("删除成功");
+                    that.getListData();
+                  }
+                });
+            }
           },
           onCancel() {
             // console.log("Cancel");
@@ -258,16 +281,14 @@ export default {
     closeEditForm() {
       this.editFormVisible = false;
     },
-    handleNewForm(form) {
-      // console.log(form);
-    },
     // 获取表格列表数据
     getListData(params = {}) {
-      if (this.url == "role") {
+      if (this.tag == "role") {
+        let searchParams = { ...params, limit: 10, page: 1 };
         this.$dataPost(
           this,
-          `sys/${this.url}/list/v2`,
-          { limit: 1 },
+          `sys/${this.tag}/list/v2`,
+          searchParams,
           false
         ).then(res => {
           let resData = res.data.data.list;
@@ -277,47 +298,54 @@ export default {
           this.tableData = resData;
         });
       } else {
-        this.$dataGet(this, `sys/${this.url}/list/v2`).then(res => {
+        this.$dataGet(this, this.url).then(res => {
           // console.log(res.data.data);
           if (res.data.code == 200) {
             let resData = res.data.data;
-            let resetData = this.setTreeData(resData)
-            this.tableData = resetData
+            let resetData = this.$setTreeData(resData, `${this.tag}Id`, true);
+            this.tableData = resetData;
           }
         });
       }
     },
-    // 处理为树级数据
-    setTreeData(rowData) {
-      let data = [...rowData]
-      let sortData = []
-      let parentIdArr = []
-      data.filter((item, idx) => {
-        item.children = []
-        data.filter((subitem, subidx) => {
-          parentIdArr.push(subitem['deptId'])
-          if (item['deptId'] === subitem['parentId']) {
-            item.children.push(subitem)
-          }
-        })
-      parentIdArr = [...new Set(parentIdArr)]
-      if (item.children.length == 0) {
-        delete item.children
-      }
-      item.key = idx
-      item.title = item.name
-      parentIdArr.indexOf(item['parentId']) == -1 ? sortData.push(item) : ''
-      })
-      return sortData
-    },
+    // 提交编辑表单
     submitEdit(form) {
-      console.log(form)
-      this.editFormVisible = false
-      this.test = []
-      console.log(this.test)
+      form[`${this.tag}Id`] = this.selectedRows[`${this.tag}Id`];
+      this.$dataPost(this, `sys/${this.tag}/update/v2`, form, false).then(
+        res => {
+          if (res.data.code == 200) {
+            this.$message.success("编辑数据成功");
+            this.editFormVisible = false;
+            this.getListData();
+            console.log(this.test);
+            this.selectedRowKeys = [];
+          }
+        }
+      );
     },
-    aa() {
-      this.test = []
+    // 提交新增表单
+    submitNew(form) {
+      this.$dataPost(this, `/sys/${this.tag}/save/v2`, form, false).then(
+        res => {
+          if (res.data.code == 200) {
+            this.$message.success("新增数据成功");
+            this.newFormVisible = false;
+            this.getListData();
+            this.selectedRowKeys = [];
+          }
+        }
+      );
+    },
+    onSelectChange(selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys;
+      this.selectedRowKey = selectedRowKeys;
+      if (this.selectedRowKey.length == 1) {
+        this.selectedRowKey = this.selectedRowKey.join("");
+        Object.assign(this.selectedRows, ...selectedRows);
+      }
+    },
+    open() {
+      window.location.href="/api/druid/sql.html"
     }
   },
   watch: {
@@ -331,6 +359,7 @@ export default {
     models() {
       this.tableData = [];
       this.getListData();
+      this.selectedRowKeys = [];
     }
   },
   mounted() {
@@ -343,34 +372,6 @@ export default {
     searchInput,
     newForm,
     editForm
-  },
-  computed: {
-    rowSelection() {
-      const { selectedRowKeys } = this;
-      return {
-        onChange: (selectedRowKeys, selectedRows) => {
-          this.selectedRowKeys = selectedRowKeys;
-          if (this.selectedRowKeys.length == 1) {
-            this.selectedRowKeys = this.selectedRowKeys.join("");
-            Object.assign(this.selectedRows, ...selectedRows);
-          }
-          // console.log(this.selectedRowKeys, "selectedRowKeys");
-          console.log(
-            `selectedRowKeys: ${selectedRowKeys}`,
-            "selectedRows: ",
-            selectedRows
-          );
-          console.log(selectedRows);
-          this.test = selectedRows
-        },
-        getCheckboxProps: record => ({
-          props: {
-            disabled: record.name === "Disabled User", // Column configuration not to be checked
-            name: record.name
-          }
-        })
-      };
-    }
   }
 };
 </script>

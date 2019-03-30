@@ -1,4 +1,5 @@
 /**
+import func from './vue-temp/vue-editor-bridge';
 import { constants } from 'fs';
  * 
  * 管理系统新增表单
@@ -12,7 +13,7 @@ import { constants } from 'fs';
     <a-modal
       :visible="newFormVisible"
       :title="newFormTitle"
-      @ok="handleOk"
+      @ok="handleNew"
       @cancel="closeNewForm"
       okText="确认"
       cancelText="取消"
@@ -28,18 +29,19 @@ import { constants } from 'fs';
             ></a-input>
           </a-form-item>
           <!-- tree选择 -->
-          <a-form-item v-if="newItem.type=='tree'" :label="newItem.label" v-bind="formItemLayout">
+          <a-form-item
+            v-if="newItem.type=='treeSelect'"
+            :label="newItem.label"
+            v-bind="formItemLayout"
+          >
             <a-tree-select
               :placeholder="newItem.placeholder"
               style="width: 300px"
               v-decorator="[`${newItem.name}`]"
               :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
               allowClear
-              :treeData="treeData"
+              :treeData="treeSelectData"
             ></a-tree-select>
-            <span v-decorator="[`${newItem.parentName}`, {
-                  initialValue: '上级部门'
-              }]"></span>
           </a-form-item>
 
           <!-- 多选框 -->
@@ -52,7 +54,7 @@ import { constants } from 'fs';
           </a-form-item>
           <!-- 单选框 -->
           <a-form-item v-if="newItem.type=='radio'" :label="newItem.label" v-bind="formItemLayout">
-            <a-radio-group v-decorator="[`${newItem.name}`]">
+            <a-radio-group v-decorator="[`${newItem.name}`, {initialValue: MenucheckedKeys}]">
               <a-radio
                 :value="radio.value"
                 v-for="radio in newItem.radioComponents"
@@ -68,6 +70,36 @@ import { constants } from 'fs';
               :min="1"
               :placeholder="newItem.placeholder"
             ></a-input-number>
+          </a-form-item>
+
+          <!-- 树形控件 -->
+          <a-form-item
+            v-if="newItem.type=='tree' && newItem.belong == 'menu'"
+            :label="newItem.label"
+            v-bind="formItemLayout"
+          >
+            <a-tree
+              showLine
+              checkable
+              autoExpandParent
+              v-model="MenucheckedKeys"
+              :treeData="menuTreeData"
+              v-decorator="[`${newItem.name}`, {initialValue: MenucheckedKeys}]"
+            ></a-tree>
+          </a-form-item>
+          <a-form-item
+            v-if="newItem.type=='tree' && newItem.belong == 'dept'"
+            :label="newItem.label"
+            v-bind="formItemLayout"
+          >
+            <a-tree
+              showLine
+              checkable
+              autoExpandParent
+              v-model="DeptcheckedKeys"
+              :treeData="deptTreeData"
+              v-decorator="[`${newItem.name}`, {initialValue: DeptcheckedKeys}]"
+            ></a-tree>
           </a-form-item>
         </template>
       </a-form>
@@ -91,7 +123,11 @@ export default {
           sm: { span: 16 }
         }
       },
-      treeData: []
+      treeSelectData: [],
+      menuTreeData: [],
+      deptTreeData: [],
+      MenucheckedKeys: [],
+      DeptcheckedKeys: []
     };
   },
   props: {
@@ -115,30 +151,70 @@ export default {
     }
   },
   methods: {
-    handleOk(e) {
-      console.log("");
-      this.handleNew(e);
-    },
     closeNewForm() {
       this.$emit("closeNewForm");
     },
     handleNew(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
-        if(!err) {
-          // console.log(values);
-          this.$dataPost(this,'/sys/dept/save/v2', values, false).then(res => {
-            if (res.data.code == 200) {
-              this.$message.success("新增数据成功");
-              this.newFormVisible = false
-            }
-          })
+        if (!err) {
+          console.log(values);
+          this.$emit("submitNew", values);
+        }
+      });
+    },
+    // 获取树选择数据
+    getTreeSelectData() {
+      let url, urlParam
+      this.newComponent &&
+        this.newComponent.forEach(item => {
+          if (item.url) {
+            url = item.url
+            urlParam = item.urlParam
+          } else if (item.urlParam){
+            urlParam = item.urlParam
+            url = `sys/${item.urlParam}/select/v2`
+          }
+        });
+      this.$dataGet(this, url).then(res => {
+        if (res.data.code == 200) {
+          this.treeSelectData = this.$setTreeData(res.data.data, `${urlParam}Id`, true);
+          console.log(this.treeSelectData)
+        }
+      });
+    },
+    // 获取树控件数据
+    getTreeData() {
+      this.$dataGet(this, `sys/menu/listV2`).then(res => {
+        if (res.data.code == 200) {
+          this.menuTreeData = this.$setTreeData(res.data.data, "menuId", false);
+        }
+        console.log(this.menuTreeData)
+      });
+      this.$dataGet(this, `sys/dept/list/v2`).then(res => {
+        if (res.data.code == 200) {
+          this.deptTreeData = this.$setTreeData(res.data.data, "deptId", false);
         }
       });
     }
   },
   mounted() {
-    // console.log(this.newComponent);
+    this.getTreeSelectData();
+    this.getTreeData();
+  },
+  watch: {
+    $route: {
+      handler: function() {
+        this.getTreeSelectData();
+      },
+      deep: true
+    },
+    MenucheckedKeys(val) {
+      console.log('onCheck', val)
+    },
+    DeptcheckedKeys(val) {
+      console.log('onCheck', val)
+    }
   }
 };
 </script>

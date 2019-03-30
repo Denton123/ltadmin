@@ -12,7 +12,6 @@
       <ant-Menu
         :menus="menus"
         :defaultSelectedKeys="defaultSelectedKeys"
-        :defaultOpenKeys="defaultOpenKeys"
         :openKeys="openKeys"
         @onOpenChange="onOpenChange"
         @markMenuClick="markMenuClick"
@@ -39,7 +38,8 @@
         <a-menu class="inlineBlock fr" mode="horizontal">
           <a-sub-menu>
             <span slot="title">
-              <a-icon type="user"/>sdt
+              <a-icon type="user"/>
+              {{username}}
             </span>
             <a-menu-item>个人中心</a-menu-item>
             <a-menu-item @click="logout">退出登录</a-menu-item>
@@ -49,6 +49,12 @@
 
       <!-- 中间内容 -->
       <a-layout-content class="index_content">
+        <a-breadcrumb class="index_breadcrumb" separator=">">
+          <a-breadcrumb-item>
+            <a-icon type="home" class="mrR10"/>首页
+          </a-breadcrumb-item>
+          <a-breadcrumb-item>{{breadcrumb}}</a-breadcrumb-item>
+        </a-breadcrumb>
         <!-- Content -->
         <router-view/>
       </a-layout-content>
@@ -58,38 +64,38 @@
 </template>
 <script>
 import antMenu from "@/components/public/antMenu";
-import menuMsg from "@/views/basicMsg/menu";
 
 export default {
   name: "antModel",
   data() {
-    let menuObj = {};
-    Object.assign(menuObj, menuMsg);
     return {
       collapsed: false,
       navs: [
         {
           title: "旅游策划",
-          name: "planMenus"
+          name: "hotelMenus"
         },
         {
           title: "系统管理",
           name: "companyMenus"
         }
       ],
-      menusData: menuObj,
+      menusData: {},
       menus: [],
       // 初始选中的菜单
       defaultSelectedKeys: [],
-      // 默认打开的菜单
-      defaultOpenKeys: [],
       // 当前头部左侧的导航按钮的菜单
       currentNav: [],
       // 当前展开的SubMenu菜单项key数组
       openKeys: [],
       currentKeys: [],
+      // 是否展开侧边栏
       collapsed: false,
-      logoSrc: require("@/assets/logo.png")
+      logoSrc: require("@/assets/logo.png"),
+      // 面包屑
+      breadcrumb: "",
+      // 用户名
+      username: this.$store.state.user["username"]
     };
   },
   components: {
@@ -100,13 +106,13 @@ export default {
     toggleNav(nav) {
       this.defaultSelectedKeys = [];
       this.openKeys = [];
+      this.currentKeys = [];
       this.menus = this.menusData[nav];
-      this.$router.push(`${this.menus[0]["children"][0]["path"]}`);
-      localStorage.setItem("nav", nav);
       this.$router.push(`${this.menus[0]["children"][0]["path"]}`);
       this.menus.forEach(menuItem => {
         this.currentKeys.push(menuItem.key);
       });
+      localStorage.removeItem("openkey");
     },
     // 退出登录
     logout() {
@@ -136,43 +142,88 @@ export default {
     },
     // 初始化菜单选项
     initialValue() {
-      let navTag = localStorage.getItem("nav");
-      let routeParams = this.$route.params.lead;
-      if (navTag !== null) {
-        this.menus = this.menusData[navTag];
-        this.currentNav.push(`${navTag}`);
-      } else if (routeParams !== undefined) {
+      let routeParams;
+      if (this.$route.params.lead !== undefined) {
+        routeParams = this.$route.params.lead;
         this.menus = this.menusData[routeParams];
         this.currentNav.push(`${routeParams}`);
       } else {
-        this.menus = this.menusData[Object.keys(this.menusData)[0]];
-        this.currentNav.push(`${Object.keys(this.menusData)[0]}`);
+        routeParams = this.$route.path.split("/")[1];
+        this.menus = this.menusData[`${routeParams}`];
       }
-      this.menus.forEach(menuItem => {
-        this.currentKeys.push(menuItem.key);
-      });
       // 存储点击侧边栏，刷新之后不变
       if (JSON.parse(localStorage.getItem("openkey")) !== null) {
         let markMenu = JSON.parse(localStorage.getItem("openkey"));
-        this.openKeys.push(`${markMenu.openKey}`);
-        this.defaultSelectedKeys.push(`${markMenu.selectedKey}`);
+        this.openKeys.push(markMenu.openKey);
+        this.defaultSelectedKeys.push(markMenu.selectedKey);
+        this.breadcrumb = markMenu.name;
       }
     },
-    markMenuClick(openKey, selectedKey) {
-      let openKeyObj = { openKey, selectedKey };
+    markMenuClick(openKey, selectedKey, name) {
+      let openKeyObj = { openKey, selectedKey, name };
       openKeyObj = JSON.stringify(openKeyObj);
       localStorage.setItem("openkey", openKeyObj);
     }
   },
   mounted() {
     this.initialValue();
+    console.log(this.menus);
   },
   watch: {
     $route: {
-      handler: function(val, oldVal) {},
+      handler: function(val, oldVal) {
+        this.menus.forEach(menuItem => {
+          menuItem.children.forEach(v => {
+            if (this.$route.params.model == v.path.split("/")[2]) {
+              this.breadcrumb = v.name;
+            }
+          });
+        });
+      },
       // 深度观察监听
       deep: true
     }
+  },
+  beforeMount() {
+    // 初始化菜单数据
+    let allMenus = [];
+    this.menusData.hotelMenus = [];
+    this.menusData.companyMenus = [];
+    this.$dataGet(this, "sys/menu/navV2").then(res => {
+      if (res.data.code == 200) {
+        let resData = res.data.data;
+        resData.forEach(item => {
+          allMenus.push({
+            name: item.name,
+            key: item.menuId,
+            icon: item.icon,
+            children: []
+          });
+          allMenus.forEach(allItem => {
+            item.list.forEach(subItem => {
+              if (subItem.parentId == allItem.key) {
+                allItem.children.push({
+                  name: subItem.name,
+                  key: subItem.menuId,
+                  icon: subItem.icon,
+                  path: subItem.url
+                });
+                console.log(this.$route.params.model, "model");
+              }
+            });
+            this.currentKeys.push(allItem.key);
+          });
+        });
+        console.log(this.breadcrumb, "breadcrumb");
+        allMenus.filter(item => {
+          if (item.key == 1) {
+            this.menusData["companyMenus"].push(item);
+          } else {
+            this.menusData["hotelMenus"].push(item);
+          }
+        });
+      }
+    });
   }
 };
 </script>

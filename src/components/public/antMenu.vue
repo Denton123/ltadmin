@@ -10,7 +10,6 @@
       class="a_menu"
       mode="inline"
       :defaultSelectedKeys="defaultSelectedKeys"
-      :defaultOpenKeys="defaultOpenKeys"
       :openKeys="openKeys"
       @openChange="onOpenChange"
     >
@@ -21,7 +20,7 @@
             <span>{{menu.name}}</span>
           </span>
           <template v-for="subMenu in menu.children">
-            <a-menu-item :key="subMenu.key" @click="handleMenuItem(menu.key, subMenu.key)">
+            <a-menu-item :key="subMenu.key" @click="handleMenuItem(menu.key, subMenu.key, subMenu.name)">
               <router-link :to="subMenu.path">{{subMenu.name}}</router-link>
             </a-menu-item>
           </template>
@@ -52,12 +51,6 @@ export default {
         return [];
       }
     },
-    defaultOpenKeys: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
     openKeys: {
       type: Array,
       default() {
@@ -72,8 +65,8 @@ export default {
     onOpenChange(openKeys) {
       this.$emit("onOpenChange", openKeys);
     },
-    handleMenuItem (menuKey, subMenuKey) {
-      this.$emit('markMenuClick', menuKey, subMenuKey)
+    handleMenuItem (menuKey, subMenuKey, name) {
+      this.$emit('markMenuClick', menuKey, subMenuKey, name)
     }
   },
   mounted() {

@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 let isPc = true
-
+console.log(process.env.BASE_URL)
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -15,9 +15,15 @@ export default new Router({
       children: [
         // 携程下单页
         {
-          path: 'planMenus/ctripCreateOrder',
+          path: 'hotelMenus/ctripOrder',
           name: 'ctripCreateOrder',
           component: () => import( /* webpackChunkName: "Basic" */ '@/views/page/ctripCreateOrder.vue')
+        },
+        // sql监控
+        {
+          path: 'companyMenus/sqlMonitor',
+          name: 'sqlMonitor',
+          component: () => import( /* webpackChunkName: "Basic" */ '@/views/page/sqlMonitor.vue')
         },
         {
           path: ':lead/:model',

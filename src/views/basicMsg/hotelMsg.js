@@ -1,7 +1,7 @@
 /* 酒店管理数据*/
 export default {
-    inlandRoute: [{
-        key: 'inlandRoute',
+    'e-longHotelList': [{
+        key: 'e-longHotelList',
         tab: '艺龙酒店列表',
         theads: ['艺龙酒店id', '酒店名称', '城市', '地址电话', '产品最低价', '可用状态', '销售状态', '同步状态', '酒店匹配', '房型匹配', '操作'],
         props: ['hotelId', 'name', 'city', 'address', 'lowPrice', 'hotelListStatusChn', 'hotelDetailStatusChn', 'syncStatusChn', 'matchStatusChn', 'roomMatchChn', 'action'],
@@ -148,12 +148,11 @@ export default {
             }
         ]
     }],
-    inlandPlan: [{
-        key: 'inlandPlan',
+    qunarHotelList: [{
+        key: 'qunarHotelList',
         tab: '去哪儿酒店列表',
         theads: ['发现假期酒店ID', '酒店名称', '城市', '地址电话', '房型数量', '操作'],
         props: ['hotelId', 'name', 'city', 'phone', 'roomTotal'],
-        widths: [50, 50, 50],
         SearchComponent: [{
                 type: 'text',
                 label: '国内城市',
@@ -177,12 +176,11 @@ export default {
             title: '酒店详情'
         }]
     }],
-    inlandPlan2: [{
-        key: 'inlandPlan2',
+    orderList: [{
+        key: 'orderList',
         tab: '订单列表',
         theads: ['订单创建时间', '系统订单id', '供应商订单', '销售平台订单', '酒店名称', '房型名称', '入住日期', '离店日期', '房间数量', '总价', '订单状态', '联系人姓名', '联系人电话', '跟单人', '操作'],
         props: ['date', 'name', 'address'],
-        widths: [50, 50, 50],
         SearchComponent: [{
                 type: 'text',
                 label: '系统订单id',
@@ -307,15 +305,14 @@ export default {
             }
         ]
     }],
-    inlandPlan3: [{
-        key: 'inlandPlan3',
+    ctripOrder: [{
+        key: 'ctripOrder',
         tab: '携程下单',
         theads: ['日期日期日期', '名称名称名称', '地址地址地址地址地址', '地址', '操作'],
         props: ['date', 'name', 'address'],
-        widths: [50, 50, 50]
     }],
-    inlandPlan4: [{
-        key: 'inlandPlan4',
+    ctripList: [{
+        key: 'ctripList',
         tab: '携程酒店列表',
         theads: ['携程酒店id', '酒店名称', '城市名称', '区域名称', '电话', '酒店地址', '酒店是否可定', '酒店星级', '酒店匹配状态', '房型匹配数量', '房型数量', '酒店同步状态', '酒店等级', '操作'],
         props: ['date', 'name', 'address'],
@@ -439,8 +436,8 @@ export default {
             // }
         ],
     }],
-    inlandPlan5: [{
-        key: 'inlandPlan5',
+    quhuhuList: [{
+        key: 'quhuhuList',
         tab: '去呼呼酒店列表',
         theads: ['去呼呼酒店id', '酒店名称', '城市名称', '电话', '酒店地址', '酒店匹配状态', '酒店匹配', '酒店同步状态', '操作'],
         props: ['date', 'name', 'address'],
@@ -530,8 +527,8 @@ export default {
             },
         ],
     }],
-    inlandPlan6: [{
-        key: 'inlandPlan6',
+    quhuhuOrderList: [{
+        key: 'quhuhuOrderList',
         tab: '去呼呼订单列表',
         theads: ['本地订单ID', '去呼呼订单ID', '入住时间', '离店时间', '联系人', '联系电话', '入住人姓名', '订单底价', '订单实付金额', '房间数量', '酒店ID', '产品房ID', '订单状态', '操作'],
         props: ['date', 'name', 'address'],
@@ -589,8 +586,8 @@ export default {
             },
         ],
     }],
-    inlandPlan7: [{
-        key: 'inlandPlan7',
+    meituanList: [{
+        key: 'meituanList',
         tab: '美团酒店列表',
         theads: ['美团酒店', '酒店名称', '城市', '地址电话', '营业状态', '星级', '类型', '评分', '开业时间', '同步状态', '酒店匹配', '房型匹配', '操作'],
         props: ['date', 'name', 'address'],
@@ -668,18 +665,28 @@ export default {
             },
         ],
     }],
-    inlandPlan8: [{
-        key: 'inlandPlan8',
+    meituanOrderList: [{
+        key: 'meituanOrderList',
         tab: '美团订单列表',
         theads: ['日期日期日期', '名称名称名称', '地址地址地址地址地址', '地址', '操作'],
         props: ['date', 'name', 'address'],
-        widths: [50, 50, 50]
     }],
-    inlandPlan9: [{
-        key: 'inlandPlan9',
-        tab: '飞猪-御道店',
+    feizhuPriceManager: [{
+        key: 'feizhuPriceManager',
+        tab: '飞猪-御道店-加价策略管理',
         theads: ['日期日期日期', '名称名称名称', '地址地址地址地址地址', '地址', '操作'],
         props: ['date', 'name', 'address'],
-        widths: [50, 50, 50]
+    }],
+    priceMonitor: [{
+        key: 'priceMonitor',
+        tab: '飞猪-御道店-加价策略管理',
+        theads: ['日期日期日期', '名称名称名称', '地址地址地址地址地址', '地址', '操作'],
+        props: ['date', 'name', 'address'],
+    }],
+    dataAcquisition: [{
+        key: 'dataAcquisition',
+        tab: '飞猪-御道店-加价策略管理',
+        theads: ['日期日期日期', '名称名称名称', '地址地址地址地址地址', '地址', '操作'],
+        props: ['date', 'name', 'address'],
     }],
 }

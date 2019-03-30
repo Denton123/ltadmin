@@ -11,15 +11,7 @@ import configBtn from '@/components/public/configBtn';
 import backBtn from '@/components/public/backBtn';
 
 import getAsyncData from '@/util/getDataFn'
-import { resolve } from 'url';
- var arr =  new Promise(resolve => {
-        resolve(getAsyncData.getDeptData())
-    })
-var test
-arr.then(res => {
-    test=res
-})
-console.log(test)
+
 export default {
     adminManage: [{
         key: 'adminManage',
@@ -49,7 +41,7 @@ export default {
                 inputType: 'text'
             },
             {
-                type: 'tree',
+                type: 'treeSelect',
                 label: '所属部门',
                 name: 'depart',
                 placeholder: '所属部门',
@@ -124,7 +116,7 @@ export default {
                 inputType: 'text'
             },
             {
-                type: 'tree',
+                type: 'treeSelect',
                 label: '所属部门',
                 name: 'depart',
                 placeholder: '所属部门',
@@ -191,7 +183,8 @@ export default {
     departmentManage: [{
         key: 'departmentManage',
         tab: '部门管理',
-        url: 'dept',
+        tag: 'dept',
+        url: 'sys/dept/list/v2',
         theads: ['部门ID', '部门名称', '上级部门', '排序号'],
         props: ['deptId', 'name', 'parentName', 'orderNum'],
         typeComponent: [{
@@ -213,12 +206,11 @@ export default {
                 inputType: 'text'
             },
             {
-                type: 'tree',
+                type: 'treeSelect',
                 label: '上级部门',
                 name: 'parentId',
                 placeholder: '上级部门',
-                parentName: 'parentName',
-                treeData: getAsyncData.getDeptData()
+                urlParam: 'dept'
             },
             {
                 type: 'num',
@@ -238,11 +230,11 @@ export default {
                 inputType: 'text'
             },
             {
-                type: 'tree',
+                type: 'treeSelect',
                 label: '上级部门',
-                name: 'parentName',
+                name: 'parentId',
                 placeholder: '上级部门',
-                treeData: []
+                urlParam: 'dept'
             },
             {
                 type: 'num',
@@ -256,8 +248,9 @@ export default {
         key: 'roleManage',
         tab: '角色管理',
         url: 'role',
+        tag: 'role',
         theads: ['角色ID', '角色名称', '所属部门', '备注', '创建时间'],
-        props: ['roleId', 'roleName', 'deptName', 'memo', 'createTime'],
+        props: ['roleId', 'roleName', 'deptName', 'remark', 'createTime'],
         typeComponent: [{
             components: newBtn
         }, {
@@ -271,7 +264,7 @@ export default {
         newComponent: [{
                 type: 'text',
                 label: '角色名称',
-                name: 'username',
+                name: 'roleName',
                 placeholder: '角色名称',
                 rules: [{
                     required: true,
@@ -280,52 +273,78 @@ export default {
                 inputType: 'text'
             },
             {
-                type: 'tree',
+                type: 'treeSelect',
                 label: '所属部门',
-                name: 'depart',
+                name: 'deptId',
                 placeholder: '所属部门',
-                treeData: []
+                urlParam: 'dept'
             },
             {
                 type: 'text',
                 label: '备注',
-                name: 'memo',
+                name: 'remark',
                 placeholder: '备注',
                 inputType: 'text'
+            },
+            {
+                type: 'tree',
+                label: '功能权限',
+                name: 'menuIdList',
+                belong: 'menu'
+            },
+            {
+                type: 'tree',
+                label: '数据权限',
+                name: 'deptIdList',
+                belong: 'dept'
             },
         ],
         editComponent: [{
                 type: 'text',
                 label: '角色名称',
-                name: 'username',
+                name: 'roleName',
                 placeholder: '角色名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入部门名称!'
                 }],
                 inputType: 'text'
             },
             {
-                type: 'tree',
+                type: 'treeSelect',
                 label: '所属部门',
-                name: 'depart',
+                name: 'deptId',
                 placeholder: '所属部门',
-                treeData: []
+                urlParam: 'dept'
             },
             {
                 type: 'text',
                 label: '备注',
-                name: 'memo',
+                name: 'remark',
                 placeholder: '备注',
                 inputType: 'text'
+            },
+            {
+                type: 'tree',
+                label: '功能权限',
+                name: 'menuIdList',
+                belong: 'menu'
+            },
+            {
+                type: 'tree',
+                label: '数据权限',
+                name: 'deptIdList',
+                belong: 'dept'
             },
         ],
     }],
     menuManage: [{
         key: 'menuManage',
         tab: '菜单管理',
+        tag: 'menu',
+        url: 'sys/menu/listV2',
         theads: ['菜单ID', '菜单名称', '上级菜单', '图标', '类型', '排序号', '菜单URL', '授权标识'],
-        props: ['date', 'name', 'address'],
+        props: ['menuId', 'name', 'parentName', 'icon', 'type', 'orderNum', 'url', 'perms'],
         typeComponent: [{
             components: newBtn
         }, {
@@ -348,12 +367,12 @@ export default {
                         desc: '按钮'
                     }
                 ],
-                name: 'state'
+                name: 'type'
             },
             {
                 type: 'text',
                 label: '菜单名称',
-                name: 'departname',
+                name: 'name',
                 placeholder: '菜单名称或按钮名称',
                 rules: [{
                     required: true,
@@ -362,36 +381,37 @@ export default {
                 inputType: 'text'
             },
             {
-                type: 'tree',
+                type: 'treeSelect',
                 label: '上级菜单',
-                name: 'depart',
+                name: 'parentName',
                 placeholder: '一级菜单',
-                treeData: []
+                urlParam: 'menu',
+                url: 'sys/menu/selectV2'
             },
             {
                 type: 'text',
                 label: '菜单URL',
-                name: 'memo',
+                name: 'url',
                 placeholder: '菜单URL',
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '授权标识',
-                name: 'memo',
+                name: 'perms',
                 placeholder: '多个用逗号分隔，如：user:list,user:create',
                 inputType: 'text'
             },
             {
                 type: 'num',
                 label: '排序号',
-                name: 'state',
+                name: 'orderNum',
                 placeholder: '排序号'
             },
             {
                 type: 'text',
                 label: '图标',
-                name: 'memo',
+                name: 'icon',
                 placeholder: '菜单图标',
                 inputType: 'text'
             },
@@ -411,12 +431,12 @@ export default {
                         desc: '按钮'
                     }
                 ],
-                name: 'state'
+                name: 'type'
             },
             {
                 type: 'text',
                 label: '菜单名称',
-                name: 'departname',
+                name: 'name',
                 placeholder: '菜单名称或按钮名称',
                 rules: [{
                     required: true,
@@ -425,36 +445,37 @@ export default {
                 inputType: 'text'
             },
             {
-                type: 'tree',
+                type: 'treeSelect',
                 label: '上级菜单',
-                name: 'depart',
+                name: 'parentName',
                 placeholder: '一级菜单',
-                treeData: []
+                urlParam: 'menu',
+                url: 'sys/menu/selectV2'
             },
             {
                 type: 'text',
                 label: '菜单URL',
-                name: 'memo',
+                name: 'url',
                 placeholder: '菜单URL',
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '授权标识',
-                name: 'memo',
+                name: 'perms',
                 placeholder: '多个用逗号分隔，如：user:list,user:create',
                 inputType: 'text'
             },
             {
                 type: 'num',
                 label: '排序号',
-                name: 'state',
+                name: 'orderNum',
                 placeholder: '排序号'
             },
             {
                 type: 'text',
                 label: '图标',
-                name: 'memo',
+                name: 'icon',
                 placeholder: '菜单图标',
                 inputType: 'text'
             },

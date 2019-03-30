@@ -1,94 +1,112 @@
 export default {
-    planMenus: [{
+    // 酒店管理菜单
+    hotelMenus: [{
             name: '艺龙',
-            key: 'planMenus',
+            key: 'e-long',
             icon: 'user',
             children: [{
                 name: '艺龙酒店列表',
-                key: 'inlandRoute',
-                path: '/planMenus/inlandRoute'
+                key: 'e-longHotelList',
+                path: '/hotelMenus/e-longHotelList'
             }]
         },
         {
             name: '去哪儿',
-            key: 'tour-plan',
+            key: 'qunar',
             icon: 'laptop',
             children: [{
                 name: '去哪儿酒店列表',
-                key: 'inlandPlan',
-                path: '/planMenus/inlandPlan'
+                key: 'qunarHotelList',
+                path: '/hotelMenus/qunarHotelList'
             }]
         },
         {
             name: '订单模块',
-            key: 'tour-plan2',
+            key: 'order',
             icon: 'laptop',
             children: [{
                 name: '订单列表',
                 key: 'inlandPlan2',
-                path: '/planMenus/inlandPlan2'
+                path: '/hotelMenus/orderList'
             }]
         },
         {
             name: '携程',
-            key: 'tour-plan3',
+            key: 'ctrip',
             icon: 'laptop',
             children: [{
                     name: '携程下单',
-                    key: 'inlandPlan3',
-                    path: '/planMenus/ctripCreateOrder'
+                    key: 'ctripOrder',
+                    path: '/hotelMenus/ctripOrder'
                 },
                 {
                     name: '携程酒店列表',
-                    key: 'inlandPlan4',
-                    path: '/planMenus/inlandPlan4'
+                    key: 'ctripList',
+                    path: '/hotelMenus/ctripList'
                 }
             ]
         },
         {
             name: '去呼呼',
-            key: 'tour-plan4',
+            key: 'quhuhu',
             icon: 'laptop',
             children: [{
                     name: '去呼呼酒店列表',
-                    key: 'inlandPlan5',
-                    path: '/planMenus/inlandPlan5'
+                    key: 'quhuhuList',
+                    path: '/hotelMenus/quhuhuList'
                 },
                 {
                     name: '去呼呼订单列表',
-                    key: 'inlandPlan6',
-                    path: '/planMenus/inlandPlan6'
+                    key: 'quhuhuOrderList',
+                    path: '/hotelMenus/quhuhuOrderList'
                 }
             ]
         },
         {
             name: '美团',
-            key: 'tour-plan5',
+            key: 'meituan',
             icon: 'laptop',
             children: [{
                     name: '美团酒店列表',
-                    key: 'inlandPlan7',
-                    path: '/planMenus/inlandPlan7'
+                    key: 'meituanList',
+                    path: '/hotelMenus/meituanList'
                 },
                 {
                     name: '美团订单列表',
-                    key: 'inlandPlan8',
-                    path: '/planMenus/inlandPlan8'
+                    key: 'meituanOrderList',
+                    path: '/hotelMenus/meituanOrderList'
                 }
             ]
         },
         {
+            name: '分销策略管理',
+            key: 'PriceManager',
+            icon: 'laptop',
+            children: [{
+                    name: '飞猪-御道店-加价策略管理',
+                    key: 'feizhuPriceManager',
+                    path: '/hotelMenus/feizhuPriceManager'
+                },
+            ]
+        },
+        {
             name: '分销监控中心',
-            key: 'tour-plan6',
+            key: 'priceMonitorCenter',
             icon: 'laptop',
             children: [{
                     name: '飞猪-御道店',
-                    key: 'inlandPlan9',
-                    path: '/planMenus/inlandPlan9'
+                    key: 'priceMonitor',
+                    path: '/hotelMenus/priceMonitor'
+                },
+                {
+                    name: '数据收集',
+                    key: 'dataAcquisition',
+                    path: '/hotelMenus/dataAcquisition'
                 },
             ]
         }
     ],
+    // 公司内部管理菜单
     companyMenus: [{
         name: '系统管理',
         key: 'companyMenus',
@@ -112,6 +130,11 @@ export default {
                 name: '菜单管理',
                 key: 'menuManage',
                 path: '/companyMenus/menuManage'
+            },
+            {
+                name: 'SQL监控',
+                key: 'sql',
+                path: '/companyMenus/sqlMonitor'
             },
             {
                 name: '定时任务',

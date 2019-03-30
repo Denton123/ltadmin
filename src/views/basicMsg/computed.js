@@ -35,6 +35,9 @@ export default {
         },
         url() {
             return this.models[this.modelIndex].url
+        },
+        tag() {
+            return this.models[this.modelIndex].tag
         }
     },
 }

@@ -33,14 +33,18 @@ import { setTimeout } from 'timers';
             />
           </a-form-item>
           <!-- tree选择 -->
-          <a-form-item v-if="editItem.type=='tree'" :label="editItem.label" v-bind="formItemLayout">
+          <a-form-item
+            v-if="editItem.type=='treeSelect'"
+            :label="editItem.label"
+            v-bind="formItemLayout"
+          >
             <a-tree-select
               :placeholder="editItem.placeholder"
               style="width: 300px"
               v-decorator="[`${editItem.name}`]"
               :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
               allowClear
-              :treeData="editItem.treeData"
+              :treeData="treeSelectData"
             />
           </a-form-item>
           <!-- 多选框 -->
@@ -65,6 +69,35 @@ import { setTimeout } from 'timers';
           <a-form-item v-if="editItem.type=='num'" :label="editItem.label" v-bind="formItemLayout">
             <a-input-number v-decorator="[`${editItem.name}`]" :min="1"/>
           </a-form-item>
+          <!-- 树形控件 -->
+          <a-form-item
+            v-if="editItem.type=='tree' && editItem.belong == 'menu'"
+            :label="editItem.label"
+            v-bind="formItemLayout"
+          >
+            <a-tree
+              showLine
+              checkable
+              autoExpandParent
+              :treeData="menuTreeData"
+              v-model="MenucheckedKeys"
+              v-decorator="[`${editItem.name}`, {initialValue: MenucheckedKeys}]"
+            ></a-tree>
+          </a-form-item>
+          <a-form-item
+            v-if="editItem.type=='tree' && editItem.belong == 'dept'"
+            :label="editItem.label"
+            v-bind="formItemLayout"
+          >
+            <a-tree
+              showLine
+              checkable
+              autoExpandParent
+              :treeData="deptTreeData"
+              v-model="DeptcheckedKeys"
+              v-decorator="[`${editItem.name}`, {initialValue: DeptcheckedKeys}]"
+            ></a-tree>
+          </a-form-item>
         </template>
       </a-form>
     </a-modal>
@@ -86,7 +119,12 @@ export default {
           sm: { span: 16 }
         }
       },
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      treeSelectData: [],
+      menuTreeData: [],
+      deptTreeData: [],
+      MenucheckedKeys: [],
+      DeptcheckedKeys: []
     };
   },
   props: {
@@ -132,7 +170,41 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.$emit('submitEdit', values)
+          console.log(values)
+          this.$emit("submitEdit", values);
+        }
+      });
+    },
+    // 获取树数据
+    getTreeSelectData() {
+      let url, urlParam
+      this.editComponent &&
+        this.editComponent.forEach(item => {
+          if (item.url) {
+            url = item.url
+            urlParam = item.urlParam
+          } else if (item.urlParam){
+            urlParam = item.urlParam
+            url = `sys/${item.urlParam}/select/v2`
+          }
+        });
+      this.$dataGet(this, url).then(res => {
+        if (res.data.code == 200) {
+          this.treeSelectData = this.$setTreeData(res.data.data, `${urlParam}Id`, true);
+          console.log(this.treeSelectData)
+        }
+      });
+    },
+    // 获取树控件数据
+    getTreeData() {
+      this.$dataGet(this, `sys/menu/listV2`).then(res => {
+        if (res.data.code == 200) {
+          this.menuTreeData = this.$setTreeData(res.data.data, "menuId", false);
+        }
+      });
+      this.$dataGet(this, `sys/dept/list/v2`).then(res => {
+        if (res.data.code == 200) {
+          this.deptTreeData = this.$setTreeData(res.data.data, "deptId", false);
         }
       });
     }
@@ -141,23 +213,40 @@ export default {
     monitorTwoProperty(val) {
       let fieldsObj = {};
       const { fields, editComponent } = val;
-      // console.log(fields);
-      // console.log(editComponent);
       this.form = this.$form.createForm(this, {
         mapPropsToFields: () => {
           let fieldsObj = {};
+          for (let i in fields) {
+            // fields值不为数字类型
+            if (typeof fields[i] == "number") {
+              fields[i] = `${fields[i]}`;
+            } else if (fields[i] == null) {
+              fields[i] = "";
+            }
+          }
           editComponent.forEach(v => {
             fieldsObj[v.name] = this.$form.createFormField({
               value: fields[v.name]
             });
           });
-          // console.log(fieldsObj, "-------------");
+          // console.log(this.fields);
+          // this.MenucheckedKeys = fields['menuIdList']
+          // this.DeptcheckedKeys = fields['deptIdList']
           return fieldsObj;
         }
       });
+    },
+    MenucheckedKeys(val) {
+      console.log("onCheck", val);
+    },
+    DeptcheckedKeys(val) {
+      console.log("onCheck", val);
     }
   },
-  mounted() {}
+  mounted() {
+    this.getTreeSelectData();
+    this.getTreeData();
+  }
 };
 </script>
 

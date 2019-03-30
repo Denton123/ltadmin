@@ -19,10 +19,9 @@ export default new Vuex.Store({
       commit
     }) {
       Axios.get('/api/sys/user/infoV2').then(res => {
-        // console.log(res)
         if (res.data.code == 200) {
           commit('changeUser', res.data.data)
-          localStorage.user = JSON.stringify(res.data.data || {})
+          // localStorage.user = JSON.stringify(res.data.data || {})
         }
       }).catch(err => {
         commit('changeUser', {})
