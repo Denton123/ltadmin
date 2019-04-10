@@ -3,6 +3,8 @@ module.exports = {
   publicPath: '/',
   // 生产构建文件目录
   outputDir: 'dist',
+  // 去除eslint
+  lintOnSave: false,
   // css配置
   css: {
     // 是否将组件中的css提取至一个独立的css文件中，默认为true
@@ -28,10 +30,10 @@ module.exports = {
     },
     disableHostCheck: true,
     // 让浏览器overlay时显示警告和错误
-    // overlay: {
-    //   warnings: true,
-    //   errors: true
-    // }
+    overlay: {
+      warnings: true,
+      errors: true
+    }
   },
   productionSourceMap: false,
   // chainWebpack: config => {

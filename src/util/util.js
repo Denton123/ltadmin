@@ -18,7 +18,7 @@ export default {
             let parentIdArr = []
             data.filter((item, idx) => {
                 item.children = []
-                data.filter((subitem, subidx) => {
+                data.filter((subitem) => {
                     parentIdArr.push(subitem[`${rowId}`])
                     if (item[`${rowId}`] === subitem['parentId']) {
                         item.children.push(subitem)

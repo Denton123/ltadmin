@@ -24,12 +24,15 @@ export default new Vuex.Store({
           // localStorage.user = JSON.stringify(res.data.data || {})
         }
       }).catch(err => {
-        commit('changeUser', {})
+        if (err) {
+          commit('changeUser', {})
         if (router.currentRoute.matched.some(record => record.meta.requireAuth)) {
           router.push({
             path: '/login',
           })
         }
+        }
+        
       })
     }
   }

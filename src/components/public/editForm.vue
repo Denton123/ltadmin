@@ -19,6 +19,7 @@ import { setTimeout } from 'timers';
     >
       <a-form :form="form" @submit="handleEdit">
         <template v-for="editItem in editComponent">
+          <!-- 文本框 -->
           <a-form-item
             :label="editItem.label"
             v-bind="formItemLayout"
@@ -27,7 +28,7 @@ import { setTimeout } from 'timers';
           >
             <a-input
               v-decorator="[
-            `${editItem.name}`
+            `${editItem.name}`, {rules: editItem.rules}
           ]"
               :placeholder="editItem.placeholder"
             />
@@ -41,7 +42,7 @@ import { setTimeout } from 'timers';
             <a-tree-select
               :placeholder="editItem.placeholder"
               style="width: 300px"
-              v-decorator="[`${editItem.name}`]"
+              v-decorator="[`${editItem.name}`, {rules: editItem.rules}]"
               :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
               allowClear
               :treeData="treeSelectData"
@@ -53,7 +54,13 @@ import { setTimeout } from 'timers';
             :label="editItem.label"
             v-bind="formItemLayout"
           >
-            <a-checkbox v-decorator="[`${editItem.name}`]">{{editItem.desc}}</a-checkbox>
+            <a-checkbox-group v-decorator="[`${editItem.name}`, {rules: editItem.rules}]">
+              <a-checkbox
+                v-for="checkbox in editItem.checkboxComponents"
+                :value="checkbox.value"
+                :key="checkbox.desc"
+              >{{checkbox.desc}}</a-checkbox>
+            </a-checkbox-group>
           </a-form-item>
           <!-- 单选框 -->
           <a-form-item
@@ -61,13 +68,13 @@ import { setTimeout } from 'timers';
             :label="editItem.label"
             v-bind="formItemLayout"
           >
-            <a-radio-group v-decorator="[`${editItem.name}`]">
-              <a-radio :value="radio.value" v-for="radio in editItem.radioComponents">{{radio.desc}}</a-radio>
+            <a-radio-group v-decorator="[`${editItem.name}`, {rules: editItem.rules}]">
+              <a-radio :value="radio.value" v-for="radio in editItem.radioComponents" :key="radio.desc">{{radio.desc}}</a-radio>
             </a-radio-group>
           </a-form-item>
           <!-- 数字输入框 -->
           <a-form-item v-if="editItem.type=='num'" :label="editItem.label" v-bind="formItemLayout">
-            <a-input-number v-decorator="[`${editItem.name}`]" :min="1"/>
+            <a-input-number v-decorator="[`${editItem.name}`, {rules: editItem.rules}]" :min="1"/>
           </a-form-item>
           <!-- 树形控件 -->
           <a-form-item
@@ -80,7 +87,6 @@ import { setTimeout } from 'timers';
               checkable
               autoExpandParent
               :treeData="menuTreeData"
-              v-model="MenucheckedKeys"
               v-decorator="[`${editItem.name}`, {initialValue: MenucheckedKeys}]"
             ></a-tree>
           </a-form-item>
@@ -94,7 +100,6 @@ import { setTimeout } from 'timers';
               checkable
               autoExpandParent
               :treeData="deptTreeData"
-              v-model="DeptcheckedKeys"
               v-decorator="[`${editItem.name}`, {initialValue: DeptcheckedKeys}]"
             ></a-tree>
           </a-form-item>
@@ -229,7 +234,7 @@ export default {
               value: fields[v.name]
             });
           });
-          // console.log(this.fields);
+          console.log(this.fields);
           // this.MenucheckedKeys = fields['menuIdList']
           // this.DeptcheckedKeys = fields['deptIdList']
           return fieldsObj;

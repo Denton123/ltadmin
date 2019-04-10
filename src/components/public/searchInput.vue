@@ -1,4 +1,5 @@
 /**
+import func from './vue-temp/vue-editor-bridge';
  * 
  * 管理系统的搜索模块
  * @author 舒丹彤 
@@ -8,7 +9,7 @@
 
  <template>
   <div class="inlineBlock">
-    <a-input :placeholder="searchInput.placeholder" v-model="searchItem" class="searchInput"/>
+    <a-input :placeholder="searchInput.placeholder" v-model="searchItem" class="searchInput" @pressEnter="onSearch"/>
     <a-button type="primary" @click="handleSearch">查询</a-button>
   </div>
 </template>
@@ -29,10 +30,16 @@ export default {
   },
   methods: {
     handleSearch() {
-      if (this.searchItem !== "") {
-        this.$emit("handleSearch", this.searchItem);
-      } else {
-        this.$message.warning("查询内容不为空");
+      this.$emit("handleSearch", this.searchItem);
+    },
+    onSearch() {
+      this.$emit("handleSearch", this.searchItem)
+    }
+  },
+  watch: {
+    $route: {
+      handler: function() {
+        this.searchItem = ''
       }
     }
   }

@@ -3,6 +3,8 @@ export default {
     'e-longHotelList': [{
         key: 'e-longHotelList',
         tab: '艺龙酒店列表',
+        detail: 'e-longHotelListDetail',
+        hotelMatch: 'e-longHotelMatch',
         theads: ['艺龙酒店id', '酒店名称', '城市', '地址电话', '产品最低价', '可用状态', '销售状态', '同步状态', '酒店匹配', '房型匹配', '操作'],
         props: ['hotelId', 'name', 'city', 'address', 'lowPrice', 'hotelListStatusChn', 'hotelDetailStatusChn', 'syncStatusChn', 'matchStatusChn', 'roomMatchChn', 'action'],
         SearchComponent: [{
@@ -32,7 +34,7 @@ export default {
             {
                 type: 'select',
                 label: '同步状态',
-                name: 'state',
+                name: 'syncStatus',
                 defaultValue: '全部',
                 options: [{
                         value: '全部'
@@ -48,7 +50,7 @@ export default {
             {
                 type: 'select',
                 label: '酒店匹配状态',
-                name: 'state',
+                name: 'hotelListStatus',
                 defaultValue: '全部',
                 options: [{
                         value: '全部'
@@ -64,7 +66,7 @@ export default {
             {
                 type: 'select',
                 label: '酒店可用状态',
-                name: 'state',
+                name: 'hotelStatus',
                 defaultValue: '全部',
                 options: [{
                         value: '全部'
@@ -80,7 +82,7 @@ export default {
             {
                 type: 'select',
                 label: '房型匹配状态',
-                name: 'state',
+                name: 'roomMatchStatus',
                 defaultValue: '全部',
                 options: [{
                         value: '全部'
@@ -99,7 +101,7 @@ export default {
             {
                 type: 'select',
                 label: '酒店销售状态',
-                name: 'state',
+                name: 'hotelStatus',
                 defaultValue: '全部',
                 options: [{
                         value: '全部'

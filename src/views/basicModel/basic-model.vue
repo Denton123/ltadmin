@@ -8,18 +8,13 @@
 
  <template>
   <div class="basic_model">
-    <!-- <a-breadcrumb class="index_breadcrumb" separator=">">
-      <a-breadcrumb-item>
-        <a-icon type="home" class="mrR10"/>首页
-      </a-breadcrumb-item>
-      <a-breadcrumb-item>{{breadcrumb}}</a-breadcrumb-item>
-    </a-breadcrumb> -->
     <div class="basic_model_content">
       <!-- 管理系统操作按钮 -->
       <div class="search_input">
         <searchInput :searchInput="searchInput" @handleSearch="handleSearch" v-if="searchInput"/>
         <component
-          v-for="typeOperate in typeComponent"
+        :key="index"
+          v-for="(typeOperate,index) in typeComponent"
           :is="typeOperate.components"
           class="mrL10 mrB10"
           :params="typeOperate.params"
@@ -44,16 +39,25 @@
         :columns="columns"
         :dataSource="tableData"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :pagination="pagination"
+        @change="handleTableChange"
+        :loading="loading"
       >
-        <template v-for="tablecomponent in tableOperate" class="tableOperate">
+        <template class="tableOperate" slot="action" slot-scope="text, record">
           <a-button
-            slot="action"
+            v-for="tablecomponent in tableOperate"
             type="primary"
             :key="tablecomponent.title"
-            @click="handleTableOperate(tablecomponent.title)"
+            class="block mrB10"
+            @click="handleTableOperate(tablecomponent.title, record.key)"
           >{{tablecomponent.title}}</a-button>
         </template>
-        <span slot="tags" slot-scope="type" v-if="type!==undefined">
+        <span slot-scope="status" slot="status">
+          <a-tag
+            :color="status == '0' ? (tag == 'user' ? 'red' : 'green') : (tag == 'user' ? 'green' : 'red')"
+          >{{status == '0' ? (tag == 'user' ? '禁用' : '正常') : (tag == 'user' ? '正常' : '暂停')}}</a-tag>
+        </span>
+        <span slot-scope="type" slot="type">
           <a-tag
             :color="type == 0 ? 'blue' : (type == 1 ? 'green' : 'red')"
           >{{type == 0 ? '目录' : (type == 1 ? '菜单' : '按钮')}}</a-tag>
@@ -79,7 +83,6 @@
         @submitEdit="submitEdit"
       />
     </div>
-    <a-button type="primary" @click="open">按钮</a-button></router-link>
   </div>
 </template>
 
@@ -90,7 +93,6 @@ import searchResult from "@/components/public/searchResult";
 import searchInput from "@/components/public/searchInput";
 import newForm from "@/components/public/newForm";
 import editForm from "@/components/public/editForm";
-import { constants } from "fs";
 
 export default {
   name: "BasicModel",
@@ -98,7 +100,6 @@ export default {
     return {
       modelIndex: 0,
       activeName: "index0",
-      loading: false,
       columns: [],
       tableData: [
         {
@@ -106,7 +107,7 @@ export default {
           name: "John Brown",
           age: 32,
           address: "New York No. 1 Lake Park",
-          tags: ["nice", "developer"]
+          lowPrice: 23
         }
       ],
       searchData: {
@@ -123,7 +124,11 @@ export default {
       // 表格选中的行的数据
       selectedRows: {},
       test: [],
-      selectedRowKey: []
+      selectedRowKey: [],
+      // 表格分页
+      pagination: {},
+      // 表格渲染loading
+      loading: false
     };
   },
   props: {
@@ -144,7 +149,11 @@ export default {
             newComponent: [],
             editComponent: [],
             tag: "",
-            url: ""
+            url: "",
+            // 详情页指标
+            detail: "",
+            // 酒店匹配指标
+            hotelMatch: ''
           }
         ];
       }
@@ -160,61 +169,102 @@ export default {
           title: v
         });
       });
+      let tagsArr = ["type", "status"];
       for (let i in this.props) {
         this.columns[i].dataIndex = this.props[i];
         if (this.props[i] == "action") {
           this.columns[i].scopedSlots = { customRender: "action" };
-        } else if (this.props[i] == "type") {
-          this.columns[i].scopedSlots = { customRender: "tags" };
+        } else if (
+          this.$route.params.model !== "dictionaryManage" &&
+          tagsArr.indexOf(this.props[i]) !== -1
+        ) {
+          this.columns[i].scopedSlots = { customRender: `${this.props[i]}` };
         }
       }
-      // console.log(this.columns);
     },
     // 表格操作按钮
-    handleTableOperate(title) {
+    handleTableOperate(title, key) {
+      if (title === "酒店详情") {
+        this.$router.push(`/hotelMenus/detail/${this.detail}/${key}`);
+      } else if (title === '酒店匹配') {
+        this.$router.push(`/hotelMenus/hotelMatch/${this.hotelMatch}/${key}`)
+      }
     },
     // 查询
     handleSearch(item) {
-      this.getListData({ roleName: item });
+      let searchParams = {};
+      searchParams[`${this.searchInput.searchName}`] = `${item}`;
+      this.getListData({ ...searchParams });
     },
     // 处理表格选中id
     handleSelectedKeys() {
-      if (this.selectedRowKey.length > 1) {
+      if (this.selectedRowKeys.length > 1) {
         this.$message.warning("只能选择一条记录");
-      } else if (this.selectedRowKey.length == 0) {
+      } else if (this.selectedRowKeys.length == 0) {
         this.$message.warning("请选择一条记录");
       }
     },
     // 新增
     handleNew() {
       this.newFormVisible = true;
-      // console.log(this.selectedRowKeys);
-      // this.handleSelectedKeys();
     },
     // 编辑
     handleEdit() {
-      if (this.selectedRowKey.length == 0 || this.selectedRowKey.length > 1) {
+      this.handleSelectedKeys();
+      if (this.selectedRowKeys.length == 0 || this.selectedRowKeys.length > 1) {
         this.editFormVisible = false;
       } else {
         this.editFormVisible = true;
-      }
-      this.handleSelectedKeys();
-      this.$nextTick(() => {
-        this.$dataGet(
-          this,
-          `/sys/${this.tag}/info/v2/${this.selectedRows[`${this.tag}Id`]}`
-        ).then(res => {
-          if (res.data.code == 200) {
-            this.fields = res.data.data;
+        this.$nextTick(() => {
+          let url,
+            ajaxType,
+            urlArr = [
+              "menu",
+              "schedule",
+              "dict",
+              "config",
+              "user",
+              "scheduleLog"
+            ],
+            urlParams;
+          if (urlArr.indexOf(this.tag) !== -1) {
+            ajaxType = "$dataPost";
+            if (this.tag == "dict" || this.tag == "config") {
+              url = `sys/${this.tag}/infoV2?id=${this.selectedRows[`id`]}`;
+            } else if (this.tag == "user") {
+              url = `sys/${this.tag}/findInfoV2?${this.tag}Id=${
+                this.selectedRows[`${this.tag}Id`]
+              }`;
+            } else {
+              urlParams =
+                this.tag == "menu"
+                  ? "menu"
+                  : this.tag == "scheduleLog"
+                  ? "log"
+                  : "job";
+              url = `sys/${this.tag}/infoV2?${urlParams}Id=${
+                this.selectedRows[`${urlParams}Id`]
+              }`;
+            }
+          } else {
+            url = `/sys/${this.tag}/info/v2/${
+              this.selectedRows[`${this.tag}Id`]
+            }`;
+            ajaxType = "$dataGet";
           }
+          this[ajaxType](this, url).then(res => {
+            if (res.data.code == 200) {
+              this.fields = res.data.data;
+            }
+          });
         });
-      });
+      }
     },
     // 删除
     handleDelete() {
       this.handleSelectedKeys();
       let that = this;
-      if (this.selectedRowKey.length == 1) {
+      if (this.selectedRowKeys.length == 1) {
         this.$confirm({
           title: "信息",
           content: "确定要删除记录吗？",
@@ -223,30 +273,48 @@ export default {
           cancelText: "取消",
           onOk() {
             let params = {};
-            let paramsKey;
-            if (that.tag === "role") {
-              paramsKey = `${that.tag}Ids`;
-              params[`${paramsKey}`] = [that.selectedRows[`${that.tag}Id`]];
-              that
-                .$dataPost(that, `sys/${that.tag}/delete/v2`, params)
-                .then(res => {
-                  if (res.data.code == 200) {
-                    that.$message.success("删除成功");
-                    that.getListData();
-                  }
-                });
+            let paramsKey, url, flag;
+            let urlArr = ["role", "schedule", "config", "user"];
+            if (urlArr.indexOf(that.tag) !== -1) {
+              if (that.tag == "schedule") {
+                flag = "job";
+                url = `/sys/${that.tag}/deleteV2`;
+              } else if (that.tag == "user") {
+                flag = that.tag;
+                url = `/sys/${that.tag}/deleteV2`;
+              } else {
+                flag = that.tag;
+                url = `sys/${that.tag}/delete/v2`;
+              }
+              paramsKey = `${flag}Ids`;
+              params[`${paramsKey}`] = [that.selectedRows[`${flag}Id`]];
+              that.$dataPost(that, url, params).then(res => {
+                if (res.data.code == 200) {
+                  that.$message.success("删除成功");
+                  that.getListData();
+                  that.selectedRowKeys = [];
+                }
+              });
             } else {
+              let url, ajaxType;
+              if (that.tag == "menu") {
+                url = `/sys/${that.tag}/deleteV2?${that.tag}Id=${
+                  that.selectedRows[`${that.tag}Id`]
+                }`;
+                ajaxType = "$dataPost";
+              } else {
+                url = `sys/${that.tag}/delete/v2`;
+                ajaxType = "$dataGet";
+              }
               paramsKey = `${that.tag}Id`;
-              that
-                .$dataGet(that, `sys/${that.tag}/delete/v2`, {
-                  deptId: that.selectedRows[`${that.tag}Id`]
-                })
-                .then(res => {
-                  if (res.data.code == 200) {
-                    that.$message.success("删除成功");
-                    that.getListData();
-                  }
-                });
+              params[`${paramsKey}`] = that.selectedRows[`${that.tag}Id`];
+              that[ajaxType](that, url, params).then(res => {
+                if (res.data.code == 200) {
+                  that.$message.success("删除成功");
+                  that.getListData();
+                  that.selectedRowKeys = [];
+                }
+              });
             }
           },
           onCancel() {
@@ -258,10 +326,38 @@ export default {
     // 暂停
     handlePause() {
       this.handleSelectedKeys();
+      if (this.selectedRowKeys.length == 1) {
+        let params = { jobIds: [`${this.selectedRows[`jobId`]}`] };
+        this.$dataPost(this, `sys/${this.tag}/pauseV2`, params).then(res => {
+          if (res.data.code == 200) {
+            this.$message.success("暂停成功");
+            this.getListData();
+            this.selectedRowKeys = [];
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        });
+      } else {
+        return;
+      }
     },
     // 恢复
     handleRenew() {
       this.handleSelectedKeys();
+      if (this.selectedRowKeys.length == 1) {
+        let params = { jobIds: [`${this.selectedRows[`jobId`]}`] };
+        this.$dataPost(this, `sys/${this.tag}/resumeV2`, params).then(res => {
+          if (res.data.code == 200) {
+            this.$message.success("恢复成功");
+            this.getListData();
+            this.selectedRowKeys = [];
+          } else {
+            this.$$message.error(res.data.msg);
+          }
+        });
+      } else {
+        return;
+      }
     },
     // 日志列表按钮
     handleShowLog() {
@@ -272,38 +368,90 @@ export default {
     // 云存储配置
     handleCloudConfig() {},
     // 立即执行
-    handleRunNow() {},
+    handleRunNow() {
+      this.handleSelectedKeys();
+      if (this.selectedRowKeys.length == 1) {
+        let params = { jobIds: [`${this.selectedRows[`jobId`]}`] };
+        this.$dataPost(this, `sys/${this.tag}/runV2`, params).then(res => {
+          if (res.data.code == 200) {
+            this.$message.success("执行成功");
+            this.getListData();
+            this.selectedRowKeys = [];
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        });
+      } else {
+        return;
+      }
+    },
     // 关闭新增表单
     closeNewForm() {
       this.newFormVisible = false;
+      this.selectedRowKeys = [];
     },
     // 关闭编辑表单
     closeEditForm() {
       this.editFormVisible = false;
+      this.selectedRowKeys = [];
     },
     // 获取表格列表数据
     getListData(params = {}) {
-      if (this.tag == "role") {
-        let searchParams = { ...params, limit: 10, page: 1 };
-        this.$dataPost(
-          this,
-          `sys/${this.tag}/list/v2`,
-          searchParams,
-          false
-        ).then(res => {
-          let resData = res.data.data.list;
-          resData.forEach((item, index) => {
-            item.key = index;
-          });
-          this.tableData = resData;
+      let tagArr = [
+        "role",
+        "schedule",
+        "config",
+        "dict",
+        "log",
+        "user",
+        "scheduleLog"
+      ];
+      if (tagArr.indexOf(this.tag) !== -1) {
+        let url;
+        url =
+          this.tag == "role"
+            ? `sys/${this.tag}/list/v2`
+            : `sys/${this.tag}/listV2`;
+        let searchParams = { ...params, limit: 10 };
+        // this.loading = true;
+        this.$dataPost(this, url, searchParams, false).then(res => {
+          if (res.data.code == 200) {
+            let resData;
+            let pager = { ...this.pagination };
+            if (this.tag == "role") {
+              resData = res.data.data.list;
+              pager.total = res.data.data.totalCount;
+              pager.current = res.data.data.currPage;
+              pager.pageSize = res.data.data.pageSize;
+              this.pagination = pager;
+            } else if (this.tag == "log") {
+              resData = res.data.page.list;
+              pager.total = res.data.page.totalCount;
+              pager.current = res.data.page.currPage;
+              pager.pageSize = res.data.page.pageSize;
+              this.pagination = pager;
+            } else {
+              resData = res.data.list;
+              pager.total = res.data.totalCount;
+              pager.current = res.data.currPage;
+              pager.pageSize = res.data.pageSize;
+              this.pagination = pager;
+            }
+            resData.forEach((item, index) => {
+              item.key = index;
+            });
+            this.tableData = resData;
+            // this.loading = false;
+          }
         });
       } else {
+        // this.loading = true;
         this.$dataGet(this, this.url).then(res => {
-          // console.log(res.data.data);
           if (res.data.code == 200) {
             let resData = res.data.data;
             let resetData = this.$setTreeData(resData, `${this.tag}Id`, true);
             this.tableData = resetData;
+            // this.loading = false;
           }
         });
       }
@@ -311,30 +459,49 @@ export default {
     // 提交编辑表单
     submitEdit(form) {
       form[`${this.tag}Id`] = this.selectedRows[`${this.tag}Id`];
-      this.$dataPost(this, `sys/${this.tag}/update/v2`, form, false).then(
-        res => {
-          if (res.data.code == 200) {
-            this.$message.success("编辑数据成功");
-            this.editFormVisible = false;
-            this.getListData();
-            console.log(this.test);
-            this.selectedRowKeys = [];
-          }
+      let urlArr = ["menu", "schedule", "config", "dict", "user"],
+        url;
+      if (urlArr.indexOf(this.tag) !== -1) {
+        url = `sys/${this.tag}/updateV2`;
+      } else {
+        url = `sys/${this.tag}/update/v2`;
+      }
+      if (this.tag == "schedule") {
+        form["jobId"] = this.selectedRows[`jobId`];
+        form["status"] = this.selectedRows["status"];
+      } else if (this.tag == "config" || this.tag == "dict") {
+        form["id"] = this.selectedRows[`id`];
+      }
+      this.$dataPost(this, url, form, false).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success("编辑数据成功");
+          this.editFormVisible = false;
+          this.getListData();
+          this.selectedRowKeys = [];
+        } else {
+          this.$message.error(res.data.msg);
         }
-      );
+      });
     },
     // 提交新增表单
     submitNew(form) {
-      this.$dataPost(this, `/sys/${this.tag}/save/v2`, form, false).then(
-        res => {
-          if (res.data.code == 200) {
-            this.$message.success("新增数据成功");
-            this.newFormVisible = false;
-            this.getListData();
-            this.selectedRowKeys = [];
-          }
+      let urlArr = ["menu", "schedule", "config", "dict", "user"];
+      let url;
+      if (urlArr.indexOf(this.tag) !== -1) {
+        url = `/sys/${this.tag}/saveV2`;
+      } else {
+        url = `/sys/${this.tag}/save/v2`;
+      }
+      this.$dataPost(this, url, form, false).then(res => {
+        if (res.data.code == 200) {
+          this.$message.success("新增数据成功");
+          this.newFormVisible = false;
+          this.getListData();
+          this.selectedRowKeys = [];
+        } else {
+          this.$message.warning(res.data.msg);
         }
-      );
+      });
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys;
@@ -345,7 +512,11 @@ export default {
       }
     },
     open() {
-      window.location.href="/api/druid/sql.html"
+      window.location.href = "/api/druid/sql.html";
+    },
+    // 点击分页
+    handleTableChange(pagination) {
+      this.getListData({ page: pagination.current });
     }
   },
   watch: {
@@ -353,6 +524,7 @@ export default {
       handler: function() {
         this.handleTabelColumns();
         // console.log(this.tableData);
+        this.pagination = {};
       },
       deep: true
     },

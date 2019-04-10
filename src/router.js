@@ -2,9 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-
-let isPc = true
-console.log(process.env.BASE_URL)
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -28,8 +25,20 @@ export default new Router({
         {
           path: ':lead/:model',
           name: 'Basic',
-          component: () => import( /* webpackChunkName: "Basic" */ '@/views/basicModel/basic.vue')
+          component: () => import( /* webpackChunkName: "Basic" */ '@/views/basicModel/basic-content.vue')
         },
+        // 酒店详情页
+        {
+          path: '/hotelMenus/detail/:model/:id',
+          name: 'Detail',
+          component: () => import( /* webpackChunkName: "Detail" */ '@/views/detailModel/detail-content.vue')
+        },
+        // 酒店匹配基础模块
+        {
+          path: '/hotelMenus/hotelMatch/:model/:id',
+          name: 'hotelMatch',
+          component: () => import( /* webpackChunkName: "hotelMatch" */ '@/views/hotelMatch/hotelMatch-content.vue')
+        }
       ],
       meta: {
         requireAuth: true

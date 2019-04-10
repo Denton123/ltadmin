@@ -11,16 +11,19 @@ import configBtn from '@/components/public/configBtn';
 import backBtn from '@/components/public/backBtn';
 
 import getAsyncData from '@/util/getDataFn'
+import validate from '@/util/validate'
 
 export default {
     adminManage: [{
         key: 'adminManage',
         url: 'dept',
+        tag: 'user',
         tab: '管理员管理',
         theads: ['用户ID', '用户名', '所属部门', '邮箱', '手机号', '状态', '创建时间 '],
-        props: ['date', 'name', 'address', 'email', 'phone', 'tags', 'time'],
+        props: ['userId', 'username', 'deptName', 'email', 'mobile', 'status', 'createTime'],
         searchInput: {
-            placeholder: '用户名'
+            placeholder: '用户名',
+            searchName: 'userName'
         },
         typeComponent: [{
             components: newBtn
@@ -36,16 +39,20 @@ export default {
                 placeholder: '登录账号',
                 rules: [{
                     required: true,
-                    message: 'Please input your note!'
+                    message: '请输入用户名!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'treeSelect',
                 label: '所属部门',
-                name: 'depart',
+                name: 'deptId',
                 placeholder: '所属部门',
-                treeData: []
+                urlParam: 'dept',
+                rules: [{
+                    required: true,
+                    message: '请选择所属部门!'
+                }],
             },
             {
                 type: 'text',
@@ -54,54 +61,55 @@ export default {
                 placeholder: '密码',
                 rules: [{
                     required: true,
-                    message: 'Please input your password!'
+                    message: '请输入密码!'
                 }],
                 inputType: 'password'
-            }, {
+            },
+            {
                 type: 'text',
                 label: '邮箱',
                 name: 'email',
                 placeholder: '邮箱',
                 rules: [{
                     type: 'email',
-                    message: 'The input is not valid E-mail!',
+                    message: '请输入正确邮箱!',
                 }, {
                     required: true,
-                    message: 'Please input your E-mail!',
+                    message: '请输入邮箱!',
                 }],
-                inputType: 'password'
+                inputType: 'text'
             }, {
                 type: 'text',
                 label: '手机号',
-                name: 'phone',
+                name: 'mobile',
                 placeholder: '手机号',
+                inputType: 'text',
                 rules: [{
-                    required: true,
-                    message: 'Please input your phone!',
-                }],
-                inputType: 'text'
+                    validator: validate.phone
+                }, {
+                    required: true
+                }]
             },
             {
                 type: 'checkbox',
                 label: '角色',
-                name: 'role',
-                desc: '运营',
-                rules: [{
-                    required: true,
-                    message: 'Please input your phone!',
-                }],
+                name: 'roleIdList',
+                checkboxComponents: [{
+                    value: 1,
+                    desc: '运营'
+                }]
             },
             {
                 type: 'radio',
                 label: '状态',
                 radioComponents: [{
-                    value: '禁用',
+                    value: '0',
                     desc: '禁用'
                 }, {
-                    value: '正常',
+                    value: '1',
                     desc: '正常'
                 }],
-                name: 'state'
+                name: 'status'
             }
         ],
         editComponent: [{
@@ -111,16 +119,20 @@ export default {
                 placeholder: '登录账号',
                 rules: [{
                     required: true,
-                    message: 'Please input your note!'
+                    message: '请输入用户名!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'treeSelect',
                 label: '所属部门',
-                name: 'depart',
+                name: 'deptId',
                 placeholder: '所属部门',
-                treeData: []
+                urlParam: 'dept',
+                rules: [{
+                    required: true,
+                    message: '请选择所属部门!'
+                }],
             },
             {
                 type: 'text',
@@ -129,7 +141,7 @@ export default {
                 placeholder: '密码',
                 rules: [{
                     required: true,
-                    message: 'Please input your password!'
+                    message: '请输入密码!'
                 }],
                 inputType: 'password'
             }, {
@@ -139,44 +151,39 @@ export default {
                 placeholder: '邮箱',
                 rules: [{
                     type: 'email',
-                    message: 'The input is not valid E-mail!',
+                    message: '请输入正确邮箱!',
                 }, {
                     required: true,
-                    message: 'Please input your E-mail!',
+                    message: '请输入邮箱!',
                 }],
                 inputType: 'password'
             }, {
                 type: 'text',
                 label: '手机号',
-                name: 'phone',
+                name: 'mobile',
                 placeholder: '手机号',
-                rules: [{
-                    required: true,
-                    message: 'Please input your phone!',
-                }],
-                inputType: 'text'
+                inputType: 'text',
             },
             {
                 type: 'checkbox',
                 label: '角色',
-                name: 'role',
-                desc: '运营',
-                rules: [{
-                    required: true,
-                    message: 'Please input your phone!',
-                }],
+                name: 'roleIdList',
+                checkboxComponents: [{
+                    value: 1,
+                    desc: '运营'
+                }]
             },
             {
                 type: 'radio',
                 label: '状态',
                 radioComponents: [{
-                    value: '禁用',
+                    value: '0',
                     desc: '禁用'
                 }, {
-                    value: '正常',
+                    value: '1',
                     desc: '正常'
                 }],
-                name: 'state'
+                name: 'status'
             }
         ],
     }],
@@ -199,10 +206,6 @@ export default {
                 label: '部门名称',
                 name: 'name',
                 placeholder: '部门名称',
-                rules: [{
-                    required: true,
-                    message: '请输入部门名称!'
-                }],
                 inputType: 'text'
             },
             {
@@ -216,7 +219,7 @@ export default {
                 type: 'num',
                 label: '排序号',
                 name: 'orderNum',
-                placeholder: '排序号'
+                placeholder: '排序号' 
             }
         ],
         editComponent: [{
@@ -224,9 +227,6 @@ export default {
                 label: '部门名称',
                 name: 'name',
                 placeholder: '部门名称',
-                rules: [{
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             },
             {
@@ -259,17 +259,14 @@ export default {
             components: deleteBtn
         }],
         searchInput: {
-            placeholder: '角色名称'
+            placeholder: '角色名称',
+            searchName: 'roleName'
         },
         newComponent: [{
                 type: 'text',
                 label: '角色名称',
                 name: 'roleName',
                 placeholder: '角色名称',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             },
             {
@@ -304,10 +301,6 @@ export default {
                 label: '角色名称',
                 name: 'roleName',
                 placeholder: '角色名称',
-                rules: [{
-                    required: true,
-                    message: '请输入部门名称!'
-                }],
                 inputType: 'text'
             },
             {
@@ -356,14 +349,14 @@ export default {
                 type: 'radio',
                 label: '类型',
                 radioComponents: [{
-                        value: '目录',
+                        value: '0',
                         desc: '目录'
                     }, {
-                        value: '菜单',
+                        value: '1',
                         desc: '菜单'
                     },
                     {
-                        value: '按钮',
+                        value: '2',
                         desc: '按钮'
                     }
                 ],
@@ -376,17 +369,21 @@ export default {
                 placeholder: '菜单名称或按钮名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入菜单名称!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'treeSelect',
                 label: '上级菜单',
-                name: 'parentName',
+                name: 'parentId',
                 placeholder: '一级菜单',
                 urlParam: 'menu',
-                url: 'sys/menu/selectV2'
+                url: 'sys/menu/selectV2',
+                rules: [{
+                    required: true,
+                    message: '请选择上级菜单!'
+                }],
             },
             {
                 type: 'text',
@@ -420,14 +417,14 @@ export default {
                 type: 'radio',
                 label: '类型',
                 radioComponents: [{
-                        value: '目录',
+                        value: '0',
                         desc: '目录'
                     }, {
-                        value: '菜单',
+                        value: '1',
                         desc: '菜单'
                     },
                     {
-                        value: '按钮',
+                        value: '2',
                         desc: '按钮'
                     }
                 ],
@@ -440,17 +437,21 @@ export default {
                 placeholder: '菜单名称或按钮名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入菜单名称!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'treeSelect',
                 label: '上级菜单',
-                name: 'parentName',
+                name: 'parentId',
                 placeholder: '一级菜单',
                 urlParam: 'menu',
-                url: 'sys/menu/selectV2'
+                url: 'sys/menu/selectV2',
+                rules: [{
+                    required: true,
+                    message: '请选择上级菜单!'
+                }],
             },
             {
                 type: 'text',
@@ -482,10 +483,11 @@ export default {
         ],
     }],
     taskManage: [{
+        tag: 'schedule',
         key: 'taskManage',
         tab: '定时任务',
         theads: ['任务ID', 'bean名称', '方法名称', '参数', 'cron表达式', '备注', '状态'],
-        props: ['date', 'name', 'address'],
+        props: ['jobId', 'beanName', 'methodName', 'params', 'cronExpression', 'remark', 'status'],
         typeComponent: [{
             components: newBtn
         }, {
@@ -502,52 +504,55 @@ export default {
             components: logListBtn
         }],
         searchInput: {
-            placeholder: 'bean名称'
+            placeholder: 'bean名称',
+            searchName: 'beanName'
         },
         newComponent: [{
                 type: 'text',
                 label: 'bean名称',
-                name: 'departname',
+                name: 'beanName',
                 placeholder: 'bean名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入bean名称!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '方法名称',
-                name: 'departname',
-                placeholder: 'bea方法名称n名称',
+                name: 'methodName',
+                placeholder: '方法名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入方法名称!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '参数',
-                name: 'departname',
+                name: 'params',
                 placeholder: '参数',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: 'cron表达式',
-                name: 'memo',
+                name: 'cronExpression',
                 placeholder: 'cron表达式',
-                inputType: 'text'
+                inputType: 'text',
+                rules: [{
+                    required: true,
+                    message: '请输入cron表达式!'
+                },{
+                    validator: validate.cron
+                }],
             },
             {
                 type: 'text',
                 label: '备注',
-                name: 'memo',
+                name: 'remark',
                 placeholder: '备注',
                 inputType: 'text'
             },
@@ -555,69 +560,190 @@ export default {
         editComponent: [{
                 type: 'text',
                 label: 'bean名称',
-                name: 'departname',
+                name: 'beanName',
                 placeholder: 'bean名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入bean名称'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '方法名称',
-                name: 'departname',
-                placeholder: 'bea方法名称n名称',
+                name: 'methodName',
+                placeholder: '方法名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入方法名称!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '参数',
-                name: 'departname',
+                name: 'params',
                 placeholder: '参数',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: 'cron表达式',
-                name: 'memo',
+                name: 'cronExpression',
                 placeholder: 'cron表达式',
-                inputType: 'text'
+                inputType: 'text',
+                rules: [{
+                    required: true,
+                    message: '请输入cron表达式!'
+                }],
             },
             {
                 type: 'text',
                 label: '备注',
-                name: 'memo',
+                name: 'remark',
                 placeholder: '备注',
                 inputType: 'text'
             },
         ],
     }],
     logList: [{
-        key: 'logList',
-        tab: '定时任务',
-        theads: ['日志ID', '任务ID', 'bean名称', '方法名称', '参数', '状态', '耗时(单位：毫秒)', '执行时间'],
-        props: ['date', 'name', 'address'],
+        key: 'log List',
+        tab: '日志列表',
+        tag: 'scheduleLog',
+        theads: ['日志Id', '任务Id', 'bean名称', '错误', '方法名称', '执行时长(毫秒)', '参数', '状态', '创建时间'],
+        props: ['logId', 'jobId', 'beanName', 'error', 'methodName', 'times', 'params', 'status', 'createTime'],
         searchInput: {
-            placeholder: '任务ID'
+            placeholder: '任务Id',
+            searchName: 'jobId'
         },
         typeComponent: [{
-            components: backBtn
+            components: newBtn
+        }, {
+            components: editBtn
         }],
+        newComponent: [{
+                type: 'text',
+                label: '日志Id',
+                name: 'logId',
+                placeholder: '日志Id',
+                rules: [{
+                    required: true,
+                    message: '请输入日志Id!'
+                }],
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '任务Id',
+                name: 'jobId',
+                placeholder: '任务Id',
+                rules: [{
+                    required: true,
+                    message: '请输入任务Id!'
+                }],
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '错误',
+                name: 'error',
+                placeholder: '错误',
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '方法名称',
+                name: 'methodName',
+                placeholder: '方法名称',
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '执行时长(毫秒)',
+                name: 'times',
+                placeholder: '执行时长(毫秒)',
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '参数',
+                name: 'params',
+                placeholder: '参数',
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '状态',
+                name: 'status',
+                placeholder: '状态',
+                inputType: 'text'
+            },
+        ],
+        editComponent: [{
+                type: 'text',
+                label: '日志Id',
+                name: 'logId',
+                placeholder: '日志Id',
+                rules: [{
+                    required: true,
+                    message: '请输入日志Id!'
+                }],
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '任务Id',
+                name: 'jobId',
+                placeholder: '任务Id',
+                rules: [{
+                    required: true,
+                    message: '请输入任务Id!'
+                }],
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '错误',
+                name: 'error',
+                placeholder: '错误',
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '方法名称',
+                name: 'methodName',
+                placeholder: '方法名称',
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '执行时长(毫秒)',
+                name: 'times',
+                placeholder: '执行时长(毫秒)',
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '参数',
+                name: 'params',
+                placeholder: '参数',
+                inputType: 'text'
+            },
+            {
+                type: 'text',
+                label: '状态',
+                name: 'status',
+                placeholder: '状态',
+                inputType: 'text'
+            },
+        ],
     }],
     paramsManage: [{
         key: 'paramsManage',
         tab: '参数管理',
+        tag: 'config',
         theads: ['ID', '参数名', '参数值', '备注'],
-        props: ['date', 'name', 'address'],
+        props: ['id', 'key', 'value', 'remark'],
         typeComponent: [{
             components: newBtn
         }, {
@@ -626,73 +752,50 @@ export default {
             components: deleteBtn
         }],
         searchInput: {
-            placeholder: '参数名'
+            placeholder: '参数名',
+            searchName: 'key'
         },
         newComponent: [{
                 type: 'text',
                 label: '参数名',
-                name: 'departname',
+                name: 'key',
                 placeholder: '参数名',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '参数值',
-                name: 'departname',
+                name: 'value',
                 placeholder: '参数值',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '备注',
-                name: 'departname',
+                name: 'remark',
                 placeholder: '备注',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             }
         ],
         editComponent: [{
                 type: 'text',
                 label: '参数名',
-                name: 'departname',
+                name: 'key',
                 placeholder: '参数名',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '参数值',
-                name: 'departname',
+                name: 'value',
                 placeholder: '参数值',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '备注',
-                name: 'departname',
+                name: 'remark',
                 placeholder: '备注',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             }
         ],
@@ -713,14 +816,16 @@ export default {
             components: deleteBtn
         }],
         searchInput: {
-            placeholder: '参数名'
+            placeholder: '参数名',
+            searchName: 'name'
         },
     }],
     dictionaryManage: [{
         key: 'dictionaryManage',
         tab: '字典管理',
-        theads: ['字典名称', '字典类型', '字典码', '字典值', '排序', '备注'],
-        props: ['date', 'name', 'address'],
+        tag: 'dict',
+        theads: ['字典Id', '字典名称', '字典类型', '字典码', '字典值', '排序', '备注'],
+        props: ['id', 'name', 'type', 'code', 'value', 'orderNum', 'remark'],
         typeComponent: [{
             components: newBtn
         }, {
@@ -729,139 +834,122 @@ export default {
             components: deleteBtn
         }],
         searchInput: {
-            placeholder: '字典名称'
+            placeholder: '字典名称',
+            searchName: 'name'
         },
         newComponent: [{
                 type: 'text',
                 label: '字典名称',
-                name: 'departname',
+                name: 'name',
                 placeholder: '字典名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入字典名称!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '字典类型',
-                name: 'departname',
+                name: 'type',
                 placeholder: '字典类型',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入字典类型!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '字典码',
-                name: 'departname',
+                name: 'code',
                 placeholder: '字典码',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入字典码!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '字典值',
-                name: 'departname',
+                name: 'value',
                 placeholder: '字典值',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入字典值!'
                 }],
                 inputType: 'text'
             },
             {
-                type: 'text',
+                type: 'num',
                 label: '排序',
-                name: 'departname',
+                name: 'orderNum',
                 placeholder: '排序',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
-                inputType: 'text'
             },
             {
                 type: 'text',
                 label: '备注',
-                name: 'departname',
+                name: 'remark',
                 placeholder: '备注',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             }
         ],
         editComponent: [{
                 type: 'text',
                 label: '字典名称',
-                name: 'departname',
+                name: 'name',
                 placeholder: '字典名称',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入字典名称!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '字典类型',
-                name: 'departname',
+                name: 'type',
                 placeholder: '字典类型',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入字典类型!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '字典码',
-                name: 'departname',
+                name: 'code',
                 placeholder: '字典码',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入字典码!'
                 }],
                 inputType: 'text'
             },
             {
                 type: 'text',
                 label: '字典值',
-                name: 'departname',
+                name: 'value',
                 placeholder: '字典值',
                 rules: [{
                     required: true,
-                    message: 'Please input your 部门名称!'
+                    message: '请输入字典值!'
                 }],
                 inputType: 'text'
             },
             {
-                type: 'text',
+                type: 'num',
                 label: '排序',
-                name: 'departname',
+                name: 'orderNum',
                 placeholder: '排序',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
-                inputType: 'text'
             },
             {
                 type: 'text',
                 label: '备注',
-                name: 'departname',
+                name: 'remark',
                 placeholder: '备注',
-                rules: [{
-                    required: true,
-                    message: 'Please input your 部门名称!'
-                }],
                 inputType: 'text'
             }
         ],
@@ -869,10 +957,12 @@ export default {
     SystemLog: [{
         key: 'SystemLog',
         tab: '系统日志',
+        tag: 'log',
         theads: ['id', '用户名', '用户操作', '请求方法', '请求参数', '执行时长(毫秒)', 'IP地址', '创建时间'],
-        props: ['date', 'name', 'address'],
+        props: ['id', 'username', 'operation', 'method', 'params', 'time', 'ip', 'createDate'],
         searchInput: {
-            placeholder: '用户名、用户操作'
+            placeholder: '用户名、用户操作',
+            searchName: 'key'
         },
     }],
 }

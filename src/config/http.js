@@ -11,22 +11,25 @@ axios.interceptors.request.use(function(config){
     // 对请求错误做些什么
     return Promise.reject(error)
 })
-
-// 添加响应拦截器
-axios.interceptors.responce.use(response => {
-    // 对响应数据做点什么
-    if (response.data.code === 500) {
-        if (response.data.msg === '请先登录') {
-            router.push({
-                path: '/login',
-            })
-        }
-        return Promise.reject(response.data)
-    }
-    if (response.data.code === 200) {
-        return response
-    }
-}, error => {
-    // 对响应错误做点什么
-    return Promise.reject(error)
+axios.create({
+    baseURL: process.env.VUE_APP_BASE_API
 })
+// axios.defaults.baseURL = 'http://test.b.gdltu.com'
+// 添加响应拦截器
+// axios.interceptors.responce.use(response => {
+//     // 对响应数据做点什么
+//     if (response.data.code === 500) {
+//         if (response.data.msg === '请先登录') {
+//             router.push({
+//                 path: '/login',
+//             })
+//         }
+//         return Promise.reject(response.data)
+//     }
+//     if (response.data.code === 200) {
+//         return response
+//     }
+// }, error => {
+//     // 对响应错误做点什么
+//     return Promise.reject(error)
+// })

@@ -37,7 +37,7 @@ import { constants } from 'fs';
             <a-tree-select
               :placeholder="newItem.placeholder"
               style="width: 300px"
-              v-decorator="[`${newItem.name}`]"
+              v-decorator="[`${newItem.name}`, {rules: newItem.rules}]"
               :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
               allowClear
               :treeData="treeSelectData"
@@ -50,11 +50,17 @@ import { constants } from 'fs';
             :label="newItem.label"
             v-bind="formItemLayout"
           >
-            <a-checkbox v-decorator="[`${newItem.name}`]">{{newItem.desc}}</a-checkbox>
+            <a-checkbox-group v-decorator="[`${newItem.name}`, {rules: newItem.rules}]">
+              <a-checkbox
+                v-for="checkbox in newItem.checkboxComponents"
+                :value="checkbox.value"
+                :key="checkbox.desc"
+              >{{checkbox.desc}}</a-checkbox>
+            </a-checkbox-group>
           </a-form-item>
           <!-- 单选框 -->
           <a-form-item v-if="newItem.type=='radio'" :label="newItem.label" v-bind="formItemLayout">
-            <a-radio-group v-decorator="[`${newItem.name}`, {initialValue: MenucheckedKeys}]">
+            <a-radio-group v-decorator="[`${newItem.name}`, {rules: newItem.rules}]">
               <a-radio
                 :value="radio.value"
                 v-for="radio in newItem.radioComponents"
@@ -66,7 +72,7 @@ import { constants } from 'fs';
           <a-form-item v-if="newItem.type=='num'" :label="newItem.label" v-bind="formItemLayout">
             <a-input-number
               v-decorator="[`${newItem.name}`, {
-                  initialValue: 0}]"
+                  initialValue: 0, rules: newItem.rules}]"
               :min="1"
               :placeholder="newItem.placeholder"
             ></a-input-number>
@@ -84,7 +90,7 @@ import { constants } from 'fs';
               autoExpandParent
               v-model="MenucheckedKeys"
               :treeData="menuTreeData"
-              v-decorator="[`${newItem.name}`, {initialValue: MenucheckedKeys}]"
+              v-decorator="[`${newItem.name}`, {initialValue: MenucheckedKeys, rules: newItem.rules}]"
             ></a-tree>
           </a-form-item>
           <a-form-item
@@ -98,7 +104,7 @@ import { constants } from 'fs';
               autoExpandParent
               v-model="DeptcheckedKeys"
               :treeData="deptTreeData"
-              v-decorator="[`${newItem.name}`, {initialValue: DeptcheckedKeys}]"
+              v-decorator="[`${newItem.name}`, {initialValue: DeptcheckedKeys, rules: newItem.rules }]"
             ></a-tree>
           </a-form-item>
         </template>
@@ -152,6 +158,7 @@ export default {
   },
   methods: {
     closeNewForm() {
+      console.log('ck')
       this.$emit("closeNewForm");
     },
     handleNew(e) {
@@ -165,21 +172,24 @@ export default {
     },
     // 获取树选择数据
     getTreeSelectData() {
-      let url, urlParam
+      let url, urlParam;
       this.newComponent &&
         this.newComponent.forEach(item => {
           if (item.url) {
-            url = item.url
-            urlParam = item.urlParam
-          } else if (item.urlParam){
-            urlParam = item.urlParam
-            url = `sys/${item.urlParam}/select/v2`
+            url = item.url;
+            urlParam = item.urlParam;
+          } else if (item.urlParam) {
+            urlParam = item.urlParam;
+            url = `sys/${item.urlParam}/select/v2`;
           }
         });
       this.$dataGet(this, url).then(res => {
         if (res.data.code == 200) {
-          this.treeSelectData = this.$setTreeData(res.data.data, `${urlParam}Id`, true);
-          console.log(this.treeSelectData)
+          this.treeSelectData = this.$setTreeData(
+            res.data.data,
+            `${urlParam}Id`,
+            true
+          );
         }
       });
     },
@@ -189,7 +199,6 @@ export default {
         if (res.data.code == 200) {
           this.menuTreeData = this.$setTreeData(res.data.data, "menuId", false);
         }
-        console.log(this.menuTreeData)
       });
       this.$dataGet(this, `sys/dept/list/v2`).then(res => {
         if (res.data.code == 200) {
@@ -210,10 +219,9 @@ export default {
       deep: true
     },
     MenucheckedKeys(val) {
-      console.log('onCheck', val)
     },
     DeptcheckedKeys(val) {
-      console.log('onCheck', val)
+      console.log("onCheck", val);
     }
   }
 };

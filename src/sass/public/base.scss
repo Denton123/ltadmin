@@ -43,7 +43,7 @@ input[type=text] {
     display: inline-block;
 }
 .block {
-    display: block;
+    display: block !important;
 }
 /*ie8+*/
 .clearfix {
