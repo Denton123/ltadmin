@@ -36,6 +36,7 @@
 
       <!-- 表格 -->
       <a-table
+        bordered
         :columns="columns"
         :dataSource="tableData"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
@@ -137,23 +138,34 @@ export default {
       default() {
         return [
           {
+            // 表格头
             theads: [],
+            // 表格字段
             props: [],
-            widths: [],
+            // 操作按钮：新增编辑等
             typeComponent: [],
+            // 搜索表单
             SearchComponent: [],
-            breadcrumb: "",
+            // 搜索结果字段
             searchResultMsg: [],
+            // 表格操作
             tableOperate: [],
+            // 搜索组件
             searchInput: {},
+            // 新建
             newComponent: [],
+            // 编辑
             editComponent: [],
             tag: "",
             url: "",
-            // 详情页指标
+            // 详情页
             detail: "",
-            // 酒店匹配指标
-            hotelMatch: ''
+            // 酒店匹配
+            hotelMatch: '',
+            // 房型匹配
+            roomMatch: '',
+            // 订单详情
+            orderDetail: ''
           }
         ];
       }
@@ -188,6 +200,10 @@ export default {
         this.$router.push(`/hotelMenus/detail/${this.detail}/${key}`);
       } else if (title === '酒店匹配') {
         this.$router.push(`/hotelMenus/hotelMatch/${this.hotelMatch}/${key}`)
+      } else if (title === '房型匹配') {
+        this.$router.push(`/hotelMenus/roomMatch/${this.roomMatch}/${key}`)
+      } else if (title === '订单详情') {
+        this.$router.push(`/hotelMenus/orderDetail/${this.orderDetail}/${key}`)
       }
     },
     // 查询
@@ -503,6 +519,7 @@ export default {
         }
       });
     },
+    // 表格多选框
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys;
       this.selectedRowKey = selectedRowKeys;
@@ -510,9 +527,6 @@ export default {
         this.selectedRowKey = this.selectedRowKey.join("");
         Object.assign(this.selectedRows, ...selectedRows);
       }
-    },
-    open() {
-      window.location.href = "/api/druid/sql.html";
     },
     // 点击分页
     handleTableChange(pagination) {
@@ -525,11 +539,12 @@ export default {
         this.handleTabelColumns();
         // console.log(this.tableData);
         this.pagination = {};
+        // this.tableData = []
       },
       deep: true
     },
     models() {
-      this.tableData = [];
+      // this.tableData = [];
       this.getListData();
       this.selectedRowKeys = [];
     }
@@ -554,11 +569,12 @@ export default {
 .basic_model {
   .basic_model_content {
     padding: 16px;
-    background: #fff;
+    // background: #fff;
     min-height: 280px;
   }
   .tableOperate {
   }
+ 
   .search_input {
     // height: 50px;
     overflow: hidden;

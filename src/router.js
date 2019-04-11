@@ -27,17 +27,29 @@ export default new Router({
           name: 'Basic',
           component: () => import( /* webpackChunkName: "Basic" */ '@/views/basicModel/basic-content.vue')
         },
-        // 酒店详情页
+        // 酒店详情
         {
           path: '/hotelMenus/detail/:model/:id',
           name: 'Detail',
           component: () => import( /* webpackChunkName: "Detail" */ '@/views/detailModel/detail-content.vue')
         },
-        // 酒店匹配基础模块
+        // 酒店匹配
         {
           path: '/hotelMenus/hotelMatch/:model/:id',
           name: 'hotelMatch',
           component: () => import( /* webpackChunkName: "hotelMatch" */ '@/views/hotelMatch/hotelMatch-content.vue')
+        },
+         // 房型匹配
+         {
+          path: '/hotelMenus/roomMatch/:model/:id',
+          name: 'roomMatch',
+          component: () => import( /* webpackChunkName: "roomMatch" */ '@/views/roomMatch/roomMatch-content.vue')
+        },
+        // 订单详情
+        {
+          path: '/hotelMenus/orderDetail/:model/:id',
+          name: 'orderDetail',
+          component: () => import( /* webpackChunkName: "orderDetail" */ '@/views/orderDetail/orderDetail-content.vue')
         }
       ],
       meta: {

@@ -20,7 +20,10 @@
             <span>{{menu.name}}</span>
           </span>
           <template v-for="subMenu in menu.children">
-            <a-menu-item :key="subMenu.key" @click="handleMenuItem(menu.key, subMenu.key, subMenu.name)">
+            <a-menu-item
+              :key="subMenu.key"
+              @click="handleMenuItem(menu.key, subMenu.key, subMenu.name)"
+            >
               <router-link :to="subMenu.path">{{subMenu.name}}</router-link>
             </a-menu-item>
           </template>
@@ -65,8 +68,8 @@ export default {
     onOpenChange(openKeys) {
       this.$emit("onOpenChange", openKeys);
     },
-    handleMenuItem (menuKey, subMenuKey, name) {
-      this.$emit('markMenuClick', menuKey, subMenuKey, name)
+    handleMenuItem(menuKey, subMenuKey, name) {
+      this.$emit("markMenuClick", menuKey, subMenuKey, name);
     }
   },
   mounted() {
@@ -83,6 +86,14 @@ export default {
   }
   .ant-menu-submenu-arrow {
     right: 65px !important;
+  }
+}
+.ant-menu-horizontal {
+  .ant-menu-item-selected {
+    color: #ffffff;
+  }
+  .ant-menu-item:hover {
+    color: #ffffff;
   }
 }
 </style>

@@ -44,6 +44,12 @@ export default {
         },
         hotelMatch() {
             return this.models[this.modelIndex].hotelMatch
+        },
+        roomMatch() {
+            return this.models[this.modelIndex].roomMatch
+        },
+        orderDetail() {
+            return this.models[this.modelIndex].orderDetail
         }
     },
 }

@@ -5,6 +5,7 @@ export default {
         tab: '艺龙酒店列表',
         detail: 'e-longHotelListDetail',
         hotelMatch: 'e-longHotelMatch',
+        roomMatch: 'e-longRoomMatch',
         theads: ['艺龙酒店id', '酒店名称', '城市', '地址电话', '产品最低价', '可用状态', '销售状态', '同步状态', '酒店匹配', '房型匹配', '操作'],
         props: ['hotelId', 'name', 'city', 'address', 'lowPrice', 'hotelListStatusChn', 'hotelDetailStatusChn', 'syncStatusChn', 'matchStatusChn', 'roomMatchChn', 'action'],
         SearchComponent: [{
@@ -181,8 +182,9 @@ export default {
     orderList: [{
         key: 'orderList',
         tab: '订单列表',
+        orderDetail: 'orderListDetail',
         theads: ['订单创建时间', '系统订单id', '供应商订单', '销售平台订单', '酒店名称', '房型名称', '入住日期', '离店日期', '房间数量', '总价', '订单状态', '联系人姓名', '联系人电话', '跟单人', '操作'],
-        props: ['date', 'name', 'address'],
+        props: ['orderdate', 'name', 'address', 'order', 'hotelName', 'roomName', 'date', 'passdate', 'num', 'price', 'status', 'username', 'phone', 'person', 'action'],
         SearchComponent: [{
                 type: 'text',
                 label: '系统订单id',
