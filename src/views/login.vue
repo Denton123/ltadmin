@@ -94,25 +94,27 @@ export default {
     // 获取验证码
     getCode() {
       axios
-        .get("/api/captchaV2.jpg", {
+        .get("/captchaV2.jpg", {
           responseType: "arraybuffer"
         })
         .then(response => {
-          console.log(response)
-          return (
-            "data:image/png;base64," +
-            btoa(
-              new Uint8Array(response.data).reduce(
-                (data, byte) => data + String.fromCharCode(byte),
-                ""
+          if (response.status == 200) {
+            console.log(response);
+            return (
+              "data:image/png;base64," +
+              btoa(
+                new Uint8Array(response.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ""
+                )
               )
-            )
-          );
+            );
+          }
         })
         .then(data => {
           this.codeSrc = data;
         });
-    }
+    },
   },
   mounted() {
     this.getCode();

@@ -50,6 +50,12 @@ export default new Router({
           path: '/hotelMenus/orderDetail/:model/:id',
           name: 'orderDetail',
           component: () => import( /* webpackChunkName: "orderDetail" */ '@/views/orderDetail/orderDetail-content.vue')
+        },
+        // 订单详情
+        {
+          path: '/hotelMenus/roomOrder/:model/:id',
+          name: 'roomOrder',
+          component: () => import( /* webpackChunkName: "roomOrder" */ '@/views/roomOrder/roomOrder-content.vue')
         }
       ],
       meta: {

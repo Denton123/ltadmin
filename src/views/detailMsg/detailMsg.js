@@ -1,6 +1,7 @@
 export default {
     'e-longHotelListDetail': {
         title: '艺龙',
+        roomOrder: 'e-longHotelOrder',
         standardOperate: [{
             title: '酒店匹配'
         },{

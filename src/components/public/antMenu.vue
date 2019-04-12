@@ -16,7 +16,7 @@
       <template v-for="menu in menus">
         <a-sub-menu :key="menu.key">
           <span slot="title">
-            <a-icon :type="menu.icon"/>
+            <!-- <a-icon :type="menu.icon"/> -->
             <span>{{menu.name}}</span>
           </span>
           <template v-for="subMenu in menu.children">

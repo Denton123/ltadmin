@@ -13,7 +13,7 @@
       <div class="search_input">
         <searchInput :searchInput="searchInput" @handleSearch="handleSearch" v-if="searchInput"/>
         <component
-        :key="index"
+          :key="index"
           v-for="(typeOperate,index) in typeComponent"
           :is="typeOperate.components"
           class="mrL10 mrB10"
@@ -161,11 +161,11 @@ export default {
             // 详情页
             detail: "",
             // 酒店匹配
-            hotelMatch: '',
+            hotelMatch: "",
             // 房型匹配
-            roomMatch: '',
+            roomMatch: "",
             // 订单详情
-            orderDetail: ''
+            orderDetail: ""
           }
         ];
       }
@@ -198,13 +198,13 @@ export default {
     handleTableOperate(title, key) {
       if (title === "酒店详情") {
         this.$router.push(`/hotelMenus/detail/${this.detail}/${key}`);
-      } else if (title === '酒店匹配') {
-        this.$router.push(`/hotelMenus/hotelMatch/${this.hotelMatch}/${key}`)
-      } else if (title === '房型匹配') {
-        this.$router.push(`/hotelMenus/roomMatch/${this.roomMatch}/${key}`)
-      } else if (title === '订单详情') {
-        this.$router.push(`/hotelMenus/orderDetail/${this.orderDetail}/${key}`)
-      }
+      } else if (title === "酒店匹配") {
+        this.$router.push(`/hotelMenus/hotelMatch/${this.hotelMatch}/${key}`);
+      } else if (title === "房型匹配") {
+        this.$router.push(`/hotelMenus/roomMatch/${this.roomMatch}/${key}`);
+      } else if (title === "订单详情") {
+        this.$router.push(`/hotelMenus/orderDetail/${this.orderDetail}/${key}`);
+      } 
     },
     // 查询
     handleSearch(item) {
@@ -539,13 +539,14 @@ export default {
         this.handleTabelColumns();
         // console.log(this.tableData);
         this.pagination = {};
-        // this.tableData = []
+        this.tableData = []
+        console.log(this.tableData, 'models')
       },
       deep: true
     },
     models() {
-      // this.tableData = [];
       this.getListData();
+      console.log(this.tableData, 'models')
       this.selectedRowKeys = [];
     }
   },
@@ -574,9 +575,8 @@ export default {
   }
   .tableOperate {
   }
- 
+
   .search_input {
-    // height: 50px;
     overflow: hidden;
   }
 }

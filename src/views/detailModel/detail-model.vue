@@ -126,7 +126,9 @@ export default {
           theads: {},
           props: {},
           standardOperate: [],
-          listOperate: []
+          listOperate: [],
+          // 房间预订
+          roomOrder: ''
         };
       }
     }
@@ -198,8 +200,12 @@ export default {
       this.$router.go(-1);
     },
     // 展示表格操作按钮
-    hanldeListOperate(title) {
+    hanldeListOperate(title, key) {
         console.log(title)
+        if (title === '房间预订') {
+        console.log('88888888')
+        this.$router.push(`/hotelMenus/roomOrder/${this.roomOrder}/${key}`)
+      }
     }
   },
   mounted() {

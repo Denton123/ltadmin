@@ -79,7 +79,7 @@ export default {
           name: "companyMenus"
         }
       ],
-      menusData: menu,
+      menusData: {},
       menus: [],
       // 初始选中的菜单
       defaultSelectedKeys: [],
@@ -168,7 +168,7 @@ export default {
   mounted() {
     this.initialValue();
     // console.log(this.menus)
-    console.log(process.env.NODE_ENV)
+    // console.log(process.env)
   },
   watch: {
     $route: {
@@ -185,46 +185,46 @@ export default {
       deep: true
     }
   },
-  // beforeMount() {
-  //   // 初始化菜单数据
-  //   let allMenus = [];
-  //   this.menusData.hotelMenus = [];
-  //   this.menusData.companyMenus = [];
-  //   this.$dataGet(this, "sys/menu/navV2").then(res => {
-  //     if (res.data.code == 200) {
-  //       let resData = res.data.data;
-  //       resData.forEach(item => {
-  //         allMenus.push({
-  //           name: item.name,
-  //           key: item.menuId,
-  //           icon: item.icon,
-  //           children: []
-  //         });
-  //         allMenus.forEach(allItem => {
-  //           item.list.forEach(subItem => {
-  //             if (subItem.parentId == allItem.key) {
-  //               allItem.children.push({
-  //                 name: subItem.name,
-  //                 key: subItem.menuId,
-  //                 icon: subItem.icon,
-  //                 path: subItem.url
-  //               });
-  //             }
-  //           });
-  //           this.currentKeys.push(allItem.key);
-  //         });
-  //       });
-  //       allMenus.filter(item => {
-  //         if (item.key == 1) {
-  //           this.menusData["companyMenus"].push(item);
-  //         } else {
-  //           this.menusData["hotelMenus"].push(item);
-  //         }
-  //       });
-  //       // console.log(this.menus)
-  //     }
-  //   });
-  // }
+  beforeMount() {
+    // 初始化菜单数据
+    let allMenus = [];
+    this.menusData.hotelMenus = [];
+    this.menusData.companyMenus = [];
+    this.$dataGet(this, "sys/menu/navV2").then(res => {
+      if (res.data.code == 200) {
+        let resData = res.data.data;
+        resData.forEach(item => {
+          allMenus.push({
+            name: item.name,
+            key: item.menuId,
+            icon: item.icon,
+            children: []
+          });
+          allMenus.forEach(allItem => {
+            item.list.forEach(subItem => {
+              if (subItem.parentId == allItem.key) {
+                allItem.children.push({
+                  name: subItem.name,
+                  key: subItem.menuId,
+                  icon: subItem.icon,
+                  path: subItem.url
+                });
+              }
+            });
+            this.currentKeys.push(allItem.key);
+          });
+        });
+        allMenus.filter(item => {
+          if (item.key == 1) {
+            this.menusData["companyMenus"].push(item);
+          } else {
+            this.menusData["hotelMenus"].push(item);
+          }
+        });
+        // console.log(this.menus)
+      }
+    });
+  }
 };
 </script>
 <style lang="scss">

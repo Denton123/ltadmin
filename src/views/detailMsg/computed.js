@@ -14,6 +14,9 @@ export default {
         },
         listOperate() {
             return this.models.listOperate
+        },
+        roomOrder() {
+            return this.models.roomOrder
         }
     },
 }

@@ -7,11 +7,6 @@ import Vue from 'vue'
 export default {
     install() {
         let host = ''
-        Vue.prototype.$adminUrl = (url) => {
-            let regx = /^\/{1,}/g
-            url = url && url.replace(regx, '')
-            return host + '/api/' + url
-        }
         Vue.prototype.$setTreeData = (rowData, rowId, isIndex) => {
             let data = [...rowData]
             let sortData = []

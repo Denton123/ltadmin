@@ -5,15 +5,22 @@ import router from '../router';
 // 添加请求拦截器
 axios.interceptors.request.use(function(config){
     // 在发送请求之前做些什么
-    console.log(config)
+    // console.log(config)
     return config
 }, function(error) {
     // 对请求错误做些什么
     return Promise.reject(error)
 })
-axios.create({
-    baseURL: process.env.VUE_APP_BASE_API
-})
+
+let baseDomain
+// 测试环境和开发环境都为api
+if (process.env.NODE_ENV === 'development') {
+    baseDomain = `/api`
+} else {
+    baseDomain = `/api`
+}
+axios.defaults.baseURL = baseDomain
+// console.log(baseDomain)
 // axios.defaults.baseURL = 'http://test.b.gdltu.com'
 // 添加响应拦截器
 // axios.interceptors.responce.use(response => {

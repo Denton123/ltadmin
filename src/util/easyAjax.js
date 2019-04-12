@@ -22,7 +22,7 @@ export default {
        */
        Vue.prototype.$dataGet = (vm, url, params={}) => {
            return new Promise((resolve, reject) => {
-               axios.get(vm.$adminUrl(url), {params: params})
+               axios.get(url, {params: params})
                 .then((responce) => {
                     resolve(responce)
                 })
@@ -54,7 +54,7 @@ export default {
                 headers = {}
                 form = ret
             }
-            axios.post(vm.$adminUrl(url), form, headers)
+            axios.post(url, form, headers)
                 .then((responce) => {
                     resolve(responce)
                 })

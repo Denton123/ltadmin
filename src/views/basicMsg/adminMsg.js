@@ -163,6 +163,11 @@ export default {
                 name: 'mobile',
                 placeholder: '手机号',
                 inputType: 'text',
+                rules: [{
+                    validator: validate.phone
+                }, {
+                    required: true
+                }]
             },
             {
                 type: 'checkbox',
