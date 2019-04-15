@@ -26,6 +26,7 @@ export default {
                 item.key = isIndex ? idx : `${item[`${rowId}`]}`
                 item.title = item.name
                 item.value = `${item[`${rowId}`]}`
+                // console.log(typeof(item.key))
                 parentIdArr.indexOf(item['parentId']) == -1 ? sortData.push(item) : ''
             })
             return sortData

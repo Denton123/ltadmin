@@ -69,7 +69,11 @@ import { setTimeout } from 'timers';
             v-bind="formItemLayout"
           >
             <a-radio-group v-decorator="[`${editItem.name}`, {rules: editItem.rules}]">
-              <a-radio :value="radio.value" v-for="radio in editItem.radioComponents" :key="radio.desc">{{radio.desc}}</a-radio>
+              <a-radio
+                :value="radio.value"
+                v-for="radio in editItem.radioComponents"
+                :key="radio.desc"
+              >{{radio.desc}}</a-radio>
             </a-radio-group>
           </a-form-item>
           <!-- 数字输入框 -->
@@ -86,6 +90,7 @@ import { setTimeout } from 'timers';
               showLine
               checkable
               autoExpandParent
+              v-model="MenucheckedKeys"
               :treeData="menuTreeData"
               v-decorator="[`${editItem.name}`, {initialValue: MenucheckedKeys}]"
             ></a-tree>
@@ -100,6 +105,7 @@ import { setTimeout } from 'timers';
               checkable
               autoExpandParent
               :treeData="deptTreeData"
+              v-model="DeptcheckedKeys"
               v-decorator="[`${editItem.name}`, {initialValue: DeptcheckedKeys}]"
             ></a-tree>
           </a-form-item>
@@ -110,6 +116,7 @@ import { setTimeout } from 'timers';
 </template>
 
  <script>
+import { constants } from "crypto";
 export default {
   name: "editForm",
   data() {
@@ -128,7 +135,7 @@ export default {
       treeSelectData: [],
       menuTreeData: [],
       deptTreeData: [],
-      MenucheckedKeys: [],
+      MenucheckedKeys: ["1"],
       DeptcheckedKeys: []
     };
   },
@@ -175,28 +182,30 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log(values)
           this.$emit("submitEdit", values);
         }
       });
     },
     // 获取树数据
     getTreeSelectData() {
-      let url, urlParam
+      let url, urlParam;
       this.editComponent &&
         this.editComponent.forEach(item => {
           if (item.url) {
-            url = item.url
-            urlParam = item.urlParam
-          } else if (item.urlParam){
-            urlParam = item.urlParam
-            url = `sys/${item.urlParam}/select/v2`
+            url = item.url;
+            urlParam = item.urlParam;
+          } else if (item.urlParam) {
+            urlParam = item.urlParam;
+            url = `sys/${item.urlParam}/select/v2`;
           }
         });
       this.$dataGet(this, url).then(res => {
         if (res.data.code == 200) {
-          this.treeSelectData = this.$setTreeData(res.data.data, `${urlParam}Id`, true);
-          console.log(this.treeSelectData)
+          this.treeSelectData = this.$setTreeData(
+            res.data.data,
+            `${urlParam}Id`,
+            true
+          );
         }
       });
     },
@@ -207,9 +216,9 @@ export default {
           this.menuTreeData = this.$setTreeData(res.data.data, "menuId", false);
         }
       });
-      this.$dataGet(this, `sys/dept/list/v2`).then(res => {
+      this.$dataPost(this, `sys/dept/list/v2`, { limit: 10 }).then(res => {
         if (res.data.code == 200) {
-          this.deptTreeData = this.$setTreeData(res.data.data, "deptId", false);
+          this.deptTreeData = this.$setTreeData(res.data.list, "deptId", false);
         }
       });
     }

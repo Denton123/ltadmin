@@ -8,12 +8,11 @@ require('@/config/index')
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requireAuth) {
-    if (isPc) {
-      console.log(isPc, '导航守卫')
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.state.user !== null) {
       next()
     } else {
-      next('login')
+      next('/login')
     }
   } else {
     next()

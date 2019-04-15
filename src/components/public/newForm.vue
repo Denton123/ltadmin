@@ -132,7 +132,7 @@ export default {
       treeSelectData: [],
       menuTreeData: [],
       deptTreeData: [],
-      MenucheckedKeys: [],
+      MenucheckedKeys: ['1'],
       DeptcheckedKeys: []
     };
   },
@@ -158,15 +158,17 @@ export default {
   },
   methods: {
     closeNewForm() {
-      console.log('ck')
       this.$emit("closeNewForm");
+      this.form.resetFields();
     },
     handleNew(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log(values);
           this.$emit("submitNew", values);
+          setTimeout(() => {
+            this.form.resetFields();
+          }, 1000);
         }
       });
     },
@@ -200,9 +202,9 @@ export default {
           this.menuTreeData = this.$setTreeData(res.data.data, "menuId", false);
         }
       });
-      this.$dataGet(this, `sys/dept/list/v2`).then(res => {
+      this.$dataPost(this, `sys/dept/list/v2`, {limit: 10}).then(res => {
         if (res.data.code == 200) {
-          this.deptTreeData = this.$setTreeData(res.data.data, "deptId", false);
+          this.deptTreeData = this.$setTreeData(res.data.list, "deptId", false);
         }
       });
     }

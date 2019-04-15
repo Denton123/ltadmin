@@ -59,7 +59,7 @@ export default new Router({
         }
       ],
       meta: {
-        requireAuth: true
+        requiresAuth: true
       }
     },
     {

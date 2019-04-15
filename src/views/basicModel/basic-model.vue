@@ -94,6 +94,7 @@ import searchResult from "@/components/public/searchResult";
 import searchInput from "@/components/public/searchInput";
 import newForm from "@/components/public/newForm";
 import editForm from "@/components/public/editForm";
+import { constants } from 'crypto';
 
 export default {
   name: "BasicModel",
@@ -204,7 +205,7 @@ export default {
         this.$router.push(`/hotelMenus/roomMatch/${this.roomMatch}/${key}`);
       } else if (title === "订单详情") {
         this.$router.push(`/hotelMenus/orderDetail/${this.orderDetail}/${key}`);
-      } 
+      }
     },
     // 查询
     handleSearch(item) {
@@ -368,7 +369,7 @@ export default {
             this.getListData();
             this.selectedRowKeys = [];
           } else {
-            this.$$message.error(res.data.msg);
+            this.$message.error(res.data.msg);
           }
         });
       } else {
@@ -420,16 +421,17 @@ export default {
         "dict",
         "log",
         "user",
-        "scheduleLog"
+        "scheduleLog",
+        "dept"
       ];
+      let searchParams = { ...params, limit: 10};
       if (tagArr.indexOf(this.tag) !== -1) {
         let url;
         url =
-          this.tag == "role"
+          this.tag == "role" || this.tag == "dept"
             ? `sys/${this.tag}/list/v2`
             : `sys/${this.tag}/listV2`;
-        let searchParams = { ...params, limit: 10 };
-        // this.loading = true;
+        this.loading = true;
         this.$dataPost(this, url, searchParams, false).then(res => {
           if (res.data.code == 200) {
             let resData;
@@ -456,18 +458,23 @@ export default {
             resData.forEach((item, index) => {
               item.key = index;
             });
-            this.tableData = resData;
-            // this.loading = false;
+            if (this.tag === "dept") {
+              let resetData = this.$setTreeData(resData, `${this.tag}Id`, true);
+              this.tableData = resetData;
+            } else {
+              this.tableData = resData;
+            }
+            this.loading = false;
           }
         });
       } else {
-        // this.loading = true;
+        this.loading = true;
         this.$dataGet(this, this.url).then(res => {
           if (res.data.code == 200) {
             let resData = res.data.data;
             let resetData = this.$setTreeData(resData, `${this.tag}Id`, true);
             this.tableData = resetData;
-            // this.loading = false;
+            this.loading = false;
           }
         });
       }
@@ -537,16 +544,13 @@ export default {
     $route: {
       handler: function() {
         this.handleTabelColumns();
-        // console.log(this.tableData);
         this.pagination = {};
-        this.tableData = []
-        console.log(this.tableData, 'models')
+        this.tableData = [];
       },
       deep: true
     },
     models() {
       this.getListData();
-      console.log(this.tableData, 'models')
       this.selectedRowKeys = [];
     }
   },

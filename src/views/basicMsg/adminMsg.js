@@ -11,7 +11,7 @@ import configBtn from '@/components/public/configBtn';
 import backBtn from '@/components/public/backBtn';
 
 import getAsyncData from '@/util/getDataFn'
-import validate from '@/util/validate'
+import {phone, cron} from '@/util/validate'
 
 export default {
     adminManage: [{
@@ -85,9 +85,7 @@ export default {
                 placeholder: '手机号',
                 inputType: 'text',
                 rules: [{
-                    validator: validate.phone
-                }, {
-                    required: true
+                    validator: phone
                 }]
             },
             {
@@ -164,9 +162,7 @@ export default {
                 placeholder: '手机号',
                 inputType: 'text',
                 rules: [{
-                    validator: validate.phone
-                }, {
-                    required: true
+                    validator: phone
                 }]
             },
             {
@@ -218,7 +214,10 @@ export default {
                 label: '上级部门',
                 name: 'parentId',
                 placeholder: '上级部门',
-                urlParam: 'dept'
+                urlParam: 'dept',
+                rules: [{
+                    required: true
+                }]
             },
             {
                 type: 'num',
@@ -239,7 +238,10 @@ export default {
                 label: '上级部门',
                 name: 'parentId',
                 placeholder: '上级部门',
-                urlParam: 'dept'
+                urlParam: 'dept',
+                rules: [{
+                    required: true
+                }]
             },
             {
                 type: 'num',
@@ -551,7 +553,7 @@ export default {
                     required: true,
                     message: '请输入cron表达式!'
                 },{
-                    validator: validate.cron
+                    validator: cron
                 }],
             },
             {
@@ -600,6 +602,8 @@ export default {
                 rules: [{
                     required: true,
                     message: '请输入cron表达式!'
+                },{
+                    validator: cron
                 }],
             },
             {
@@ -621,134 +625,13 @@ export default {
             placeholder: '任务Id',
             searchName: 'jobId'
         },
-        typeComponent: [{
-            components: newBtn
-        }, {
-            components: editBtn
-        }],
-        newComponent: [{
-                type: 'text',
-                label: '日志Id',
-                name: 'logId',
-                placeholder: '日志Id',
-                rules: [{
-                    required: true,
-                    message: '请输入日志Id!'
-                }],
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '任务Id',
-                name: 'jobId',
-                placeholder: '任务Id',
-                rules: [{
-                    required: true,
-                    message: '请输入任务Id!'
-                }],
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '错误',
-                name: 'error',
-                placeholder: '错误',
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '方法名称',
-                name: 'methodName',
-                placeholder: '方法名称',
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '执行时长(毫秒)',
-                name: 'times',
-                placeholder: '执行时长(毫秒)',
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '参数',
-                name: 'params',
-                placeholder: '参数',
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '状态',
-                name: 'status',
-                placeholder: '状态',
-                inputType: 'text'
-            },
-        ],
-        editComponent: [{
-                type: 'text',
-                label: '日志Id',
-                name: 'logId',
-                placeholder: '日志Id',
-                rules: [{
-                    required: true,
-                    message: '请输入日志Id!'
-                }],
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '任务Id',
-                name: 'jobId',
-                placeholder: '任务Id',
-                rules: [{
-                    required: true,
-                    message: '请输入任务Id!'
-                }],
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '错误',
-                name: 'error',
-                placeholder: '错误',
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '方法名称',
-                name: 'methodName',
-                placeholder: '方法名称',
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '执行时长(毫秒)',
-                name: 'times',
-                placeholder: '执行时长(毫秒)',
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '参数',
-                name: 'params',
-                placeholder: '参数',
-                inputType: 'text'
-            },
-            {
-                type: 'text',
-                label: '状态',
-                name: 'status',
-                placeholder: '状态',
-                inputType: 'text'
-            },
-        ],
     }],
     paramsManage: [{
         key: 'paramsManage',
         tab: '参数管理',
         tag: 'config',
         theads: ['ID', '参数名', '参数值', '备注'],
-        props: ['id', 'key', 'value', 'remark'],
+        props: ['id', 'configKey', 'value', 'remark'],
         typeComponent: [{
             components: newBtn
         }, {
@@ -758,12 +641,12 @@ export default {
         }],
         searchInput: {
             placeholder: '参数名',
-            searchName: 'key'
+            searchName: 'configKey'
         },
         newComponent: [{
                 type: 'text',
                 label: '参数名',
-                name: 'key',
+                name: 'configKey',
                 placeholder: '参数名',
                 inputType: 'text'
             },
@@ -785,7 +668,7 @@ export default {
         editComponent: [{
                 type: 'text',
                 label: '参数名',
-                name: 'key',
+                name: 'configKey',
                 placeholder: '参数名',
                 inputType: 'text'
             },
