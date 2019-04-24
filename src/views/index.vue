@@ -64,9 +64,9 @@
 </template>
 <script>
 import antMenu from "@/components/public/antMenu";
-import menu from '@/views/basicMsg/menu'
+import menu from "@/views/basicMsg/menu";
 export default {
-  name: "antModel",
+  name: "index",
   data() {
     return {
       navs: [
@@ -94,7 +94,7 @@ export default {
       // 面包屑
       breadcrumb: "",
       // 用户名
-      username: this.$store.state.user["username"]
+      username: ""
     };
   },
   components: {
@@ -158,6 +158,9 @@ export default {
         this.defaultSelectedKeys.push(markMenu.selectedKey);
         this.breadcrumb = markMenu.name;
       }
+      this.username = window.bdUser['username']
+        ? window.bdUser['username']
+        : "";
     },
     markMenuClick(openKey, selectedKey, name) {
       let openKeyObj = { openKey, selectedKey, name };
@@ -167,8 +170,8 @@ export default {
   },
   mounted() {
     this.initialValue();
-    // console.log(this.menus)
-    // console.log(process.env)
+  },
+  created(){
   },
   watch: {
     $route: {
@@ -183,10 +186,10 @@ export default {
       },
       // 深度观察监听
       deep: true
-    }
+    },
   },
   beforeMount() {
-    // 初始化菜单数据
+    // 加载菜单数据
     let allMenus = [];
     this.menusData.hotelMenus = [];
     this.menusData.companyMenus = [];
@@ -272,21 +275,11 @@ export default {
   .index_breadcrumb {
     margin: 16px;
   }
-  .index_content {
-    // margin: 0 16px 16px 16px;
-    // padding: 24px;
-    // background: #fff;
-    // min-height: 280px;
-  }
   .ant-menu-horizontal {
     color: #fff;
     background: transparent;
     line-height: 64px;
     font-size: 20px;
-  }
-  .ant-menu-submenu-title,
-  .ant-menu-sub {
-    // text-align: center;
   }
 }
 </style>

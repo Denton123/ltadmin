@@ -4,21 +4,14 @@
 
 import Vue from 'vue'
 import axios from 'axios'
-// Vue.use(axios)
 
 export default {
     install () {
-        /* 
-        test
-        */
-       Vue.prototype.$test = () => {
-           console.log('哈哈哈哈')
-       }
        /* 
         全局get方法
-        @param vm
-        @param url
-        @param params
+        @param vm vue实例
+        @param url 接口路径
+        @param params 参数
        */
        Vue.prototype.$dataGet = (vm, url, params={}) => {
            return new Promise((resolve, reject) => {
@@ -33,9 +26,10 @@ export default {
        }
        /* 
         全局post方法
-        @param vm
-        @param url
-        @param params
+        @param vm vue实例
+        @param url 接口路径
+        @param ret post参数
+        @param isFormData 是否需要转为formData形式
        */
       Vue.prototype.$dataPost = (vm, url, ret, isFormData) => {
         return new Promise((resolve, reject) => {

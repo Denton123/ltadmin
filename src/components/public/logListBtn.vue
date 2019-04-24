@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "NewBtn",
+  name: "logListBtn",
   methods: {
       handleShowLog(){
           this.$parent.handleShowLog()

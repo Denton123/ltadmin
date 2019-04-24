@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "NewBtn",
+  name: "reNewBtn",
   methods: {
       handleRenew(){
           this.$parent.handleRenew()

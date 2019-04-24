@@ -6,35 +6,26 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: null
+    user: null,
+    isLogin: false
   },
   mutations: {
     changeUser(state, msg) {
       // console.log(state.user, 'state')
       state.user = msg
-    }
+    },
+    setLogin(state, value) {
+      state.isLogin = value
+      localStorage.setItem('isLogin', value)
+    },
   },
   actions: {
     getUser({
       commit
     }) {
-      Axios.get('/sys/user/infoV2').then(res => {
-        if (res.data.code == 200) {
-          // console.log(res)
-          commit('changeUser', res.data.data)
-          // localStorage.user = JSON.stringify(res.data.data || {})
-        }
-      }).catch(err => {
-        if (err) {
-          commit('changeUser', {})
-        if (router.currentRoute.matched.some(record => record.meta.requireAuth)) {
-          router.push({
-            path: '/login',
-          })
-        }
-        }
-        
-      })
+      console.log(res)
+      commit('changeUser', res.data.data)
+
     }
   }
 })

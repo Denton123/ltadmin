@@ -26,21 +26,34 @@
             <span>关键词：</span>
             <a-input placeholder="酒店名称/地址" v-model="searchKey" value="{{}}"/>
             <a-button type="primary">查询</a-button>
+            <!-- 自定义按钮 -->
+            <component
+              v-for="(typeOperate,index) in typeComponent"
+              :is="typeOperate.component"
+              :key="index"
+              :params="typeOperate.params"
+              :hotelMatchCardTag="hotelMatchCardTag"
+              @showModal="handleActionModal(index, 'typeComponent')"
+            />
           </div>
           <a-divider/>
           <!-- 表格列表 -->
           <div class="hotelMatch_list">
             <a-table :columns="listColumns" :dataSource="listData" bordered>
+              <template slot="actionModal" slot-scope="text, record">
+                <a-button
+                  type="primary"
+                  v-for="(item, index) in actionOperate"
+                  :key="item.title"
+                  @click="handleActionModal(index, 'actionOperate')"
+                >{{item.title}}</a-button>
+              </template>
             </a-table>
           </div>
         </a-col>
         <!-- 左侧卡片 -->
         <a-col :span="8" :pull="16" class="hotelMatch_left">
-          <a-card
-            :title="`${item.title}-待匹配酒店信息`"
-            v-for="(item, index) in hotelMatchCardTag"
-            :key="index"
-          >
+          <a-card :title="`${item.title}`" v-for="(item, index) in hotelMatchCardTag" :key="index">
             <a-button type="primary" slot="extra" v-if="item.hasBtn">下一个</a-button>
             <template v-for="(value, key) in item.tag">
               <p>
@@ -51,12 +64,23 @@
           </a-card>
         </a-col>
       </a-row>
+
+      <!-- 弹出模态框 -->
+      <msg-modal
+        :modalVisible="modalVisible"
+        :modalParams="modalParams"
+        :hotelMatchCardTag="hotelMatchCardTag"
+        @hanldModalCancel="hanldModalCancel"
+        @handleModalOk="handleModalOk"
+        :confirmLoading="confirmLoading"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import computed from "../hotelMatchMsg/computed";
+import msgModal from "@/components/public/msgModal";
 export default {
   name: "hotelMatchModel",
   data() {
@@ -78,7 +102,21 @@ export default {
       // 表格头
       listColumns: [],
       // 表格数据
-      listData: []
+      listData: [
+        {
+          key: "1",
+          name: "John Brown",
+          age: 32,
+          address: "New York No. 1 Lake Park",
+          lowPrice: 23
+        }
+      ],
+      // 模态框是否显示
+      modalVisible: false,
+      // 模态框数据
+      modalParams: {},
+      // 模态框确认加载
+      confirmLoading: false
     };
   },
   props: {
@@ -86,37 +124,67 @@ export default {
       type: Object,
       default() {
         return {
+          // 标题
           title: "",
+          // 左侧卡片对象key
           hotelMatchCardTag: [],
+          // 表头
           theads: [],
-          props: []
+          // 表格字段
+          props: [],
+          // 操作按钮
+          typeComponent: [],
+          // 模态框操作按钮
+          actionOperate: []
         };
       }
     }
   },
-  methods: {
+  methods: {                                                                                
     //   返回上一级页面
     backTo() {
       this.$router.go(-1);
     },
-    handleTableColumns(){
-      this.listColumns = []
-      this.theads && this.theads.forEach(item => {
-        this.listColumns.push({
-          title: item
-        })
-      });
+    // 处理表格数据
+    handleTableColumns() {
+      this.listColumns = [];
+      this.theads &&
+        this.theads.forEach(item => {
+          this.listColumns.push({
+            title: item
+          });
+        });
       for (let i in this.props) {
-        this.listColumns[i].dataIndex = this.props[i]
-        if (this.props[i] == 'actions') {
-          this.listColumns[i].scopedSlots = { customRender: "action" };
+        this.listColumns[i].dataIndex = this.props[i];
+        if (this.props[i] == "actionModal") {
+          this.listColumns[i].scopedSlots = { customRender: "actionModal" };
         }
       }
+    },
+    // 显示模态框
+    handleActionModal(index, type) {
+      this.modalVisible = true;
+      this.modalParams = this[type][index].params;
+    },
+    // 提交模态框
+    handleModalOk() {
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.confirmLoading = false;
+        this.modalVisible = false;
+      }, 1000);
+    },
+    // 取消模态框
+    hanldModalCancel() {
+      this.modalVisible = false;
     }
   },
   mixins: [computed],
-  mounted () {
-    this.handleTableColumns()
+  mounted() {
+    this.handleTableColumns();
+  },
+  components: {
+    msgModal
   }
 };
 </script>

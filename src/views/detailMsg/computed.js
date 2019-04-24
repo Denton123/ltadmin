@@ -17,6 +17,9 @@ export default {
         },
         roomOrder() {
             return this.models.roomOrder
+        },
+        listTitle(){
+            return this.models.listTitle
         }
     },
 }

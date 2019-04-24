@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "NewBtn",
+  name: "pauseBtn",
   methods: {
       handlePause(){
           this.$parent.handlePause()

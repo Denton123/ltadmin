@@ -1,5 +1,4 @@
 /**
-import { setTimeout } from 'timers';
  * 
  * 管理系统编辑表单
  * @author 舒丹彤 
@@ -92,7 +91,7 @@ import { setTimeout } from 'timers';
               autoExpandParent
               v-model="MenucheckedKeys"
               :treeData="menuTreeData"
-              v-decorator="[`${editItem.name}`, {initialValue: MenucheckedKeys}]"
+              v-decorator="[`${editItem.name}`]"
             ></a-tree>
           </a-form-item>
           <a-form-item
@@ -106,7 +105,7 @@ import { setTimeout } from 'timers';
               autoExpandParent
               :treeData="deptTreeData"
               v-model="DeptcheckedKeys"
-              v-decorator="[`${editItem.name}`, {initialValue: DeptcheckedKeys}]"
+              v-decorator="[`${editItem.name}`]"
             ></a-tree>
           </a-form-item>
         </template>
@@ -116,7 +115,6 @@ import { setTimeout } from 'timers';
 </template>
 
  <script>
-import { constants } from "crypto";
 export default {
   name: "editForm",
   data() {
@@ -135,8 +133,10 @@ export default {
       treeSelectData: [],
       menuTreeData: [],
       deptTreeData: [],
-      MenucheckedKeys: ["1"],
-      DeptcheckedKeys: []
+      MenucheckedKeys: [],
+      DeptcheckedKeys: [],
+      MenuCheckedArr: [],
+      DeptCheckedArr: []
     };
   },
   props: {
@@ -182,6 +182,12 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
+          if (values["menuIdList"]) {
+            values["menuIdList"] = this.MenuCheckedArr;
+          }
+          if (values["deptIdList"]) {
+            values["deptIdList"] = this.DeptCheckedArr;
+          }
           this.$emit("submitEdit", values);
         }
       });
@@ -200,7 +206,7 @@ export default {
           }
         });
       this.$dataGet(this, url).then(res => {
-        if (res.data.code == 200) {
+        if (res && res.data.code == 200) {
           this.treeSelectData = this.$setTreeData(
             res.data.data,
             `${urlParam}Id`,
@@ -211,14 +217,15 @@ export default {
     },
     // 获取树控件数据
     getTreeData() {
-      this.$dataGet(this, `sys/menu/listV2`).then(res => {
+      var that = this;
+      that.$dataGet(that, `sys/menu/listV2`).then(res => {
         if (res.data.code == 200) {
-          this.menuTreeData = this.$setTreeData(res.data.data, "menuId", false);
+          that.menuTreeData = this.$setTreeData(res.data.data, "menuId", false);
         }
       });
-      this.$dataPost(this, `sys/dept/list/v2`, { limit: 10 }).then(res => {
+      that.$dataPost(that, `sys/dept/list/v2`, { limit: 10 }).then(res => {
         if (res.data.code == 200) {
-          this.deptTreeData = this.$setTreeData(res.data.list, "deptId", false);
+          that.deptTreeData = this.$setTreeData(res.data.list, "deptId", false);
         }
       });
     }
@@ -243,18 +250,27 @@ export default {
               value: fields[v.name]
             });
           });
-          console.log(this.fields);
-          // this.MenucheckedKeys = fields['menuIdList']
-          // this.DeptcheckedKeys = fields['deptIdList']
+          let menuSelectedKey = [];
+          let deptSelectedKey = [];
+          if (fields["menuIdList"] || fields["deptIdList"]) {
+            fields["menuIdList"].forEach(key => {
+              menuSelectedKey.push(`${key}`);
+            });
+            fields["deptIdList"].forEach(key => {
+              deptSelectedKey.push(`${key}`);
+            });
+            this.MenucheckedKeys = menuSelectedKey;
+            this.DeptcheckedKeys = deptSelectedKey;
+          }
           return fieldsObj;
         }
       });
     },
     MenucheckedKeys(val) {
-      console.log("onCheck", val);
+      this.MenuCheckedArr = val;
     },
     DeptcheckedKeys(val) {
-      console.log("onCheck", val);
+      this.DeptCheckedArr = val;
     }
   },
   mounted() {

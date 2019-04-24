@@ -90,7 +90,7 @@ import { constants } from 'fs';
               autoExpandParent
               v-model="MenucheckedKeys"
               :treeData="menuTreeData"
-              v-decorator="[`${newItem.name}`, {initialValue: MenucheckedKeys, rules: newItem.rules}]"
+              v-decorator="[`${newItem.name}`, {initialValue: MenucheckedKeys}]"
             ></a-tree>
           </a-form-item>
           <a-form-item
@@ -104,7 +104,7 @@ import { constants } from 'fs';
               autoExpandParent
               v-model="DeptcheckedKeys"
               :treeData="deptTreeData"
-              v-decorator="[`${newItem.name}`, {initialValue: DeptcheckedKeys, rules: newItem.rules }]"
+              v-decorator="[`${newItem.name}`, {initialValue: DeptcheckedKeys }]"
             ></a-tree>
           </a-form-item>
         </template>
@@ -114,6 +114,7 @@ import { constants } from 'fs';
 </template>
 
  <script>
+import { constants } from 'crypto';
 export default {
   name: "newForm",
   data() {
@@ -132,7 +133,7 @@ export default {
       treeSelectData: [],
       menuTreeData: [],
       deptTreeData: [],
-      MenucheckedKeys: ['1'],
+      MenucheckedKeys: [],
       DeptcheckedKeys: []
     };
   },
@@ -166,9 +167,9 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.$emit("submitNew", values);
-          setTimeout(() => {
-            this.form.resetFields();
-          }, 1000);
+          // setTimeout(() => {
+          //   this.form.resetFields();
+          // }, 2000);
         }
       });
     },
@@ -220,11 +221,6 @@ export default {
       },
       deep: true
     },
-    MenucheckedKeys(val) {
-    },
-    DeptcheckedKeys(val) {
-      console.log("onCheck", val);
-    }
   }
 };
 </script>

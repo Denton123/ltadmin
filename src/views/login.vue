@@ -68,6 +68,7 @@ export default {
   name: "login",
   data() {
     return {
+      // 验证码图片
       codeSrc: ""
     };
   },
@@ -83,7 +84,11 @@ export default {
           this.$dataPost(this, "sys/loginV2", values, false).then(res => {
             if (res.data.code == 200) {
               this.$message.success("登录成功");
-              this.$router.push("/hotelMenus/e-longHotelList");
+              this.$store.commit("setLogin", true);
+              this.$router.push({
+                path: "/hotelMenus/e-longHotelList"
+              });
+              // this.$store.dispatch('getUser')
             } else if (res.data.code == 500) {
               this.$message.error(res.data.msg);
             }
@@ -99,7 +104,6 @@ export default {
         })
         .then(response => {
           if (response.status == 200) {
-            console.log(response);
             return (
               "data:image/png;base64," +
               btoa(
@@ -114,7 +118,7 @@ export default {
         .then(data => {
           this.codeSrc = data;
         });
-    },
+    }
   },
   mounted() {
     this.getCode();

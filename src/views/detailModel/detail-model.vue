@@ -7,7 +7,7 @@
  */
 
  <template>
-  <div>
+  <div class="detail">
     <!-- 头部 -->
     <div class="detail_head">
       <h2 class="detail_title">{{title}}-{{}}-详细信息</h2>
@@ -40,13 +40,14 @@
             type="primary"
             :key="item.title"
             class="block mrB10"
-            @click="hanldeStandardOperate(item.title, record.key)"
+            @click="hanldeStandardOperate(item.type, item.model, record.key)"
           >{{item.title}}</a-button>
         </template>
       </a-table>
     </div>
     <!-- 搜索 -->
     <div class="detai_search">
+       <h4 class="detai_search_title">{{listTitle}}</h4>
       <a-date-picker
         :disabledDate="disabledStartDate"
         format="YYYY-MM-DD"
@@ -64,6 +65,7 @@
         :open="endOpen"
         @openChange="handleEndOpenChange"
         @change="handleEndChange"
+        class="mrL10"
       />
       <a-button type="primary" @click="handleSearchDate" class="mrL10">搜索</a-button>
     </div>
@@ -77,10 +79,10 @@
             type="primary"
             :key="item.title"
             class="block mrB10"
-            @click="hanldeListOperate(item.title, record.key)"
+            @click="hanldeListOperate(item.type, item.model, record.key)"
           >{{item.title}}</a-button>
         </template>
-      </a-table>
+      </a-table> 
     </div>
   </div>
 </template>
@@ -92,9 +94,13 @@ export default {
   name: "detailModel",
   data() {
     return {
+      // 供应商表格列
       supplierColumns: [],
+      // 标准表格列
       standardColumns: [],
+      // 列表列
       listColumns: [],
+      // 列表数据
       listData: [
         {
           key: "1",
@@ -103,7 +109,9 @@ export default {
           address: "西湖区湖底公园1号"
         }
       ],
+      // 供应商数据
       supplierData: [],
+      // 标准数据
       standardData: [
         {
           key: "1",
@@ -112,8 +120,11 @@ export default {
           address: "西湖区湖底公园1号"
         }
       ],
+      // 开始时间
       startValue: null,
+      // 结束时间
       endValue: null,
+      // 结束时间是否打开
       endOpen: false
     };
   },
@@ -122,13 +133,20 @@ export default {
       type: Object,
       default() {
         return {
+          // 标题
           title: "",
+          // 表头
           theads: {},
+          // 表格字段
           props: {},
+          // 标准操作
           standardOperate: [],
+          // 列表操作
           listOperate: [],
           // 房间预订
-          roomOrder: ''
+          roomOrder: '',
+          // 列表标题
+          listTitle: ''
         };
       }
     }
@@ -151,8 +169,8 @@ export default {
       }
     },
     // 标准库表格操作
-    hanldeStandardOperate(title, key) {
-      console.log(title);
+    hanldeStandardOperate(type, model, key) {
+      this.$router.push(`/hotelMenus/${type}/${model}/${key}`);
     },
     // 开始不可选择日期
     disabledStartDate(startValue) {
@@ -200,12 +218,8 @@ export default {
       this.$router.go(-1);
     },
     // 展示表格操作按钮
-    hanldeListOperate(title, key) {
-        console.log(title)
-        if (title === '房间预订') {
-        console.log('88888888')
-        this.$router.push(`/hotelMenus/roomOrder/${this.roomOrder}/${key}`)
-      }
+    hanldeListOperate(type, model, key) {
+        this.$router.push(`/hotelMenus/${type}/${model}/${key}`)
     }
   },
   mounted() {
@@ -225,19 +239,24 @@ export default {
 </script>
 
 <style lang="scss">
-.detail_head {
+.detail{
+  .detail_head {
   .detail_title {
     font-size: 30px;
     text-align: center;
   }
 }
-.detail_thead {
-  .detail_thead_title {
-    font-size: 18px;
-  }
+h4{
+  font-size: 18px;
+  font-weight: 500;
 }
 .ant-table-thead > tr > th {
   font-weight: bold;
 }
+.mrL10{
+  margin-left: 10px;
+}
+}
+
 </style>
  

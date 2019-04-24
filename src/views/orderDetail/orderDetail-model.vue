@@ -33,7 +33,7 @@
         <span>订单备注记录</span>
         <a-icon
           :type="tableShow ? 'up-circle' : 'down-circle'"
-          class="fr mrT10"
+          class="fr mrT10 toggleIcon"
           @click="handleFold"
         />
       </div>
@@ -78,6 +78,7 @@ export default {
   name: "orderDetailModel",
   data() {
     return {
+      // 下拉数据
       selectOptions: [
         {
           value: "全部"
@@ -114,16 +115,21 @@ export default {
         }
       ],
       selectValue: undefined,
+      // 列表列
       listColumns: [],
+      // 表格数据
       tableData: [
         {
           time: "1",
           source: "John Brown",
           person: 32,
-          statement: "New York No. 1 Lake Park"
+          statement: "New York No. 1 Lake Park",
+          key: '1'
         }
       ],
+      // 是否显示表格
       tableShow: true,
+      // 描述值
       statementValue: ""
     };
   },
@@ -132,8 +138,11 @@ export default {
       type: Object,
       default() {
         return {
+          // 表头
           theads: [],
+          // 表格字段
           props: [],
+          // 卡片标签
           cardTag: []
         };
       }
@@ -144,12 +153,15 @@ export default {
     backTo() {
       this.$router.go(-1);
     },
+    // 提交
     handleSubmit() {
       console.log(this.selectValue);
     },
+    // 下拉选择操作
     handleChange(value) {
       console.log(value);
     },
+    // 表格列处理
     handleTableColumns() {
       this.listColumns = [];
       this.theads &&
@@ -165,6 +177,7 @@ export default {
         }
       }
     },
+    // 折叠表格
     handleFold() {
       this.tableShow = !this.tableShow;
       let tableHead = document.getElementById("orderDetail_table_head");
@@ -172,6 +185,7 @@ export default {
         ? "1px solid #e8e8e8"
         : "none";
     },
+    // 表格选择框
     onSelectChange(selectedRowKeys, selectedRows) {
       console.log(
         `selectedRowKeys: ${selectedRowKeys}`,
@@ -179,6 +193,7 @@ export default {
         selectedRows
       );
     },
+    // 添加描述
     addStatement() {
       console.log(this.statementValue);
     }
@@ -214,6 +229,9 @@ export default {
       font-size: 18px;
       text-align: center;
     }
+  }
+  .toggleIcon{
+    cursor: pointer;
   }
 }
 .ant-divider {

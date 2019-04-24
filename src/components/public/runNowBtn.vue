@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "NewBtn",
+  name: "runNowBtn",
   methods: {
       handleRunNow(){
           this.$parent.handleRunNow()

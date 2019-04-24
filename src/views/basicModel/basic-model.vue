@@ -46,12 +46,12 @@
       >
         <template class="tableOperate" slot="action" slot-scope="text, record">
           <a-button
-            v-for="tablecomponent in tableOperate"
+            v-for="tablecom in tableOperate"
             type="primary"
-            :key="tablecomponent.title"
+            :key="tablecom.title"
             class="block mrB10"
-            @click="handleTableOperate(tablecomponent.title, record.key)"
-          >{{tablecomponent.title}}</a-button>
+            @click="handleTableOperate(tablecom.type, tablecom.model, record.key)"
+          >{{tablecom.title}}</a-button>
         </template>
         <span slot-scope="status" slot="status">
           <a-tag
@@ -72,6 +72,7 @@
         @closeNewForm="closeNewForm"
         :newComponent="newComponent"
         @submitNew="submitNew"
+        v-if="newFormVisible"
       />
       <!-- 编辑表单 -->
       <edit-form
@@ -80,7 +81,6 @@
         @closeEditForm="closeEditForm"
         :fields="fields"
         :editComponent="editComponent"
-        v-if="editFormVisible"
         @submitEdit="submitEdit"
       />
     </div>
@@ -94,15 +94,15 @@ import searchResult from "@/components/public/searchResult";
 import searchInput from "@/components/public/searchInput";
 import newForm from "@/components/public/newForm";
 import editForm from "@/components/public/editForm";
-import { constants } from 'crypto';
 
 export default {
   name: "BasicModel",
   data() {
     return {
       modelIndex: 0,
-      activeName: "index0",
+      // 列
       columns: [],
+      // 表格数据
       tableData: [
         {
           key: "1",
@@ -112,6 +112,7 @@ export default {
           lowPrice: 23
         }
       ],
+      // 搜索结果
       searchData: {
         hotelMatchTotal: 115215,
         hotelOpenTotal: 5458787,
@@ -119,13 +120,17 @@ export default {
         hotelTotal: 458712,
         hotelUsableTotal: 478812389
       },
+      // 表格选中的行的全部key数组
       selectedRowKeys: [],
+      // 新增表单是否可见
       newFormVisible: false,
+      // 编辑表单是否可见
       editFormVisible: false,
+      // 表格返回数据
       fields: {},
       // 表格选中的行的数据
       selectedRows: {},
-      test: [],
+      // 表格选中的行的key数组
       selectedRowKey: [],
       // 表格分页
       pagination: {},
@@ -158,15 +163,7 @@ export default {
             // 编辑
             editComponent: [],
             tag: "",
-            url: "",
-            // 详情页
-            detail: "",
-            // 酒店匹配
-            hotelMatch: "",
-            // 房型匹配
-            roomMatch: "",
-            // 订单详情
-            orderDetail: ""
+            url: ""
           }
         ];
       }
@@ -196,16 +193,8 @@ export default {
       }
     },
     // 表格操作按钮
-    handleTableOperate(title, key) {
-      if (title === "酒店详情") {
-        this.$router.push(`/hotelMenus/detail/${this.detail}/${key}`);
-      } else if (title === "酒店匹配") {
-        this.$router.push(`/hotelMenus/hotelMatch/${this.hotelMatch}/${key}`);
-      } else if (title === "房型匹配") {
-        this.$router.push(`/hotelMenus/roomMatch/${this.roomMatch}/${key}`);
-      } else if (title === "订单详情") {
-        this.$router.push(`/hotelMenus/orderDetail/${this.orderDetail}/${key}`);
-      }
+    handleTableOperate(type, model, key) {
+      this.$router.push(`/hotelMenus/${type}/${model}/${key}`);
     },
     // 查询
     handleSearch(item) {
@@ -291,12 +280,12 @@ export default {
           onOk() {
             let params = {};
             let paramsKey, url, flag;
-            let urlArr = ["role", "schedule", "config", "user"];
+            let urlArr = ["role", "schedule", "config", "user", "dict"];
             if (urlArr.indexOf(that.tag) !== -1) {
               if (that.tag == "schedule") {
                 flag = "job";
                 url = `/sys/${that.tag}/deleteV2`;
-              } else if (that.tag == "user") {
+              } else if (that.tag == "user" || that.tag == "dict") {
                 flag = that.tag;
                 url = `/sys/${that.tag}/deleteV2`;
               } else {
@@ -424,14 +413,14 @@ export default {
         "scheduleLog",
         "dept"
       ];
-      let searchParams = { ...params, limit: 10};
+      let searchParams = { ...params, limit: 10 };
       if (tagArr.indexOf(this.tag) !== -1) {
         let url;
         url =
           this.tag == "role" || this.tag == "dept"
             ? `sys/${this.tag}/list/v2`
             : `sys/${this.tag}/listV2`;
-        this.loading = true;
+        // this.loading = true;
         this.$dataPost(this, url, searchParams, false).then(res => {
           if (res.data.code == 200) {
             let resData;
@@ -464,17 +453,17 @@ export default {
             } else {
               this.tableData = resData;
             }
-            this.loading = false;
+            // this.loading = false;
           }
         });
       } else {
-        this.loading = true;
+        // this.loading = true;
         this.$dataGet(this, this.url).then(res => {
-          if (res.data.code == 200) {
+          if (res && res.data.code == 200) {
             let resData = res.data.data;
             let resetData = this.$setTreeData(resData, `${this.tag}Id`, true);
             this.tableData = resetData;
-            this.loading = false;
+            // this.loading = false;
           }
         });
       }
@@ -531,7 +520,7 @@ export default {
       this.selectedRowKeys = selectedRowKeys;
       this.selectedRowKey = selectedRowKeys;
       if (this.selectedRowKey.length == 1) {
-        this.selectedRowKey = this.selectedRowKey.join("");
+        this.selectedRowKey = this.selectedRowKey.join(""); 
         Object.assign(this.selectedRows, ...selectedRows);
       }
     },
@@ -540,7 +529,7 @@ export default {
       this.getListData({ page: pagination.current });
     }
   },
-  watch: {
+  watch: { 
     $route: {
       handler: function() {
         this.handleTabelColumns();
@@ -572,14 +561,12 @@ export default {
 @import "@/sass/mixins/_mixins.scss";
 
 .basic_model {
+  overflow-x: auto;
   .basic_model_content {
     padding: 16px;
     // background: #fff;
     min-height: 280px;
   }
-  .tableOperate {
-  }
-
   .search_input {
     overflow: hidden;
   }

@@ -38,7 +38,7 @@
             type="primary"
             :key="item.title"
             class="block mrB10"
-            @click="hanldeStandardOperate(item.title, record.key)"
+            @click="hanldeStandardOperate(item.type, item.model, record.key)"
           >{{item.title}}</a-button>
         </template>
       </a-table>
@@ -53,7 +53,7 @@
             type="primary"
             :key="item.title"
             class="block mrB10"
-            @click="hanldeListOperate(item.title, record.key)"
+            @click="hanldeListOperate(item.type, item.model, record.key)"
           >{{item.title}}</a-button>
         </template>
       </a-table>
@@ -67,11 +67,24 @@ export default {
   name: "roomMatchModel",
   data() {
     return {
+      // 供应商列
       supplierColumns: [],
+      // 标准列
       standardColumns: [],
+      // 列表列
       listColumns: [],
-      listData: [],
+      // 列表数据
+      listData: [
+        {
+          key: "1",
+          name: "胡彦祖",
+          age: 42,
+          address: "西湖区湖底公园1号"
+        }
+      ],
+      // 供应商数据
       supplierData: [],
+      // 标准数据
       standardData: [
         {
           key: "1",
@@ -87,17 +100,22 @@ export default {
       type: Object,
       default() {
         return {
+          // 标题
           title: "",
+          // 表头
           theads: {},
+          // 表格字段
           props: {},
+          // 标准操作
           standardOperate: [],
+          // 列操作
           listOperate: []
         };
       }
     }
   },
   methods: {
-    //   返回上一级页面
+    // 返回上一级页面
     backTo() {
       this.$router.go(-1);
     },
@@ -118,8 +136,8 @@ export default {
       }
     },
     // 标准库表格操作
-    hanldeStandardOperate(title, key) {
-      console.log(title);
+    hanldeStandardOperate(type, model, key) {
+      this.$router.push(`/hotelMenus/${type}/${model}/${key}`);
     }
   },
   mixins: [computed],

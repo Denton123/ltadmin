@@ -38,18 +38,6 @@ export default {
         },
         tag() {
             return this.models[this.modelIndex].tag
-        },
-        detail() {
-            return this.models[this.modelIndex].detail 
-        },
-        hotelMatch() {
-            return this.models[this.modelIndex].hotelMatch
-        },
-        roomMatch() {
-            return this.models[this.modelIndex].roomMatch
-        },
-        orderDetail() {
-            return this.models[this.modelIndex].orderDetail
         }
     },
 }

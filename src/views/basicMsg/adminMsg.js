@@ -10,8 +10,10 @@ import uploadBtn from '@/components/public/uploadBtn';
 import configBtn from '@/components/public/configBtn';
 import backBtn from '@/components/public/backBtn';
 
-import getAsyncData from '@/util/getDataFn'
-import {phone, cron} from '@/util/validate'
+import {
+    phone,
+    cron
+} from '@/util/validate'
 
 export default {
     adminManage: [{
@@ -85,8 +87,13 @@ export default {
                 placeholder: '手机号',
                 inputType: 'text',
                 rules: [{
-                    validator: phone
-                }]
+                        validator: phone
+                    },
+                    {
+                        required: true,
+                        message: '请输入手机号'
+                    }
+                ]
             },
             {
                 type: 'checkbox',
@@ -162,8 +169,13 @@ export default {
                 placeholder: '手机号',
                 inputType: 'text',
                 rules: [{
-                    validator: phone
-                }]
+                        validator: phone
+                    },
+                    {
+                        required: true,
+                        message: '请输入手机号'
+                    }
+                ]
             },
             {
                 type: 'checkbox',
@@ -223,7 +235,7 @@ export default {
                 type: 'num',
                 label: '排序号',
                 name: 'orderNum',
-                placeholder: '排序号' 
+                placeholder: '排序号'
             }
         ],
         editComponent: [{
@@ -552,7 +564,7 @@ export default {
                 rules: [{
                     required: true,
                     message: '请输入cron表达式!'
-                },{
+                }, {
                     validator: cron
                 }],
             },
@@ -602,7 +614,7 @@ export default {
                 rules: [{
                     required: true,
                     message: '请输入cron表达式!'
-                },{
+                }, {
                     validator: cron
                 }],
             },
@@ -616,7 +628,7 @@ export default {
         ],
     }],
     logList: [{
-        key: 'log List',
+        key: 'logList',
         tab: '日志列表',
         tag: 'scheduleLog',
         theads: ['日志Id', '任务Id', 'bean名称', '错误', '方法名称', '执行时长(毫秒)', '参数', '状态', '创建时间'],
@@ -625,6 +637,9 @@ export default {
             placeholder: '任务Id',
             searchName: 'jobId'
         },
+        typeComponent: [{
+            components: backBtn
+        }],
     }],
     paramsManage: [{
         key: 'paramsManage',

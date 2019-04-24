@@ -18,4 +18,3 @@ Vue.use(Antd)
 
 /* 导入http */
 require('./http')
-

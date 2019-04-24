@@ -11,6 +11,12 @@ export default {
         },
         props() {
             return this.models.props
+        },
+        typeComponent(){
+            return this.models.typeComponent
+        },
+        actionOperate(){
+            return this.models.actionOperate
         }
     },
 }

@@ -3,9 +3,6 @@ export default {
     'e-longHotelList': [{
         key: 'e-longHotelList',
         tab: '艺龙酒店列表',
-        detail: 'e-longHotelListDetail',
-        hotelMatch: 'e-longHotelMatch',
-        roomMatch: 'e-longRoomMatch',
         theads: ['艺龙酒店id', '酒店名称', '城市', '地址电话', '产品最低价', '可用状态', '销售状态', '同步状态', '酒店匹配', '房型匹配', '操作'],
         props: ['hotelId', 'name', 'city', 'address', 'lowPrice', 'hotelListStatusChn', 'hotelDetailStatusChn', 'syncStatusChn', 'matchStatusChn', 'roomMatchChn', 'action'],
         SearchComponent: [{
@@ -141,13 +138,19 @@ export default {
             }
         ],
         tableOperate: [{
-                title: '酒店详情'
+                title: '酒店详情',
+                type: 'detail',
+                model: 'e-longHotelListDetail'
             },
             {
-                title: '酒店匹配'
+                title: '酒店匹配',
+                type: 'hotelMatch',
+                model: 'e-longHotelMatch'
             },
             {
-                title: '房型匹配'
+                title: '房型匹配',
+                type: 'roomMatch',
+                model: 'e-longRoomMatch'
             }
         ]
     }],
@@ -155,7 +158,7 @@ export default {
         key: 'qunarHotelList',
         tab: '去哪儿酒店列表',
         theads: ['发现假期酒店ID', '酒店名称', '城市', '地址电话', '房型数量', '操作'],
-        props: ['hotelId', 'name', 'city', 'phone', 'roomTotal'],
+        props: ['hotelId', 'name', 'city', 'phone', 'roomTotal', 'action'],
         SearchComponent: [{
                 type: 'text',
                 label: '国内城市',
@@ -176,13 +179,14 @@ export default {
             },
         ],
         tableOperate: [{
-            title: '酒店详情'
+            title: '酒店详情',
+            type: 'detail',
+            model: 'qunarHotelDetail'
         }]
     }],
     orderList: [{
         key: 'orderList',
         tab: '订单列表',
-        orderDetail: 'orderListDetail',
         theads: ['订单创建时间', '系统订单id', '供应商订单', '销售平台订单', '酒店名称', '房型名称', '入住日期', '离店日期', '房间数量', '总价', '订单状态', '联系人姓名', '联系人电话', '跟单人', '操作'],
         props: ['orderdate', 'name', 'address', 'order', 'hotelName', 'roomName', 'date', 'passdate', 'num', 'price', 'status', 'username', 'phone', 'person', 'action'],
         SearchComponent: [{
@@ -302,10 +306,14 @@ export default {
             }
         ],
         tableOperate: [{
-                title: '订单详情'
+                title: '订单详情',
+                type: 'orderDetail',
+                model: 'orderListDetail'
             },
             {
-                title: '跟单'
+                title: '取消订单',
+                type: 'orderDocumentary',
+                model: 'orderListDocumentary'
             }
         ]
     }],
@@ -319,7 +327,39 @@ export default {
         key: 'ctripList',
         tab: '携程酒店列表',
         theads: ['携程酒店id', '酒店名称', '城市名称', '区域名称', '电话', '酒店地址', '酒店是否可定', '酒店星级', '酒店匹配状态', '房型匹配数量', '房型数量', '酒店同步状态', '酒店等级', '操作'],
-        props: ['date', 'name', 'address'],
+        props: ['date', 'name', 'address', 'action'],
+        tableOperate: [{
+                title: '酒店详情',
+                type: 'detail',
+                model: 'ctripDetail'
+            },
+            {
+                title: '酒店匹配',
+                type: 'hotelMatch',
+                model: 'ctripHotelMatch'
+            },
+            {
+                title: '房型匹配',
+                type: 'roomMatch',
+                model: 'ctripRoomMatch'
+            }
+        ],
+        searchResultMsg: [{
+                tab: '【酒店】',
+                tag: {
+                    hotelTotal: '全部酒店数量',
+                    hotelMatchTotal: '可售',
+                    hotelSyncTotal: '已匹配',
+                }
+            },
+            {
+                tab: '【房型】',
+                tag: {
+                    hotelMatchTotal: '全部酒店数量',
+                    hotelOpenTotal: '已匹配',
+                }
+            }
+        ],
         SearchComponent: [{
                 type: 'text',
                 label: '国内城市',
@@ -444,7 +484,23 @@ export default {
         key: 'quhuhuList',
         tab: '去呼呼酒店列表',
         theads: ['去呼呼酒店id', '酒店名称', '城市名称', '电话', '酒店地址', '酒店匹配状态', '酒店匹配', '酒店同步状态', '操作'],
-        props: ['date', 'name', 'address'],
+        props: ['date', 'name', 'address', 'action'],
+        tableOperate: [{
+                title: '酒店详情',
+                type: 'detail',
+                model: 'quhuhuDetail'
+            },
+            {
+                title: '酒店匹配',
+                type: 'hotelMatch',
+                model: 'quhuhuHotelMatch'
+            },
+            {
+                title: '房型匹配',
+                type: 'roomMatch',
+                model: 'quhuhuRoomMatch'
+            }
+        ],
         SearchComponent: [{
                 type: 'text',
                 label: '国内城市',
@@ -594,7 +650,41 @@ export default {
         key: 'meituanList',
         tab: '美团酒店列表',
         theads: ['美团酒店', '酒店名称', '城市', '地址电话', '营业状态', '星级', '类型', '评分', '开业时间', '同步状态', '酒店匹配', '房型匹配', '操作'],
-        props: ['date', 'name', 'address'],
+        props: ['date', 'name', 'address', 'action'],
+        tableOperate: [{
+                title: '酒店详情',
+                type: 'detail',
+                model: 'meituanDetail'
+            },
+            {
+                title: '酒店匹配',
+                type: 'hotelMatch',
+                model: 'meituanHotelMatch'
+            },
+            {
+                title: '房型匹配',
+                type: 'roomMatch',
+                model: 'meituanRoomMatch'
+            }
+        ],
+        searchResultMsg: [{
+                tab: '【酒店】',
+                tag: {
+                    hotelTotal: '全部酒店数量',
+                    hotelUsableTotal: '可用',
+                    hotelMatchTotal: '可售',
+                    hotelOpenTotal: '已同步',
+                    hotelSyncTotal: '已匹配',
+                }
+            },
+            {
+                tab: '【房型】',
+                tag: {
+                    hotelMatchTotal: '全部酒店数量',
+                    hotelOpenTotal: '已匹配',
+                }
+            }
+        ],
         SearchComponent: [{
                 type: 'text',
                 label: '美团酒店ID',
@@ -673,7 +763,71 @@ export default {
         key: 'meituanOrderList',
         tab: '美团订单列表',
         theads: ['日期日期日期', '名称名称名称', '地址地址地址地址地址', '地址', '操作'],
-        props: ['date', 'name', 'address'],
+        props: ['date', 'name', 'address', 'action'],
+        tableOperate: [{
+                title: '订单详情',
+                type: 'orderDetail',
+                model: 'meituanorderDetail'
+            },
+            {
+                title: '酒店匹配',
+                type: 'hotelMatch',
+                model: 'meituanHotelMatch'
+            },
+        ],
+        SearchComponent: [{
+                type: 'text',
+                label: '系统订单id',
+                placeholder: '请输入系统订单id',
+                name: 'city'
+            },
+            {
+                type: 'text',
+                label: '美团订单id',
+                placeholder: '请输入美团订单id',
+                name: 'city2'
+            },
+            {
+                type: 'text',
+                label: '酒店ID',
+                placeholder: '请输入酒店ID',
+                name: 'hotelId'
+            },
+            {
+                type: 'text',
+                label: '产品ID',
+                placeholder: '请输入产品ID',
+                name: 'hotelId'
+            },
+            {
+                type: 'text',
+                label: '联系人姓名',
+                placeholder: '请输入联系人姓名',
+                name: 'hotelId'
+            },
+            {
+                type: 'text',
+                label: '联系人电话',
+                placeholder: '请输入联系人电话',
+                name: 'hotelId'
+            },
+            {
+                type: 'select',
+                label: '订单状态',
+                name: 'state',
+                defaultValue: '全部',
+                options: [{
+                        value: '全部'
+                    },
+                    {
+                        value: '同步'
+                    },
+                    {
+                        value: '不同步'
+                    }
+                ]
+            },
+        ],
     }],
     feizhuPriceManager: [{
         key: 'feizhuPriceManager',
