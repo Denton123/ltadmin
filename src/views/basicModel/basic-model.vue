@@ -520,7 +520,7 @@ export default {
       this.selectedRowKeys = selectedRowKeys;
       this.selectedRowKey = selectedRowKeys;
       if (this.selectedRowKey.length == 1) {
-        this.selectedRowKey = this.selectedRowKey.join(""); 
+        this.selectedRowKey = this.selectedRowKey.join("");
         Object.assign(this.selectedRows, ...selectedRows);
       }
     },
@@ -529,7 +529,7 @@ export default {
       this.getListData({ page: pagination.current });
     }
   },
-  watch: { 
+  watch: {
     $route: {
       handler: function() {
         this.handleTabelColumns();

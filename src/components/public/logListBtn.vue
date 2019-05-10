@@ -11,9 +11,9 @@
 export default {
   name: "logListBtn",
   methods: {
-      handleShowLog(){
-          this.$parent.handleShowLog()
-      }
+    handleShowLog() {
+      this.$parent.handleShowLog();
+    }
   }
 };
 </script>

@@ -11,9 +11,9 @@
 export default {
   name: "reNewBtn",
   methods: {
-      handleRenew(){
-          this.$parent.handleRenew()
-      }
+    handleRenew() {
+      this.$parent.handleRenew();
+    }
   }
 };
 </script>

@@ -65,6 +65,7 @@
 <script>
 import antMenu from "@/components/public/antMenu";
 import menu from "@/views/basicMsg/menu";
+import axios from "axios";
 export default {
   name: "index",
   data() {
@@ -158,20 +159,22 @@ export default {
         this.defaultSelectedKeys.push(markMenu.selectedKey);
         this.breadcrumb = markMenu.name;
       }
-      this.username = window.bdUser['username']
-        ? window.bdUser['username']
+      this.username = window.bdUser["username"]
+        ? window.bdUser["username"]
         : "";
     },
     markMenuClick(openKey, selectedKey, name) {
       let openKeyObj = { openKey, selectedKey, name };
       openKeyObj = JSON.stringify(openKeyObj);
       localStorage.setItem("openkey", openKeyObj);
-    }
+    },
   },
   mounted() {
     this.initialValue();
+    console.log(this.GLOBAL)
   },
-  created(){
+  created() {
+    // console.log(this.GLOBAL)
   },
   watch: {
     $route: {
@@ -186,7 +189,7 @@ export default {
       },
       // 深度观察监听
       deep: true
-    },
+    }
   },
   beforeMount() {
     // 加载菜单数据

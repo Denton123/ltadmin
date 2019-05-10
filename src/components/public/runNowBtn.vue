@@ -11,9 +11,9 @@
 export default {
   name: "runNowBtn",
   methods: {
-      handleRunNow(){
-          this.$parent.handleRunNow()
-      }
+    handleRunNow() {
+      this.$parent.handleRunNow();
+    }
   }
 };
 </script>

@@ -140,7 +140,7 @@ export default {
       }
     }
   },
-  methods: {                                                                                
+  methods: {
     //   返回上一级页面
     backTo() {
       this.$router.go(-1);

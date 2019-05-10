@@ -124,7 +124,7 @@ export default {
           source: "John Brown",
           person: 32,
           statement: "New York No. 1 Lake Park",
-          key: '1'
+          key: "1"
         }
       ],
       // 是否显示表格
@@ -230,7 +230,7 @@ export default {
       text-align: center;
     }
   }
-  .toggleIcon{
+  .toggleIcon {
     cursor: pointer;
   }
 }

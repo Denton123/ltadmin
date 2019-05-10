@@ -6,7 +6,7 @@ import Axios from 'axios';
 
 require('@/config/index')
 Vue.config.productionTip = false
-
+Vue.prototype.GLOBAL = 'global_'
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.isLogin) {
@@ -17,6 +17,8 @@ router.beforeEach((to, from, next) => {
         } else {
           next('/login')
         }
+      }).catch((error) => {
+        if (error) next('/login')
       })
     } else {
       next('/login')

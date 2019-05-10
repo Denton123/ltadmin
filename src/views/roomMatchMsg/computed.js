@@ -1,6 +1,6 @@
 export default {
     computed: {
-        title(){
+        title() {
             return this.models.title
         },
         theads() {

@@ -78,8 +78,11 @@ export default {
   methods: {
     // 登录
     handleLogin(e) {
+      console.log(e)
       e.preventDefault();
+      console.log(this.form)
       this.form.validateFields((err, values) => {
+        console.log('wwww')
         if (!err) {
           this.$dataPost(this, "sys/loginV2", values, false).then(res => {
             if (res.data.code == 200) {

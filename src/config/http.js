@@ -27,10 +27,10 @@ axios.defaults.baseURL = baseDomain
 // console.log(baseDomain)
 // axios.defaults.baseURL = 'http://test.b.gdltu.com'
 // 添加响应拦截器
-axios.interceptors.response.use(function (response) {
-    // 对响应数据做点什么
-    if (response.data.code === 500) router.push({path: '/login'})
-    if (response.data.code === 200) return response
-}, error => {
-    return Promise.reject(error)
-})
+// axios.interceptors.response.use(function (response) {
+//     // 对响应数据做点什么
+//     if (response.data.code === 500) router.push({path: '/login'})
+//     if (response.data.code === 200) return response
+// }, error => {
+//     return Promise.reject(error)
+// })

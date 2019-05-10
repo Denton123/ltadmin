@@ -35,7 +35,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.models)
+    console.log(this.models);
   }
 };
 </script>

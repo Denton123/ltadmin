@@ -41,15 +41,14 @@
     </div>
     <!-- 价格日历 -->
     <div class="roomOrder_list">
-      <a-table :columns="listColumns" :dataSource="listData" bordered>
-      </a-table> 
+      <a-table :columns="listColumns" :dataSource="listData" bordered></a-table>
     </div>
   </div>
 </template>
 
 <script>
 import computed from "../roomOrderMsg/computed";
-import orderForm from './component/orderForm'
+import orderForm from "./component/orderForm";
 export default {
   name: "roomOrderModel",
   data() {
@@ -113,7 +112,7 @@ export default {
     this.handleTableColumns("room");
     this.handleTableColumns("list");
   },
-  components:{
+  components: {
     orderForm
   }
 };

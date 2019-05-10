@@ -4,28 +4,28 @@
 * @date 2019/3/5
 * */
 <template>
-    <div>
-        <div class="content">404</div>
-    </div>
+  <div>
+    <div class="content">404</div>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'NoFound'
-}
+  name: "NoFound"
+};
 </script>
 
 <style lang="scss">
-    div.content{
-        position: absolute; 
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		margin: auto;
-		width: 52px;
-		height: 41px;
-		font-size: 80px;
-		color: #9E9E9E;
-    }
+div.content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 52px;
+  height: 41px;
+  font-size: 80px;
+  color: #9e9e9e;
+}
 </style>

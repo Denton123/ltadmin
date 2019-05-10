@@ -8,13 +8,13 @@ export default {
     install() {
         let host = ''
         /**
-        * 将json数据转为tree等级数据
-        *
-        * @param rowData {Object}
-        * @param rowId {String} 需要对比的id
-        * @param isIndex {Boolean} key值是index，还是id
-        * @returns {Object}
-        */
+         * 将json数据转为tree等级数据
+         *
+         * @param rowData {Object}
+         * @param rowId {String} 需要对比的id
+         * @param isIndex {Boolean} key值是index，还是id
+         * @returns {Object}
+         */
         Vue.prototype.$setTreeData = (rowData, rowId, isIndex) => {
             let data = [...rowData]
             let sortData = []

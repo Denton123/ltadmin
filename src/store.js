@@ -23,9 +23,7 @@ export default new Vuex.Store({
     getUser({
       commit
     }) {
-      console.log(res)
       commit('changeUser', res.data.data)
-
     }
   }
 })

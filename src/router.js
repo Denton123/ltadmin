@@ -39,8 +39,8 @@ export default new Router({
           name: 'hotelMatch',
           component: () => import( /* webpackChunkName: "hotelMatch" */ '@/views/hotelMatch/hotelMatch-content.vue')
         },
-         // 房型匹配
-         {
+        // 房型匹配
+        {
           path: '/hotelMenus/roomMatch/:model/:id',
           name: 'roomMatch',
           component: () => import( /* webpackChunkName: "roomMatch" */ '@/views/roomMatch/roomMatch-content.vue')

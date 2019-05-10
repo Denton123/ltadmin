@@ -47,7 +47,7 @@
     </div>
     <!-- 搜索 -->
     <div class="detai_search">
-       <h4 class="detai_search_title">{{listTitle}}</h4>
+      <h4 class="detai_search_title">{{listTitle}}</h4>
       <a-date-picker
         :disabledDate="disabledStartDate"
         format="YYYY-MM-DD"
@@ -82,7 +82,7 @@
             @click="hanldeListOperate(item.type, item.model, record.key)"
           >{{item.title}}</a-button>
         </template>
-      </a-table> 
+      </a-table>
     </div>
   </div>
 </template>
@@ -144,9 +144,9 @@ export default {
           // 列表操作
           listOperate: [],
           // 房间预订
-          roomOrder: '',
+          roomOrder: "",
           // 列表标题
-          listTitle: ''
+          listTitle: ""
         };
       }
     }
@@ -156,11 +156,12 @@ export default {
     // 处理表格头数据
     handleTableColumns(type) {
       this[`${type}Columns`] = [];
-      this.theads[`${type}Theads`] && this.theads[`${type}Theads`].forEach(v => {
-        this[`${type}Columns`].push({
-          title: v
+      this.theads[`${type}Theads`] &&
+        this.theads[`${type}Theads`].forEach(v => {
+          this[`${type}Columns`].push({
+            title: v
+          });
         });
-      });
       for (let i in this.props[`${type}Props`]) {
         this[`${type}Columns`][i].dataIndex = this.props[`${type}Props`][i];
         if (this.props[`${type}Props`][i] == "action") {
@@ -219,7 +220,7 @@ export default {
     },
     // 展示表格操作按钮
     hanldeListOperate(type, model, key) {
-        this.$router.push(`/hotelMenus/${type}/${model}/${key}`)
+      this.$router.push(`/hotelMenus/${type}/${model}/${key}`);
     }
   },
   mounted() {
@@ -239,24 +240,23 @@ export default {
 </script>
 
 <style lang="scss">
-.detail{
+.detail {
   .detail_head {
-  .detail_title {
-    font-size: 30px;
-    text-align: center;
+    .detail_title {
+      font-size: 30px;
+      text-align: center;
+    }
+  }
+  h4 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .ant-table-thead > tr > th {
+    font-weight: bold;
+  }
+  .mrL10 {
+    margin-left: 10px;
   }
 }
-h4{
-  font-size: 18px;
-  font-weight: 500;
-}
-.ant-table-thead > tr > th {
-  font-weight: bold;
-}
-.mrL10{
-  margin-left: 10px;
-}
-}
-
 </style>
  

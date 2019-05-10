@@ -1,14 +1,13 @@
-
 export default {
     computed: {
-        theads(){
+        theads() {
             return this.models.theads
         },
-        props(){
+        props() {
             return this.models.props
         },
         cardTag() {
-            return this.models.cardTag 
+            return this.models.cardTag
         }
     },
 }

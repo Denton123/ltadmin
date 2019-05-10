@@ -11,9 +11,9 @@
 export default {
   name: "pauseBtn",
   methods: {
-      handlePause(){
-          this.$parent.handlePause()
-      }
+    handlePause() {
+      this.$parent.handlePause();
+    }
   }
 };
 </script>
