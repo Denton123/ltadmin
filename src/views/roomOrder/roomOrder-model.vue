@@ -8,34 +8,38 @@
 <template>
   <div class="roomOrder">
     <!-- 头部 -->
-    <div class="roomOrder_head">
+    <div class="roomOrder_head whiteblock">
       <h2 class="roomOrder_title">{{title}}-{{}}-预定页</h2>
       <a-button type="primary" class="fr mrB10" @click="backTo">
         <a-icon type="rollback"/>返回
       </a-button>
-      <a-divider/>
+      <!-- <a-divider/> -->
     </div>
     <!-- 预订页头部表格 -->
     <div class="roomOrder_thead">
-      <h4 class="roomOrder_thead_title">供应商-酒店信息</h4>
-      <a-table
-        :columns="supplierColumns"
-        :dataSource="supplierData"
-        bordered
-        class="mrB10"
-        :pagination="false"
-      ></a-table>
-      <h4 class="roomOrder_thead_title">房型信息</h4>
-      <a-table
-        :columns="roomColumns"
-        :dataSource="roomData"
-        bordered
-        :pagination="false"
-        class="mrB10"
-      ></a-table>
+      <div class="detail_thead_wrap whiteblock">
+        <h4 class="roomOrder_thead_title">供应商-酒店信息</h4>
+        <a-table
+          :columns="supplierColumns"
+          :dataSource="supplierData"
+          bordered
+          class="mrB10"
+          :pagination="false"
+        ></a-table>
+      </div>
+      <div class="detail_thead_wrap whiteblock">
+        <h4 class="roomOrder_thead_title">房型信息</h4>
+        <a-table
+          :columns="roomColumns"
+          :dataSource="roomData"
+          bordered
+          :pagination="false"
+          class="mrB10"
+        ></a-table>
+      </div>
     </div>
     <!-- 预定信息表单 -->
-    <div class="roomOrder_form">
+    <div class="roomOrder_form whiteblock">
       <h4 class="roomOrder_form_title">预订信息</h4>
       <order-form :orderComponent="orderComponent"></order-form>
     </div>
@@ -128,6 +132,16 @@ export default {
       font-size: 30px;
       text-align: center;
     }
+    height: 110px;
+    margin-bottom: 10px;
+  }
+  .detail_thead_wrap{
+    // background: #ffffff;
+    margin-bottom: 10px;
+    // padding: 10px;
+  }
+  .roomOrder_form{
+    padding-bottom: 40px;
   }
 }
 </style>

@@ -7,7 +7,7 @@
  */
 
  <template>
-  <div class="orderForm">
+  <div class="orderForm whiteblock">
     <a-form :form="form" @submit="handleOrderSubmit">
       <template v-for="item in orderComponent">
         <!-- 时间 -->

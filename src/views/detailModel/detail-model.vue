@@ -9,45 +9,50 @@
  <template>
   <div class="detail">
     <!-- 头部 -->
-    <div class="detail_head">
+    <div class="detail_head whiteblock">
       <h2 class="detail_title">{{title}}-{{}}-详细信息</h2>
       <a-button type="primary" class="fr mrB10" @click="backTo">
         <a-icon type="rollback"/>返回
       </a-button>
-      <a-divider/>
+      <!-- <a-divider/> -->
     </div>
     <!-- 详情页头部表格 -->
     <div class="detail_thead">
-      <h4 class="detail_thead_title">供应商-酒店信息</h4>
-      <a-table
-        :columns="supplierColumns"
-        :dataSource="supplierData"
-        bordered
-        class="mrB10"
-        :pagination="false"
-      ></a-table>
-      <h4 class="detail_thead_title">标准库-酒店信息</h4>
-      <a-table
-        :columns="standardColumns"
-        :dataSource="standardData"
-        bordered
-        :pagination="false"
-        class="mrB10"
-      >
-        <template slot="action" slot-scope="text, record">
-          <a-button
-            v-for="item in standardOperate"
-            type="primary"
-            :key="item.title"
-            class="block mrB10"
-            @click="hanldeStandardOperate(item.type, item.model, record.key)"
-          >{{item.title}}</a-button>
-        </template>
-      </a-table>
+      <div class="detail_thead_wrap whiteblock">
+        <h4 class="detail_thead_title">供应商-酒店信息</h4>
+        <a-table
+          :columns="supplierColumns"
+          :dataSource="supplierData"
+          bordered
+          class="mrB10"
+          :pagination="false"
+        ></a-table>
+      </div>
+      <div class="detail_thead_wrap whiteblock">
+        <h4 class="detail_thead_title">标准库-酒店信息</h4>
+        <a-table
+          :columns="standardColumns"
+          :dataSource="standardData"
+          bordered
+          :pagination="false"
+          class="mrB10"
+        >
+          <template slot="action" slot-scope="text, record">
+            <a-button
+              v-for="item in standardOperate"
+              type="primary"
+              :key="item.title"
+              class="block mrB10"
+              @click="hanldeStandardOperate(item.type, item.model, record.key)"
+            >{{item.title}}</a-button>
+          </template>
+        </a-table>
+      </div>
     </div>
     <!-- 搜索 -->
-    <div class="detai_search">
+    <div class="detai_search whiteblock">
       <h4 class="detai_search_title">{{listTitle}}</h4>
+      <span>入住时间：</span>
       <a-date-picker
         :disabledDate="disabledStartDate"
         format="YYYY-MM-DD"
@@ -57,6 +62,7 @@
         @change="handleStartChange"
         class="mrR10"
       />
+      <span class="mrL10">离店时间：</span>
       <a-date-picker
         :disabledDate="disabledEndDate"
         format="YYYY-MM-DD"
@@ -65,13 +71,12 @@
         :open="endOpen"
         @openChange="handleEndOpenChange"
         @change="handleEndChange"
-        class="mrL10"
       />
       <a-button type="primary" @click="handleSearchDate" class="mrL10">搜索</a-button>
     </div>
 
     <!-- 展示列表 -->
-    <div class="detail_list mrT10">
+    <!-- <div class="detail_list mrT10">
       <a-table :columns="listColumns" :dataSource="listData" bordered>
         <template slot="action" slot-scope="text, record">
           <a-button
@@ -82,8 +87,61 @@
             @click="hanldeListOperate(item.type, item.model, record.key)"
           >{{item.title}}</a-button>
         </template>
+        <a-table
+          slot="expandedRowRender"
+          slot-scope="text"
+          :columns="innerColumns"
+          :dataSource="innerData"
+          :pagination="false"
+        ></a-table>
       </a-table>
-    </div>
+    </div>-->
+    <!-- 展示列表 -->
+      <a-list
+        itemLayout="vertical"
+        :dataSource="listData"
+        :pagination="pagination"
+        class="whiteblock mrT10"
+      >
+        <a-list-item
+          slot="renderItem"
+          slot-scope="item, index"
+          key="item.name"
+          @click="toggleListDetail(item)"
+        >
+          <a-list-item-meta>
+            <a slot="title" class="listTitle">{{item.name}} <a-icon :type="activeIndex===item.key ? 'up': 'down'" /></a>
+            <a-avatar slot="avatar" :src="item.logo"></a-avatar>
+            <template slot="description">
+              <span>{{item.age}}</span>
+              <span class="mrR10 mrL10">|</span>
+              <span>{{item.address}}</span>
+            </template>
+          </a-list-item-meta>
+
+          <div v-if="activeIndex===item.key">
+            <a-table :columns="innerColumns" :dataSource="innerData" :pagination="false">
+              <template slot="action" slot-scope="text, record">
+                <a-button
+                  v-for="item in listOperate"
+                  type="primary"
+                  :key="item.title"
+                  class="block mrB10"
+                  @click="hanldeListOperate(item.type, item.model, record.key)"
+                >{{item.title}}</a-button>
+              </template>
+              <template slot="price" slot-scope="text, record">
+                <a-popover>
+                  <template slot="content">
+                    <a-table :columns="priceColumns" :dataSource="priceData" :pagination="false"></a-table>
+                  </template>
+                  <span>{{record.price}}</span>
+                </a-popover>
+              </template>
+            </a-table>
+          </div>
+        </a-list-item>
+      </a-list>
   </div>
 </template>
 
@@ -100,13 +158,52 @@ export default {
       standardColumns: [],
       // 列表列
       listColumns: [],
+      // 列表展开表格
+      innerColumns: [],
+      // 价格日历列
+      priceColumns: [],
       // 列表数据
       listData: [
         {
           key: "1",
-          name: "胡彦祖",
+          name: "单人房",
           age: 42,
-          address: "西湖区湖底公园1号"
+          address: "西湖区湖底公园1号",
+          logo: "http://pavo.elongstatic.com/i/Hotel120_120/nw_FXQ8JLibJK.jpg"
+        },
+        {
+          key: "2",
+          name: "豪华房",
+          age: 111,
+          address: "西湖区湖底公园1号",
+          logo:
+            "http://pavo.elongstatic.com/i/Hotel120_120/nw_FXQ8JLibJK.jpg"
+        }
+      ],
+      // 列表展开表格数据
+      innerData: [
+        {
+          key: "1",
+          supplycode: "胡彦祖",
+          roomcode: 42,
+          productcode: "西湖区湖底公园1号",
+          price: "￥520",
+          test: '价格'
+        },
+        {
+          key: "2",
+          supplycode: "胡彦祖",
+          roomcode: 42,
+          productcode: "西湖区湖底公园1号",
+          price: "￥520",
+          test: '可用状态'
+        }
+      ],
+      // 价格日历数据
+      priceData: [
+        {
+          key: '1',
+          '5-21': '￥2222'
         }
       ],
       // 供应商数据
@@ -125,7 +222,9 @@ export default {
       // 结束时间
       endValue: null,
       // 结束时间是否打开
-      endOpen: false
+      endOpen: false,
+      pagination: {},
+      activeIndex: -1
     };
   },
   props: {
@@ -166,6 +265,8 @@ export default {
         this[`${type}Columns`][i].dataIndex = this.props[`${type}Props`][i];
         if (this.props[`${type}Props`][i] == "action") {
           this[`${type}Columns`][i].scopedSlots = { customRender: "action" };
+        } else if (this.props[`${type}Props`][i] == "price") {
+          this[`${type}Columns`][i].scopedSlots = { customRender: "price" };
         }
       }
     },
@@ -177,20 +278,20 @@ export default {
     disabledStartDate(startValue) {
       const endValue = this.endValue;
       if (!startValue || !endValue) {
-        return startValue < moment().endOf("day");
+        return startValue < moment().startOf("day");
       }
       return (
-        startValue.valueOf() > endValue.valueOf() ||
-        startValue < moment().endOf("day")
+        // startValue.valueOf() > endValue.valueOf() ||
+        startValue < moment().startOf("day")
       );
     },
     // 结束不可选择日期
     disabledEndDate(endValue) {
       const startValue = this.startValue;
       if (!endValue || !startValue) {
-        return false;
+        return endValue < moment().startOf("day");
       }
-      return startValue.valueOf() >= endValue.valueOf();
+      return startValue.valueOf() > endValue.valueOf();
     },
     // 开始日期打开事件
     handleStartOpenChange(open) {
@@ -212,7 +313,14 @@ export default {
     },
     // 点击搜索按钮
     handleSearchDate() {
-      console.log(moment(this.startValue).format("YYYY-MM-DD"));
+      const begin = moment(this.startValue).format("YYYY/MM/DD");
+      const end = moment(this.endValue).format("YYYY/MM/DD");
+      const allTime = this.$getTimeRange(begin, end)
+      this.theads.priceTheads = allTime
+      this.props.priceProps = allTime
+      this.handleTableColumns('price')
+      console.log(this.priceData)
+      console.log(this.props.priceProps)
     },
     // 返回上一级页面
     backTo() {
@@ -221,12 +329,18 @@ export default {
     // 展示表格操作按钮
     hanldeListOperate(type, model, key) {
       this.$router.push(`/hotelMenus/${type}/${model}/${key}`);
+    },
+    // 切换显示日历表格
+    toggleListDetail(item) {
+      console.log(item);
+      this.activeIndex = this.activeIndex == item.key ? -1 : item.key;
     }
   },
   mounted() {
     this.handleTableColumns("supplier");
     this.handleTableColumns("standard");
     this.handleTableColumns("list");
+    this.handleTableColumns("inner");
   },
   watch: {
     startValue(val) {
@@ -246,6 +360,8 @@ export default {
       font-size: 30px;
       text-align: center;
     }
+    height: 110px;
+    margin-bottom: 10px;
   }
   h4 {
     font-size: 18px;
@@ -256,6 +372,24 @@ export default {
   }
   .mrL10 {
     margin-left: 10px;
+  }
+  .detail_thead_wrap {
+    margin-bottom: 10px;
+  }
+  .ant-table-wrapper {
+    background: #ffffff;
+  }
+  .ant-avatar {
+    border-radius: 0%;
+    width: 80px;
+    height: 100px;
+  }
+  .listTitle{
+    color: #37D;
+    cursor: pointer;
+  }
+  .ant-list-item{
+    cursor: pointer;
   }
 }
 </style>

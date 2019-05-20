@@ -27,6 +27,18 @@ export default {
             },
             dataFlag: 'standard',
             hasBtn: false
+        }, {
+            title: '标准库-已匹配酒店信息',
+            other: '未匹配至标准库酒店'
+        }],
+        typeComponent: [{
+            component: newModalBtn,
+            params: {
+                btnDesc: '新建标准化酒店',
+                title: '新建标准化酒店',
+                infoTitle: '是否以供应商的待匹配酒店信息为基础创建御道标准化酒店？',
+                okText: '确认新建'
+            }
         }],
         theads: ['城市', '标准库酒店ID', '酒店名称', , '地址电话', '已匹配供应商酒店', '操作'],
         props: ['city', 'hotelId', 'name', 'address', 'hotel', 'actions']

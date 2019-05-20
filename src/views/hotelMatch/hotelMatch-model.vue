@@ -7,19 +7,19 @@
  */
 <template>
   <div class="hotelMatch">
-    <div class="hotelMatch_head">
+    <div class="hotelMatch_head whiteblock">
       <h2 class="hotelMatch_title">{{title}}-{{}}-酒店匹配</h2>
       <a-button type="primary" class="fr mrB10" @click="backTo">
         <a-icon type="rollback"/>返回
       </a-button>
-      <a-divider/>
+      <!-- <a-divider/> -->
     </div>
     <div>
       <a-row>
         <!-- 右侧列表 -->
         <a-col :span="16" :push="8" class="hotelMatch_right">
           <!-- 搜索 -->
-          <div class="hotelMatch_search">
+          <div class="hotelMatch_search whiteblock">
             <h4>搜索标准库</h4>
             <span>国内城市：</span>
             <a-input placeholder="请输入城市名称" v-model="searchCityName"/>
@@ -55,12 +55,15 @@
         <a-col :span="8" :pull="16" class="hotelMatch_left">
           <a-card :title="`${item.title}`" v-for="(item, index) in hotelMatchCardTag" :key="index">
             <a-button type="primary" slot="extra" v-if="item.hasBtn">下一个</a-button>
-            <template v-for="(value, key) in item.tag">
-              <p>
-                <strong>{{value}}：</strong>
-                <span>{{hotelCardDate[key] ? hotelCardDate[key] : ''}}</span>
-              </p>
+            <template v-if="item.tag">
+              <div :key="key" v-for="(value, key) in item.tag">
+                <p>
+                  <strong>{{value}}：</strong>
+                  <span>{{hotelCardDate[key] ? hotelCardDate[key] : ''}}</span>
+                </p>
+              </div>
             </template>
+            <div v-else>{{item.other}}</div>
           </a-card>
         </a-col>
       </a-row>
@@ -199,6 +202,8 @@ export default {
       font-size: 30px;
       text-align: center;
     }
+    height: 110px;
+    margin-bottom: 10px;
   }
   .hotelMatch_left {
     border-right: 1px solid #000;
@@ -214,6 +219,12 @@ export default {
     h4 {
       font-size: 18px;
     }
+  }
+  .ant-table-thead > tr > th {
+    font-weight: bold;
+  }
+  .ant-table-wrapper {
+    background: #ffffff;
   }
 }
 </style>

@@ -35,13 +35,13 @@
         </a-menu>
 
         <!-- 头部右侧nav -->
-        <a-menu class="inlineBlock fr" mode="horizontal">
+        <a-menu class="inlineBlock fr menu_right" mode="horizontal">
           <a-sub-menu>
             <span slot="title">
               <a-icon type="user"/>
               {{username}}
             </span>
-            <a-menu-item>个人中心</a-menu-item>
+            <a-menu-item @click="toModify">修改密码</a-menu-item>
             <a-menu-item @click="logout">退出登录</a-menu-item>
           </a-sub-menu>
         </a-menu>
@@ -58,7 +58,7 @@
         <!-- Content -->
         <router-view/>
       </a-layout-content>
-      <a-layout-footer style="textAlign: center">Ant Design ©2018 Created by Ant UED</a-layout-footer>
+      <a-layout-footer style="textAlign: center">版权所有 ©2019 乐途国际</a-layout-footer>
     </a-layout>
   </a-layout>
 </template>
@@ -122,6 +122,15 @@ export default {
       this.$router.push("/login");
       localStorage.clear();
     },
+    // 修改密码
+    toModify() {
+      this.defaultSelectedKeys = [];
+      this.openKeys = [];
+      this.currentKeys = [];
+      this.$router.push("/hotelMenus/modifyPwd");
+      this.breadcrumb = "修改密码";
+      localStorage.removeItem("openkey");
+    },
     // 点击当前菜单折叠其他菜单
     onOpenChange(keys) {
       const lastestOpenKey = keys.find(
@@ -142,6 +151,7 @@ export default {
     },
     // 初始化菜单选项
     initialValue() {
+      console.log(this.$route.params)
       let routeParams;
       if (this.$route.params.lead !== undefined) {
         routeParams = this.$route.params.lead;
@@ -162,19 +172,20 @@ export default {
       this.username = window.bdUser["username"]
         ? window.bdUser["username"]
         : "";
+      if (this.$route.name === "modifyPwd") {
+        this.breadcrumb = "修改密码";
+      }
     },
     markMenuClick(openKey, selectedKey, name) {
       let openKeyObj = { openKey, selectedKey, name };
       openKeyObj = JSON.stringify(openKeyObj);
       localStorage.setItem("openkey", openKeyObj);
-    },
+    }
   },
   mounted() {
     this.initialValue();
-    console.log(this.GLOBAL)
   },
   created() {
-    // console.log(this.GLOBAL)
   },
   watch: {
     $route: {
@@ -235,6 +246,7 @@ export default {
 </script>
 <style lang="scss">
 .index_layout {
+  overflow: hidden;
   .trigger {
     font-size: 18px;
     line-height: 64px;
@@ -242,9 +254,9 @@ export default {
     cursor: pointer;
     transition: color 0.3s;
     color: #fff;
-    &:hover {
-      color: #1890ff;
-    }
+    // &:hover {
+    //   color: #1890ff;
+    // }
   }
   .logo {
     font-size: 20px;
@@ -270,19 +282,32 @@ export default {
     padding: 0;
   }
   .ant-layout-content {
-    background: #fff;
+    background:#f0f2f5;
   }
   .layout_right {
     text-align: left;
   }
   .index_breadcrumb {
-    margin: 16px;
+    padding: 16px;
+    border-bottom: 2px solid #e5e5e5;
+    // margin-left: 10px;
+    // margin-right: 10px;
+    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    background: #fff;
   }
   .ant-menu-horizontal {
     color: #fff;
     background: transparent;
     line-height: 64px;
     font-size: 20px;
+  }
+  .menu_right {
+    .ant-menu-submenu-title {
+      color: #fff;
+      &:hover {
+        color: #fff;
+      }
+    }
   }
 }
 </style>

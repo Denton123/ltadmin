@@ -3,7 +3,7 @@ export default {
     'e-longHotelList': [{
         key: 'e-longHotelList',
         tab: '艺龙酒店列表',
-        theads: ['艺龙酒店id', '酒店名称', '城市', '地址电话', '产品最低价', '可用状态', '销售状态', '同步状态', '酒店匹配', '房型匹配', '操作'],
+        theads: ['艺龙酒店id', '酒店名称', '城市', '地址电话', '房型|产品数量', '产品最低价', '可用状态', '销售状态', '同步状态', '酒店匹配', '房型匹配', '操作'],
         props: ['hotelId', 'name', 'city', 'address', 'lowPrice', 'hotelListStatusChn', 'hotelDetailStatusChn', 'syncStatusChn', 'matchStatusChn', 'roomMatchChn', 'action'],
         SearchComponent: [{
                 type: 'text',
@@ -62,6 +62,12 @@ export default {
                 ]
             },
             {
+                type: 'num',
+                label: '房型数量',
+                startName: 'startNum',
+                endName: 'endNum'
+            },
+            {
                 type: 'select',
                 label: '酒店可用状态',
                 name: 'hotelStatus',
@@ -97,6 +103,12 @@ export default {
                 ]
             },
             {
+                type: 'num',
+                label: '产品最低价',
+                startName: 'startNum',
+                endName: 'endNum'
+            },
+            {
                 type: 'select',
                 label: '酒店销售状态',
                 name: 'hotelStatus',
@@ -111,13 +123,7 @@ export default {
                         value: '不可售'
                     }
                 ]
-            },
-            // {
-            //     type: 'date',
-            //     label: '匹配日期',
-            //     startDate: 'startDate',
-            //     endDate: 'endDate',
-            // }
+            }
         ],
         searchResultMsg: [{
                 tab: '【酒店】',
@@ -311,7 +317,7 @@ export default {
                 model: 'orderListDetail'
             },
             {
-                title: '取消订单',
+                title: '跟单',
                 type: 'orderDocumentary',
                 model: 'orderListDocumentary'
             }

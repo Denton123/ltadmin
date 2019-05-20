@@ -87,6 +87,9 @@ export default {
   .ant-menu-submenu-arrow {
     right: 65px !important;
   }
+  height: 100%;
+  // border-right: 2px solid #e5e5e5;
+  box-shadow: 2px 0 6px rgba(0,21,41,.35);
 }
 .ant-menu-horizontal {
   .ant-menu-item-selected {
@@ -95,5 +98,10 @@ export default {
   .ant-menu-item:hover {
     color: #ffffff;
   }
+}
+.ant-menu-inline,
+.ant-menu-vertical,
+.ant-menu-vertical-left {
+  border-right: none !important;
 }
 </style>

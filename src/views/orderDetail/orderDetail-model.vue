@@ -8,15 +8,15 @@
 <template>
   <div class="orderDetail">
     <!-- 头部 -->
-    <div class="orderDetail_head">
+    <div class="orderDetail_head whiteblock">
       <h2 class="orderDetail_title">订单详情信息</h2>
       <a-button type="primary" class="fr mrB10" @click="backTo">
         <a-icon type="rollback"/>返回
       </a-button>
-      <a-divider/>
+      <!-- <a-divider/> -->
     </div>
     <!-- 操作 -->
-    <div class="orderDetail_operate">
+    <div class="orderDetail_operate whiteblock">
       <a-select defaultValue="全部" style="width: 200px;" @change="handleChange">
         <a-select-option
           v-for="(item,index) in selectOptions"
@@ -28,7 +28,7 @@
       <a-button type="primary" class="mrL10">刷新</a-button>
     </div>
     <!-- 表格 -->
-    <div class="orderDetail_record mrT10">
+    <div class="orderDetail_record mrT10 whiteblock">
       <div id="orderDetail_table_head">
         <span>订单备注记录</span>
         <a-icon
@@ -49,12 +49,12 @@
     </div>
 
     <!-- 添加描述 -->
-    <div class="addStatement mrT10">
+    <div class="addStatement mrT10 whiteblock">
       <a-input class="inlineBlock" v-model="statementValue"/>
       <a-button type="primary" class="mrL10" @click="addStatement">添加描述</a-button>
     </div>
     <!-- 卡片数据 -->
-    <div class="orderDetail_card">
+    <div class="orderDetail_card whiteblock">
       <a-row>
         <a-col :span="8" v-for="(item,index) in cardTag" :key="index">
           <h4>{{item.title}}</h4>
@@ -207,6 +207,10 @@ export default {
 
 <style lang="scss">
 .orderDetail {
+  .orderDetail_head{
+    height: 110px;
+    margin-bottom: 10px;
+  }
   .orderDetail_title {
     font-size: 30px;
     text-align: center;
@@ -232,6 +236,9 @@ export default {
   }
   .toggleIcon {
     cursor: pointer;
+  }
+  .ant-table-thead > tr > th {
+    font-weight: bold;
   }
 }
 .ant-divider {

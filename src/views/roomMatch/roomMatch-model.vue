@@ -7,44 +7,48 @@
  */
 <template>
   <div class="roomMatch">
-    <div class="roomMatch_head">
+    <div class="roomMatch_head whiteblock">
       <h2 class="roomMatch_title">{{title}}-{{}}-详情信息</h2>
       <a-button type="primary" class="fr mrB10" @click="backTo">
         <a-icon type="rollback"/>返回
       </a-button>
-      <a-divider/>
+      <!-- <a-divider/> -->
     </div>
     <!-- 房型匹配头部表格 -->
     <div class="roomMatch_thead">
-      <h4 class="roomMatch_thead_title">供应商-酒店信息</h4>
-      <a-table
-        :columns="supplierColumns"
-        :dataSource="supplierData"
-        bordered
-        class="mrB10"
-        :pagination="false"
-      ></a-table>
-      <h4 class="roomMatch_thead_title">标准库-酒店信息</h4>
-      <a-table
-        :columns="standardColumns"
-        :dataSource="standardData"
-        bordered
-        :pagination="false"
-        class="mrB10"
-      >
-        <template slot="action" slot-scope="text, record">
-          <a-button
-            v-for="item in standardOperate"
-            type="primary"
-            :key="item.title"
-            class="block mrB10"
-            @click="hanldeStandardOperate(item.type, item.model, record.key)"
-          >{{item.title}}</a-button>
-        </template>
-      </a-table>
+      <div class="detail_thead_wrap whiteblock mrB10">
+        <h4 class="roomMatch_thead_title">供应商-酒店信息</h4>
+        <a-table
+          :columns="supplierColumns"
+          :dataSource="supplierData"
+          bordered
+          class="mrB10"
+          :pagination="false"
+        ></a-table>
+      </div>
+      <div class="detail_thead_wrap whiteblock mrB10">
+        <h4 class="roomMatch_thead_title">标准库-酒店信息</h4>
+        <a-table
+          :columns="standardColumns"
+          :dataSource="standardData"
+          bordered
+          :pagination="false"
+          class="mrB10"
+        >
+          <template slot="action" slot-scope="text, record">
+            <a-button
+              v-for="item in standardOperate"
+              type="primary"
+              :key="item.title"
+              class="block mrB10"
+              @click="hanldeStandardOperate(item.type, item.model, record.key)"
+            >{{item.title}}</a-button>
+          </template>
+        </a-table>
+      </div>
     </div>
 
-    <div class="roomMatchList">
+    <div class="roomMatchList whiteblock">
       <h4 class="roomMatch_thead_title">供应商-酒店房型</h4>
       <a-table :columns="listColumns" :dataSource="listData" bordered>
         <template slot="action" slot-scope="text, record">
@@ -151,12 +155,19 @@ export default {
 
 <style lang="scss">
 .roomMatch {
+  .roomMatch_head {
+    height: 110px;
+    margin-bottom: 10px;
+  }
   .roomMatch_title {
     font-size: 30px;
     text-align: center;
   }
   .roomMatch_thead_title {
     font-size: 18px;
+  }
+  .ant-table-thead > tr > th {
+    font-weight: bold;
   }
 }
 </style>

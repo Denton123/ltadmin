@@ -10,7 +10,7 @@
   <div class="basic_model">
     <div class="basic_model_content">
       <!-- 管理系统操作按钮 -->
-      <div class="search_input">
+      <div class="search_input whiteblock">
         <searchInput :searchInput="searchInput" @handleSearch="handleSearch" v-if="searchInput"/>
         <component
           :key="index"
@@ -21,9 +21,9 @@
         />
       </div>
       <!-- 操作模块 -->
-      <div class="basic_model_operate">
+      <div class="basic_model_operate" v-if="SearchComponent">
         <!-- 搜索表单 -->
-        <searchForm v-if="SearchComponent" :SearchComponent="SearchComponent"/>
+        <searchForm  :SearchComponent="SearchComponent"/>
       </div>
       <!-- 搜索结果 -->
       <div class="mrT10 mrB10">
@@ -569,6 +569,16 @@ export default {
   }
   .search_input {
     overflow: hidden;
+  }
+  .ant-table-thead > tr > th {
+    font-weight: bold;
+  }
+  .basic_model_operate{
+    background: #ffffff;
+    padding: 10px;
+  }
+  .ant-table-wrapper{
+    background: #ffffff;
   }
 }
 </style>

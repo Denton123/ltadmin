@@ -33,7 +33,7 @@ input[type=text] {
     margin-left: 10px;
 }
 .mrT10 {
-    margin-top: 10px;
+    margin-top: 10px !important;
 }
 .mrB10 {
     margin-bottom: 10px;
@@ -48,4 +48,8 @@ input[type=text] {
 /*ie8+*/
 .clearfix {
     *zoom: 1; 
+}
+.whiteblock{
+    padding: 10px !important;
+    background: #ffffff;
 }

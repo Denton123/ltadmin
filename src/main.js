@@ -5,8 +5,7 @@ import store from './store'
 import Axios from 'axios';
 
 require('@/config/index')
-Vue.config.productionTip = false
-Vue.prototype.GLOBAL = 'global_'
+
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.isLogin) {
@@ -15,12 +14,14 @@ router.beforeEach((to, from, next) => {
           window.bdUser = res.data.data
           next()
         } else {
+          // this.$message.warning('登录已生效，请重新登录')
           next('/login')
         }
       }).catch((error) => {
         if (error) next('/login')
       })
     } else {
+      // this.$message.warning('登录已生效，请重新登录')
       next('/login')
     }
   } else {
