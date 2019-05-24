@@ -4,7 +4,7 @@ export default {
         key: 'e-longHotelList',
         tab: '艺龙酒店列表',
         theads: ['艺龙酒店id', '酒店名称', '城市', '地址电话', '房型|产品数量', '产品最低价', '可用状态', '销售状态', '同步状态', '酒店匹配', '房型匹配', '操作'],
-        props: ['hotelId', 'name', 'city', 'address', 'lowPrice', 'hotelListStatusChn', 'hotelDetailStatusChn', 'syncStatusChn', 'matchStatusChn', 'roomMatchChn', 'action'],
+        props: ['hotelId', 'name', 'city', 'address', 'lowPrice', 'hotelListStatusChn', 'hotelDetailStatusChn', 'syncStatusChn', 'matchStatusChn', 'roomMatchChn', 'roomMatch', 'action'],
         SearchComponent: [{
                 type: 'text',
                 label: '国内城市',
@@ -104,7 +104,7 @@ export default {
             },
             {
                 type: 'num',
-                label: '产品最低价',
+                label: '产品数量',
                 startName: 'startNum',
                 endName: 'endNum'
             },
@@ -140,6 +140,12 @@ export default {
                 tag: {
                     hotelMatchTotal: '全部酒店数量',
                     hotelOpenTotal: '已匹配',
+                }
+            },
+            {
+                tab: '【产品】',
+                tag: {
+                    hotelMatchTotal: '全部产品数量',
                 }
             }
         ],
@@ -768,7 +774,7 @@ export default {
     meituanOrderList: [{
         key: 'meituanOrderList',
         tab: '美团订单列表',
-        theads: ['日期日期日期', '名称名称名称', '地址地址地址地址地址', '地址', '操作'],
+        theads: ['订单创建时间', '系统订单id', '美团订单id', '酒店ID', '产品ID', '入住日期', '离店日期', '房间数量', '总价', '结算价', '订单状态', '联系人姓名', '联系人电话', '操作'],
         props: ['date', 'name', 'address', 'action'],
         tableOperate: [{
                 title: '订单详情',

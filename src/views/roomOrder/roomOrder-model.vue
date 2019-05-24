@@ -38,21 +38,29 @@
         ></a-table>
       </div>
     </div>
-    <!-- 预定信息表单 -->
-    <div class="roomOrder_form whiteblock">
-      <h4 class="roomOrder_form_title">预订信息</h4>
-      <order-form :orderComponent="orderComponent"></order-form>
-    </div>
-    <!-- 价格日历 -->
-    <div class="roomOrder_list">
-      <a-table :columns="listColumns" :dataSource="listData" bordered></a-table>
-    </div>
+    <a-row :gutter="24" class="whiteblock order-form-row">
+      <a-col :span="12">
+        <!-- 预定信息表单 -->
+        <div class="roomOrder_form">
+          <h4 class="roomOrder_form_title">预订信息</h4>
+          <order-form :orderComponent="orderComponent" @transferTime="transferTime"></order-form>
+        </div>
+      </a-col>
+      <a-col :span="12">
+        <!-- 价格日历 -->
+        <div class="roomOrder_list" v-if="priceColumns.length !== 0">
+          <h4>价格日历</h4>
+          <a-table :columns="priceColumns" :dataSource="priceData" bordered :pagination="false"></a-table>
+        </div>
+      </a-col>
+    </a-row>
   </div>
 </template>
 
 <script>
 import computed from "../roomOrderMsg/computed";
 import orderForm from "./component/orderForm";
+import moment from "moment";
 export default {
   name: "roomOrderModel",
   data() {
@@ -68,7 +76,16 @@ export default {
       // 列表列
       listColumns: [],
       // 列表数据
-      listData: []
+      listData: [],
+      priceColumns: [],
+      priceData: [
+        {
+          "06-07周五": "￥234",
+          key: "1",
+          "06-08周六": "￥34234",
+          "06-09周日": "￥989"
+        }
+      ]
     };
   },
   props: {
@@ -108,6 +125,15 @@ export default {
           this[`${type}Columns`][i].scopedSlots = { customRender: "action" };
         }
       }
+    },
+    transferTime(date) {
+      const begin = moment(date.startValue).format("YYYY/MM/DD/ddd");
+      const end = moment(date.endValue).format("YYYY/MM/DD/ddd");
+      const allTime = this.$getTimeRange(begin, end);
+      this.theads.priceTheads = allTime;
+      this.props.priceProps = allTime;
+      console.log(allTime);
+      this.handleTableColumns("price");
     }
   },
   mixins: [computed],
@@ -115,6 +141,7 @@ export default {
     this.handleTableColumns("supplier");
     this.handleTableColumns("room");
     this.handleTableColumns("list");
+    console.log(this.priceColumns);
   },
   components: {
     orderForm
@@ -125,7 +152,7 @@ export default {
 <style lang="scss">
 .roomOrder {
   h4 {
-    font-size: 18px;
+    font-size: 20px;
   }
   .roomOrder_head {
     .roomOrder_title {
@@ -135,13 +162,23 @@ export default {
     height: 110px;
     margin-bottom: 10px;
   }
-  .detail_thead_wrap{
+  .detail_thead_wrap {
     // background: #ffffff;
     margin-bottom: 10px;
     // padding: 10px;
   }
-  .roomOrder_form{
-    padding-bottom: 40px;
+  .roomOrder_form {
+    overflow-x: auto;
+    margin-bottom: 15px;
+  }
+  .roomOrder_list {
+    overflow-x: auto;
+    h4 {
+      margin-bottom: 10px !important;
+    }
+  }
+  .order-form-row {
+    margin-left: 2px !important;
   }
 }
 </style>

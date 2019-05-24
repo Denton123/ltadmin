@@ -10,8 +10,8 @@
   <div class="basic_model">
     <div class="basic_model_content">
       <!-- 管理系统操作按钮 -->
-      <div class="search_input whiteblock">
-        <searchInput :searchInput="searchInput" @handleSearch="handleSearch" v-if="searchInput"/>
+      <div class="search_input whiteblock" v-if="searchInput">
+        <searchInput :searchInput="searchInput" @handleSearch="handleSearch"/>
         <component
           :key="index"
           v-for="(typeOperate,index) in typeComponent"

@@ -7,7 +7,7 @@
  */
 
  <template>
-  <div class="modifyPwd">
+  <div class="modifyPwd whiteblock">
     <a-form :form="form" @submit="handleModify">
       <!-- 账号 -->
       <a-form-item label="账号" v-bind="formItemLayout">
@@ -110,8 +110,8 @@ export default {
       callback();
     },
     // 取消/重置
-    handleReset(){
-        this.form.resetFields()
+    handleReset() {
+      this.form.resetFields();
     }
   },
   mounted() {
@@ -123,11 +123,9 @@ export default {
  <style lang="scss">
 .modifyPwd {
   margin: 10px;
-  .ant-form-item{
-      width: 500px;
+  padding: 40px !important;
+  .ant-form-item {
+    width: 500px;
   }
 }
 </style>
- 
- 
- 

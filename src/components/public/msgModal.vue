@@ -19,13 +19,8 @@
     >
       <h4>{{modalParams.infoTitle}}</h4>
       <a-row>
-        <a-col>
-          <a-card
-            :bordered="false"
-            v-for="(item, index) in hotelMatchCardTag"
-            :key="index"
-            :title="`${item.title}`"
-          >
+        <a-col :span="12" v-for="(item, index) in modalParams.hotelMatchCardTag" :key="index">
+          <a-card :bordered="false" :title="`${item.title}`">
             <template v-for="(value, key) in item.tag">
               <p>
                 <strong>{{value}}：</strong>
@@ -43,8 +38,7 @@
 export default {
   name: "msgModal",
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     modalParams: {
@@ -53,35 +47,42 @@ export default {
         return {};
       }
     },
-    hotelMatchCardTag: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
     modalVisible: {
       type: Boolean,
-      default(){
-        return false
+      default() {
+        return false;
       }
     },
     confirmLoading: {
       type: Boolean,
-      default(){
-        return false
+      default() {
+        return false;
       }
     }
   },
   methods: {
     handleModalOk() {
-      this.$emit('handleModalOk')
+      this.$emit("handleModalOk");
     },
     hanldModalCancel() {
-      this.$emit('hanldModalCancel')
+      this.$emit("hanldModalCancel");
     }
+  },
+  mounted() {
   }
 };
 </script>
 
 <style lang="scss">
+.msgModal {
+  .ant-modal-title {
+    color: #000;
+    font-weight: 600;
+  }
+  .ant-card-head {
+    border-bottom: none !important;
+    padding: 0 !important;
+    font-weight: 600;
+  }
+}
 </style> 

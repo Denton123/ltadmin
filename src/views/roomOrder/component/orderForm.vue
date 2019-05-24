@@ -12,30 +12,30 @@
       <template v-for="item in orderComponent">
         <!-- 时间 -->
         <a-form-item v-if="item.type=='time'">
-          <a-form-item label="入住时间" class="checkTime">
+          <a-form-item label="入住时间" class="checkTime" v-bind="dateItemLayout">
             <a-date-picker
               :disabledDate="disabledStartDate"
               format="YYYY-MM-DD"
               placeholder="入住时间"
+              v-model="startValue"
               @openChange="handleStartOpenChange"
               @change="handleStartChange"
-              v-decorator="[`${item.checkInName}`]"
             />
           </a-form-item>
-          <a-form-item label="离店时间" class="checkTime mrR10">
+          <a-form-item label="离店时间" class="checkTime mrL10" v-bind="dateItemLayout">
             <a-date-picker
               :disabledDate="disabledEndDate"
               format="YYYY-MM-DD"
               placeholder="离店时间"
+              v-model="endValue"
               :open="endOpen"
               @openChange="handleEndOpenChange"
               @change="handleEndChange"
-              v-decorator="[`${item.checkOutName}`]"
             />
           </a-form-item>
         </a-form-item>
         <!-- 数量 -->
-        <a-form-item v-else-if="item.type == 'num'" :label="item.label">
+        <a-form-item v-else-if="item.type == 'num'" :label="item.label" v-bind="formItemLayout">
           <a-select
             v-decorator="[`${item.name}`, {
                   initialValue: `${item.options[0].value}`
@@ -51,14 +51,16 @@
         <!-- 姓名 -->
         <a-form-item
           v-else-if="item.type=='name'"
-          label="入住人姓名"
+          :label="item.label"
           v-for="(input,index) in inputArr"
-          :key="index"
+          :key="input.name"
+          v-bind="formItemLayout"
         >
-          <a-input placeholder="入住人姓名"/>
+          <a-input placeholder="入住人姓名" 
+          v-decorator="[`${item.name}${index+1}`]"/>
         </a-form-item>
         <!-- input -->
-        <a-form-item v-else-if="item.type=='text'" :label="item.label">
+        <a-form-item v-else-if="item.type=='text'" :label="item.label" v-bind="formItemLayout">
           <a-input :placeholder="item.placeholder" v-decorator="[`${item.name}`]"/>
         </a-form-item>
       </template>
@@ -82,15 +84,21 @@ export default {
       endOpen: false,
       formItemLayout: {
         labelCol: {
-          xs: { span: 16 },
-          sm: { span: 2 }
+          span: 4
         },
         wrapperCol: {
-          xs: { span: 16 },
-          sm: { span: 16 }
+          span: 6
         }
       },
-      inputArr: 1
+      dateItemLayout: {
+        labelCol: {
+          span: 10
+        },
+        wrapperCol: {
+          span: 10
+        }
+      },
+      inputArr: 1,
     };
   },
   props: {
@@ -106,20 +114,17 @@ export default {
     disabledStartDate(startValue) {
       const endValue = this.endValue;
       if (!startValue || !endValue) {
-        return startValue < moment().endOf("day");
+        return startValue < moment().startOf("day");
       }
-      return (
-        startValue.valueOf() > endValue.valueOf() ||
-        startValue < moment().endOf("day")
-      );
+      return startValue < moment().startOf("day");
     },
     // 结束不可选择日期
     disabledEndDate(endValue) {
-      const startValue = this.startValue;
+       const startValue = this.startValue;
       if (!endValue || !startValue) {
-        return false;
+        return endValue < moment().startOf("day");
       }
-      return startValue.valueOf() >= endValue.valueOf();
+      return startValue.valueOf() > endValue.valueOf();
     },
     // 开始日期打开事件
     handleStartOpenChange(open) {
@@ -133,21 +138,19 @@ export default {
     },
     // 开始日期选择事件
     handleStartChange(date, dateString) {
-      this.startValue = date;
     },
     // 结束日期选择事件
     handleEndChange(date, dateString) {
-      this.endValue = date;
     },
     // 提交预定订单
     handleOrderSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
-        if (values["checkInTime"] || values["checkOutTime"] !== undefined) {
+        if (this.startValue !== null || this.endValue !== null) {
           const fields = {
             ...values,
-            checkInTime: values["checkInTime"].format("YYYY-MM-DD"),
-            checkOutTime: values["checkOutTime"].format("YYYY-MM-DD")
+            checkInTime: this.startValue.format("YYYY-MM-DD"),
+            checkOutTime: this.endValue.format("YYYY-MM-DD")
           };
           console.log(fields);
         }
@@ -156,18 +159,43 @@ export default {
     // 下拉选择入住人数
     handleSelectChange(value) {
       this.inputArr = value;
+    },
+  },
+  computed: {
+    dateChange() {
+      const { startValue, endValue } = this;
+      return { startValue, endValue };
     }
   },
-  mounted() {}
+  watch: {
+    // 同时监听开始时间和结束时间两个属性
+    dateChange(val) {
+      const { startValue, endValue } = val;
+      if (startValue !== null && endValue !== null) {
+        // this.operateDate();
+        this.$emit('transferTime', {startValue, endValue})
+      }
+    }
+  },
+  mounted() {
+  }
 };
 </script>
 
  <style lang="scss">
 .orderForm {
+  // width: 50%;
+  overflow: hidden;
   .checkTime {
     display: inline-block;
   }
   .orderSelect {
+    width: 200px;
+  }
+  .ant-form-item {
+    margin-bottom: 0;
+  }
+  .ant-input {
     width: 200px;
   }
 }

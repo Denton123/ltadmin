@@ -10,11 +10,12 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.isLogin) {
       Axios.get('/sys/user/infoV2').then(res => {
-        if (res && res.data.code == 200) {
+        if (res && res.data.code == 200 && res.data.data !== null) {
           window.bdUser = res.data.data
           next()
         } else {
           // this.$message.warning('登录已生效，请重新登录')
+          localStorage.clear()
           next('/login')
         }
       }).catch((error) => {

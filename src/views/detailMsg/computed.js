@@ -20,6 +20,9 @@ export default {
         },
         listTitle(){
             return this.models.listTitle
+        },
+        listTag() {
+            return this.models.listTag
         }
     },
 }

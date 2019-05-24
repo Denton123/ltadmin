@@ -20,7 +20,7 @@
         <a-col :span="16" :push="8" class="hotelMatch_right">
           <!-- 搜索 -->
           <div class="hotelMatch_search whiteblock">
-            <h4>搜索标准库</h4>
+            <h4>搜索标准库酒店</h4>
             <span>国内城市：</span>
             <a-input placeholder="请输入城市名称" v-model="searchCityName"/>
             <span>关键词：</span>
@@ -38,7 +38,8 @@
           </div>
           <a-divider/>
           <!-- 表格列表 -->
-          <div class="hotelMatch_list">
+          <div class="hotelMatch_list whiteblock">
+            <h4>搜索结果</h4>
             <a-table :columns="listColumns" :dataSource="listData" bordered>
               <template slot="actionModal" slot-scope="text, record">
                 <a-button
@@ -218,6 +219,7 @@ export default {
     }
     h4 {
       font-size: 18px;
+      font-weight: 600;
     }
   }
   .ant-table-thead > tr > th {
@@ -225,6 +227,12 @@ export default {
   }
   .ant-table-wrapper {
     background: #ffffff;
+  }
+  .hotelMatch_list{
+    h4 {
+      font-size: 18px;
+      font-weight: 600;
+    }
   }
 }
 </style>

@@ -13,10 +13,21 @@ export default new Router({
         // 携程下单页
         {
           path: 'hotelMenus/ctripOrder',
-          name: 'ctripCreateOrder',
-          component: () => import( /* webpackChunkName: "Basic" */ '@/views/page/ctripCreateOrder.vue')
+          name: 'ctripOrder',
+          component: () => import( /* webpackChunkName: "ctripCreateOrder" */ '@/views/page/ctripCreateOrder.vue')
         },
-
+        // 飞猪-御道店-加价策略管理
+        {
+          path: 'hotelMenus/feizhuPriceManager',
+          name: 'feizhuPriceManager',
+          component: () => import( /* webpackChunkName: "feizhuPriceManager" */ '@/views/page/feizhuPriceManager/feizhuPriceManager.vue')
+        },
+        // 飞猪-御道监控中心
+        {
+          path: 'hotelMenus/priceMonitor',
+          name: 'priceMonitor',
+          component: () => import( /* webpackChunkName: "priceMonitor" */ '@/views/page/priceMonitor/priceMonitor.vue')
+        },
         {
           path: 'hotelMenus/modifyPwd',
           name: 'modifyPwd',
@@ -26,7 +37,7 @@ export default new Router({
         {
           path: 'companyMenus/sqlMonitor',
           name: 'sqlMonitor',
-          component: () => import( /* webpackChunkName: "Basic" */ '@/views/page/sqlMonitor.vue')
+          component: () => import( /* webpackChunkName: "sqlMonitor" */ '@/views/page/sqlMonitor.vue')
         },
         {
           path: ':lead/:model',
@@ -63,7 +74,6 @@ export default new Router({
           name: 'roomOrder',
           component: () => import( /* webpackChunkName: "roomOrder" */ '@/views/roomOrder/roomOrder-content.vue')
         },
-
       ],
       meta: {
         requiresAuth: true

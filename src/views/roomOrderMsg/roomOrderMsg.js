@@ -4,12 +4,14 @@ export default {
         theads: {
             supplierTheads: ['艺龙酒店ID', '酒店名称', '城市', '地址', '电话', '酒店星级', '可用状态', '同步状态', '酒店匹配', '房型匹配'],
             roomTheads: ['房型ID', '房型名称', '楼层｜面积｜最少入住人数', '描述', '价格计划ID', '价格计划名称', '增值服务', '预定规则'],
-            listTheads: ['日期', '建议售卖价', '实际售卖价', '房间数量']
+            listTheads: ['日期', '建议售卖价', '实际售卖价', '房间数量'],
+            priceTheads: []
         },
         props: {
             supplierProps: [],
             roomProps: [],
-            listProps: []
+            listProps: [],
+            priceProps: []
         },
         orderComponent: [
             {
@@ -37,6 +39,8 @@ export default {
             },
             {
                 type: 'name',
+                name: 'username',
+                label: '入住人姓名'
             },
             {
                 type: 'text',
@@ -103,6 +107,7 @@ export default {
             },
             {
                 type: 'name',
+                name: 'username'
             },
             {
                 type: 'text',

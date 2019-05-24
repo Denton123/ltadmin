@@ -9,7 +9,7 @@
   <div id="search_components">
     <a-form class="search_form" :form="form" @submit="handleSearch">
       <a-row :gutter="24">
-        <a-col :span="8" v-for="item in SearchComponent">
+        <a-col :span="8" v-for="item in SearchComponent" :key="item.labelCol">
           <!-- 文本框 -->
           <a-form-item v-if="item.type=='text'" :label="item.label">
             <a-input :placeholder="item.placeholder" v-decorator="[`${item.name}`]"/>
@@ -30,7 +30,7 @@
               }]"
               />
             </a-form-item>
-            <span class="desperate">-</span>
+            <span class="desperate">至</span>
             <a-form-item style="{display: 'inline'}">
               <a-input-number
                 :min="1"
@@ -49,7 +49,7 @@
               }]"
             >
               <template v-for="selectItem in item.options">
-                <a-select-option :value="selectItem.value">{{selectItem.value}}</a-select-option>
+                <a-select-option :value="selectItem.value" :key="selectItem.value">{{selectItem.value}}</a-select-option>
               </template>
             </a-select>
           </a-form-item>

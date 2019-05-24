@@ -8,7 +8,7 @@
 <template>
   <div class="roomMatch">
     <div class="roomMatch_head whiteblock">
-      <h2 class="roomMatch_title">{{title}}-{{}}-详情信息</h2>
+      <h2 class="roomMatch_title">{{title}}-{{}}-房型匹配</h2>
       <a-button type="primary" class="fr mrB10" @click="backTo">
         <a-icon type="rollback"/>返回
       </a-button>
@@ -53,20 +53,49 @@
       <a-table :columns="listColumns" :dataSource="listData" bordered>
         <template slot="action" slot-scope="text, record">
           <a-button
-            v-for="item in listOperate"
+            v-if="record.key==2 && isHideMatch"
+            v-for="item in modifyOperate"
             type="primary"
             :key="item.title"
             class="block mrB10"
-            @click="hanldeListOperate(item.type, item.model, record.key)"
+            @click="hanldeListOperate()"
           >{{item.title}}</a-button>
+
+          <div v-else>
+            <a-select style="width:120px" :defaultValue="listOperate.selectOption[0].value">
+              <template v-for="selectItem in listOperate.selectOption">
+                <a-select-option
+                  :key="selectItem.title"
+                  :value="selectItem.value"
+                >{{selectItem.title}}</a-select-option>
+              </template>
+            </a-select>
+            <a-button
+              class="mrL10"
+              type="primary"
+              v-for="(btn, index) in listOperate.operateBtn"
+              :key="btn.title"
+              @click="handleActionModal(index, btn.title)"
+            >{{btn.title}}</a-button>
+          </div>
         </template>
       </a-table>
     </div>
+
+    <!-- 弹出模态框 -->
+    <msg-modal
+      :modalVisible="modalVisible"
+      :modalParams="modalParams"
+      @hanldModalCancel="hanldModalCancel"
+      @handleModalOk="handleModalOk"
+      :confirmLoading="confirmLoading"
+    />
   </div>
 </template>
 
 <script>
 import computed from "../roomMatchMsg/computed";
+import msgModal from "@/components/public/msgModal";
 export default {
   name: "roomMatchModel",
   data() {
@@ -81,7 +110,13 @@ export default {
       listData: [
         {
           key: "1",
-          name: "胡彦祖",
+          name: "胡ss彦祖",
+          age: 42,
+          address: "西湖区湖底公园1号"
+        },
+        {
+          key: "2",
+          name: "胡ss彦祖",
           age: 42,
           address: "西湖区湖底公园1号"
         }
@@ -96,7 +131,14 @@ export default {
           age: 42,
           address: "西湖区湖底公园1号"
         }
-      ]
+      ],
+      // 模态框是否显示
+      modalVisible: false,
+      // 模态框数据
+      modalParams: {},
+      // 模态框确认加载
+      confirmLoading: false,
+      isHideMatch: true
     };
   },
   props: {
@@ -113,7 +155,8 @@ export default {
           // 标准操作
           standardOperate: [],
           // 列操作
-          listOperate: []
+          modifyOperate: [],
+          listOperate: {},
         };
       }
     }
@@ -142,6 +185,26 @@ export default {
     // 标准库表格操作
     hanldeStandardOperate(type, model, key) {
       this.$router.push(`/hotelMenus/${type}/${model}/${key}`);
+    },
+    // 弹出模态框操作
+    handleActionModal(index, title) {
+      this.modalVisible = true;
+      this.modalParams = this.listOperate.operateBtn[index].params;
+    },
+    handleModalOk() {
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.confirmLoading = false;
+        this.modalVisible = false;
+      }, 1000);
+    },
+    // 取消模态框
+    hanldModalCancel() {
+      this.modalVisible = false;
+    },
+    // 修改匹配操作
+    hanldeListOperate() {
+      this.isHideMatch = false;
     }
   },
   mixins: [computed],
@@ -149,6 +212,9 @@ export default {
     this.handleTableColumns("supplier");
     this.handleTableColumns("standard");
     this.handleTableColumns("list");
+  },
+  components: {
+    msgModal
   }
 };
 </script>

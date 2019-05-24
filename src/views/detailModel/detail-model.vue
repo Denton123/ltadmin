@@ -97,51 +97,62 @@
       </a-table>
     </div>-->
     <!-- 展示列表 -->
-      <a-list
-        itemLayout="vertical"
-        :dataSource="listData"
-        :pagination="pagination"
-        class="whiteblock mrT10"
+    <a-list
+      itemLayout="vertical"
+      :dataSource="listData"
+      :pagination="pagination"
+      class="whiteblock mrT10"
+    >
+      <a-list-item
+        slot="renderItem"
+        slot-scope="item, index"
+        key="item.name"
+        @click="toggleListDetail(item)"
       >
-        <a-list-item
-          slot="renderItem"
-          slot-scope="item, index"
-          key="item.name"
-          @click="toggleListDetail(item)"
-        >
-          <a-list-item-meta>
-            <a slot="title" class="listTitle">{{item.name}} <a-icon :type="activeIndex===item.key ? 'up': 'down'" /></a>
-            <a-avatar slot="avatar" :src="item.logo"></a-avatar>
-            <template slot="description">
-              <span>{{item.age}}</span>
-              <span class="mrR10 mrL10">|</span>
-              <span>{{item.address}}</span>
+        <a-list-item-meta>
+          <a slot="title" class="listTitle">
+            {{item.name}}
+            <a-icon :type="activeIndex===item.key ? 'up': 'down'"/>
+          </a>
+          <a-avatar slot="avatar" :src="item.logo"></a-avatar>
+          <template slot="description">
+            <template v-for="(value, key) in listTag">
+              <span>{{value}}:</span>
+              <span>{{item[key]}}</span>
+              <span class="mrL10 mrR10 separate">|</span>
             </template>
-          </a-list-item-meta>
+          </template>
+        </a-list-item-meta>
 
-          <div v-if="activeIndex===item.key">
-            <a-table :columns="innerColumns" :dataSource="innerData" :pagination="false">
-              <template slot="action" slot-scope="text, record">
-                <a-button
-                  v-for="item in listOperate"
-                  type="primary"
-                  :key="item.title"
-                  class="block mrB10"
-                  @click="hanldeListOperate(item.type, item.model, record.key)"
-                >{{item.title}}</a-button>
-              </template>
-              <template slot="price" slot-scope="text, record">
-                <a-popover>
-                  <template slot="content">
-                    <a-table :columns="priceColumns" :dataSource="priceData" :pagination="false"></a-table>
-                  </template>
-                  <span>{{record.price}}</span>
-                </a-popover>
-              </template>
-            </a-table>
-          </div>
-        </a-list-item>
-      </a-list>
+        <div v-if="activeIndex===item.key">
+          <a-table :columns="innerColumns" :dataSource="innerData" :pagination="false">
+            <template slot="action" slot-scope="text, record">
+              <a-button
+                v-for="item in listOperate"
+                type="primary"
+                :key="item.title"
+                class="block mrB10"
+                @click="hanldeListOperate(item.type, item.model, record.key)"
+              >{{item.title}}</a-button>
+            </template>
+            <template slot="price" slot-scope="text, record">
+              <a-popover v-if="startValue && endValue !== null">
+                <template slot="content">
+                  <a-table
+                    bordered
+                    :columns="priceColumns"
+                    :dataSource="priceData"
+                    :pagination="false"
+                  ></a-table>
+                </template>
+                <span>{{record.price}}</span>
+              </a-popover>
+              <span v-else>{{record.price}}</span>
+            </template>
+          </a-table>
+        </div>
+      </a-list-item>
+    </a-list>
   </div>
 </template>
 
@@ -166,18 +177,23 @@ export default {
       listData: [
         {
           key: "1",
+          id: "1134234",
           name: "单人房",
-          age: 42,
-          address: "西湖区湖底公园1号",
+          roomname: "kk",
+          bedname: "cc",
+          condition: "西湖区湖底公园1号",
+          statement: "床型： 大床2米 ",
           logo: "http://pavo.elongstatic.com/i/Hotel120_120/nw_FXQ8JLibJK.jpg"
         },
         {
           key: "2",
-          name: "豪华房",
-          age: 111,
-          address: "西湖区湖底公园1号",
-          logo:
-            "http://pavo.elongstatic.com/i/Hotel120_120/nw_FXQ8JLibJK.jpg"
+          id: "1134234",
+          name: "单人房",
+          roomname: "kk",
+          bedname: "cc",
+          condition: "西湖区湖底公园1号",
+          statement: "床型： 大床2米 ",
+          logo: "http://pavo.elongstatic.com/i/Hotel120_120/nw_FXQ8JLibJK.jpg"
         }
       ],
       // 列表展开表格数据
@@ -188,7 +204,7 @@ export default {
           roomcode: 42,
           productcode: "西湖区湖底公园1号",
           price: "￥520",
-          test: '价格'
+          test: "价格"
         },
         {
           key: "2",
@@ -196,14 +212,14 @@ export default {
           roomcode: 42,
           productcode: "西湖区湖底公园1号",
           price: "￥520",
-          test: '可用状态'
+          test: "可用状态"
         }
       ],
       // 价格日历数据
       priceData: [
         {
-          key: '1',
-          '5-21': '￥2222'
+          key: "1",
+          "05-31周五": "￥2222"
         }
       ],
       // 供应商数据
@@ -223,6 +239,7 @@ export default {
       endValue: null,
       // 结束时间是否打开
       endOpen: false,
+      // 分页
       pagination: {},
       activeIndex: -1
     };
@@ -245,7 +262,8 @@ export default {
           // 房间预订
           roomOrder: "",
           // 列表标题
-          listTitle: ""
+          listTitle: "",
+          listTag: {}
         };
       }
     }
@@ -313,14 +331,15 @@ export default {
     },
     // 点击搜索按钮
     handleSearchDate() {
+      this.operateDate();
+    },
+    operateDate() {
       const begin = moment(this.startValue).format("YYYY/MM/DD");
       const end = moment(this.endValue).format("YYYY/MM/DD");
-      const allTime = this.$getTimeRange(begin, end)
-      this.theads.priceTheads = allTime
-      this.props.priceProps = allTime
-      this.handleTableColumns('price')
-      console.log(this.priceData)
-      console.log(this.props.priceProps)
+      const allTime = this.$getTimeRange(begin, end);
+      this.theads.priceTheads = allTime;
+      this.props.priceProps = allTime;
+      this.handleTableColumns("price");
     },
     // 返回上一级页面
     backTo() {
@@ -339,15 +358,22 @@ export default {
   mounted() {
     this.handleTableColumns("supplier");
     this.handleTableColumns("standard");
-    this.handleTableColumns("list");
+    // this.handleTableColumns("list");
     this.handleTableColumns("inner");
   },
+  computed: {
+    dateChange() {
+      const { startValue, endValue } = this;
+      return { startValue, endValue };
+    }
+  },
   watch: {
-    startValue(val) {
-      console.log("val");
-    },
-    endValue(val) {
-      console.log("val");
+    // 同时监听开始时间和结束时间两个属性
+    dateChange(val) {
+      const { startValue, endValue } = val;
+      if (startValue && endValue !== null) {
+        this.operateDate();
+      }
     }
   }
 };
@@ -384,12 +410,23 @@ export default {
     width: 80px;
     height: 100px;
   }
-  .listTitle{
-    color: #37D;
+  .listTitle {
+    color: #37d;
     cursor: pointer;
   }
-  .ant-list-item{
+  .ant-list-item {
     cursor: pointer;
+  }
+  .ant-list-item-content {
+    .ant-table-wrapper {
+      margin-left: 80px !important;
+    }
+  }
+  .ant-list-item-meta-description {
+    color: #555;
+  }
+  .separate:last-child {
+    display: none;
   }
 }
 </style>

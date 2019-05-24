@@ -12,8 +12,14 @@ export default {
         standardOperate() {
             return this.models.standardOperate
         },
+        modifyOperate() {
+            return this.models.modifyOperate
+        },
         listOperate() {
             return this.models.listOperate
-        }
+        },
+        // hotelMatchCardTag() {
+        //     return this.models.hotelMatchCardTag
+        // }
     },
 }

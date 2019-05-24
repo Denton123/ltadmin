@@ -116,9 +116,6 @@ export default {
     },
     // 退出登录
     logout() {
-      // this.$dataGet(this, 'sys/logoutV2').then(res => {
-      //   console.log(res)
-      // })
       this.$router.push("/login");
       localStorage.clear();
     },
@@ -151,7 +148,6 @@ export default {
     },
     // 初始化菜单选项
     initialValue() {
-      console.log(this.$route.params)
       let routeParams;
       if (this.$route.params.lead !== undefined) {
         routeParams = this.$route.params.lead;
@@ -159,7 +155,6 @@ export default {
         this.currentNav.push(`${routeParams}`);
       } else {
         routeParams = this.$route.path.split("/")[1];
-        // console.log(routeParams)
         this.menus = this.menusData[`${routeParams}`];
       }
       // 存储点击侧边栏，刷新之后不变
@@ -190,10 +185,14 @@ export default {
   watch: {
     $route: {
       handler: function() {
+        console.log(this.$route)
         this.menus.forEach(menuItem => {
           menuItem.children.forEach(v => {
-            if (this.$route.params.model == v.path.split("/")[2]) {
+            console.log(v.path.split("/")[2])
+            if (this.$route.params.model == v.path.split("/")[2] || this.$route.name == v.path.split("/")[2]) {
               this.breadcrumb = v.name;
+              console.log(this.breadcrumb)
+              console.log(v)
             }
           });
         });
@@ -238,7 +237,6 @@ export default {
             this.menusData["hotelMenus"].push(item);
           }
         });
-        // console.log(this.menus)
       }
     });
   }
@@ -254,16 +252,12 @@ export default {
     cursor: pointer;
     transition: color 0.3s;
     color: #fff;
-    // &:hover {
-    //   color: #1890ff;
-    // }
   }
   .logo {
     font-size: 20px;
     color: #fff;
     height: 64px;
     position: relative;
-    // padding-left: 24px;
     overflow: hidden;
     line-height: 64px;
     transition: all 0.3s;
@@ -289,11 +283,9 @@ export default {
   }
   .index_breadcrumb {
     padding: 16px;
-    border-bottom: 2px solid #e5e5e5;
-    // margin-left: 10px;
-    // margin-right: 10px;
-    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    box-shadow: 2px 0 6px rgba(0,21,41,.35);
     background: #fff;
+    margin-bottom: 10px;
   }
   .ant-menu-horizontal {
     color: #fff;
