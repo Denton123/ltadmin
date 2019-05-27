@@ -134,6 +134,9 @@ export default {
       this.props.priceProps = allTime;
       console.log(allTime);
       this.handleTableColumns("price");
+    },
+    doSomething(){
+      console.log('iii')
     }
   },
   mixins: [computed],
@@ -141,7 +144,6 @@ export default {
     this.handleTableColumns("supplier");
     this.handleTableColumns("room");
     this.handleTableColumns("list");
-    console.log(this.priceColumns);
   },
   components: {
     orderForm

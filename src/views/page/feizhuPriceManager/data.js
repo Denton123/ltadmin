@@ -3,6 +3,7 @@ export default {
         return {
             priceData: [{
                     firstTitle: "艺龙-elong",
+                    label: 'Elong',
                     subData: [{
                             title: "推送价格策略",
                             theads: [
@@ -16,7 +17,7 @@ export default {
                             ],
                             props: [
                                 "num",
-                                "pricerange",
+                                "priceMin",
                                 "priceration",
                                 "rationevidence",
                                 "fixedValue",
@@ -26,20 +27,21 @@ export default {
                             data: [{
                                     key: 0,
                                     num: "1",
-                                    pricerange: "122",
+                                    priceMin: "122",
+                                    priceMax: '1111',
                                     priceration: "23",
-                                    rationevidence: true,
+                                    rationevidence: 1,
                                     fixedValue: "111",
-                                    integer: false
+                                    integer: 0
                                 },
                                 {
                                     key: 1,
-                                    num: "1",
-                                    pricerange: "122",
+                                    num: "2",
+                                    priceMin: "122",
                                     priceration: "23",
-                                    rationevidence: true,
+                                    rationevidence: 1,
                                     fixedValue: "111",
-                                    integer: false
+                                    integer: 0
                                 }
                             ],
                             operationBtn: [{
@@ -60,7 +62,7 @@ export default {
                             ],
                             props: [
                                 "num",
-                                "pricerange",
+                                "priceMin",
                                 "priceration",
                                 "rationevidence",
                                 "fixedValue",
@@ -70,11 +72,11 @@ export default {
                             data: [{
                                 key: 0,
                                 num: "1",
-                                pricerange: "122",
+                                priceMin: "122",
                                 priceration: "23",
-                                rationevidence: true,
+                                rationevidence: 1,
                                 fixedValue: "111",
-                                integer: false
+                                integer: 0
                             }],
                             operationBtn: [{
                                 title: "添加策略",
@@ -99,6 +101,7 @@ export default {
                 },
                 {
                     firstTitle: "携程-Ctrip",
+                    label: 'Ctrip',
                     subData: [{
                             title: "推送价格策略",
                             theads: [
@@ -114,7 +117,7 @@ export default {
                             props: [
                                 "num",
                                 'hoteltype',
-                                "pricerange",
+                                "priceMin",
                                 "priceration",
                                 "rationevidence",
                                 "fixedValue",
@@ -125,11 +128,11 @@ export default {
                                 key: 0,
                                 num: "1",
                                 hoteltype: '金牌',
-                                pricerange: "122",
+                                priceMin: "122",
                                 priceration: "23",
-                                rationevidence: true,
+                                rationevidence: 1,
                                 fixedValue: "111",
-                                integer: false
+                                integer: 0
                             }],
                             operationBtn: [{
                                 title: "添加策略",
@@ -151,7 +154,7 @@ export default {
                             props: [
                                 "num",
                                 'hoteltype',
-                                "pricerange",
+                                "priceMin",
                                 "priceration",
                                 "rationevidence",
                                 "fixedValue",
@@ -162,11 +165,11 @@ export default {
                                 key: 0,
                                 num: "1",
                                 hoteltype: '普通',
-                                pricerange: "122",
+                                priceMin: "122",
                                 priceration: "23",
-                                rationevidence: true,
+                                rationevidence: 1,
                                 fixedValue: "111",
-                                integer: false
+                                integer: 0
                             }],
                             operationBtn: [{
                                 title: "添加策略",
@@ -197,6 +200,7 @@ export default {
                 },
                 {
                     firstTitle: "去呼呼-Quhuhu",
+                    label: 'Quhuhu',
                     subData: [{
                             title: "推送价格策略",
                             theads: [
@@ -210,7 +214,7 @@ export default {
                             ],
                             props: [
                                 "num",
-                                "pricerange",
+                                "priceMin",
                                 "priceration",
                                 "rationevidence",
                                 "fixedValue",
@@ -220,11 +224,11 @@ export default {
                             data: [{
                                 key:0,
                                 num: "1",
-                                pricerange: "122",
+                                priceMin: "122",
                                 priceration: "23",
-                                rationevidence: true,
+                                rationevidence: 1,
                                 fixedValue: "111",
-                                integer: false
+                                integer: 0
                             }],
                             operationBtn: [{
                                 title: "添加策略",
@@ -244,7 +248,7 @@ export default {
                             ],
                             props: [
                                 "num",
-                                "pricerange",
+                                "priceMin",
                                 "priceration",
                                 "rationevidence",
                                 "fixedValue",
@@ -254,11 +258,11 @@ export default {
                             data: [{
                                 key: 0,
                                 num: "1",
-                                pricerange: "122",
+                                priceMin: "122",
                                 priceration: "23",
-                                rationevidence: true,
+                                rationevidence: 1,
                                 fixedValue: "111",
-                                integer: false
+                                integer: 0
                             }],
                             operationBtn: [{
                                 title: "添加策略",
@@ -283,6 +287,7 @@ export default {
                 },
                 {
                     firstTitle: "美团-Meituan",
+                    label: 'Meituan',
                     subData: [{
                             title: "推送价格策略",
                             theads: [
@@ -298,7 +303,7 @@ export default {
                             props: [
                                 "num",
                                 'invoice',
-                                "pricerange",
+                                "priceMin",
                                 "priceration",
                                 "rationevidence",
                                 "fixedValue",
@@ -309,11 +314,11 @@ export default {
                                 key: 0,
                                 num: "1",
                                 invoice: '酒店',
-                                pricerange: "122",
+                                priceMin: "122",
                                 priceration: "23",
-                                rationevidence: true,
+                                rationevidence: 1,
                                 fixedValue: "111",
-                                integer: false
+                                integer: 0
                             }],
                             operationBtn: [{
                                 title: "添加策略",
@@ -335,7 +340,7 @@ export default {
                             props: [
                                 "num",
                                 'invoice',
-                                "pricerange",
+                                "priceMin",
                                 "priceration",
                                 "rationevidence",
                                 "fixedValue",
@@ -346,11 +351,11 @@ export default {
                                 key: 0,
                                 num: "1",
                                 invoice: '美团',
-                                pricerange: "122",
+                                priceMin: "122",
                                 priceration: "23",
-                                rationevidence: true,
+                                rationevidence: 1,
                                 fixedValue: "111",
-                                integer: false
+                                integer: 0
                             }],
                             operationBtn: [{
                                 title: "添加策略",

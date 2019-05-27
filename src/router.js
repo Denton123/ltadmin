@@ -28,6 +28,13 @@ export default new Router({
           name: 'priceMonitor',
           component: () => import( /* webpackChunkName: "priceMonitor" */ '@/views/page/priceMonitor/priceMonitor.vue')
         },
+        // 数据收集
+        {
+          path: 'hotelMenus/dataAcquisition',
+          name: 'dataAcquisition',
+          component: () => import( /* webpackChunkName: "dataAcquisition" */ '@/views/page/dataAcquisition/dataAcquisition.vue')
+        },
+        // 修改密码
         {
           path: 'hotelMenus/modifyPwd',
           name: 'modifyPwd',

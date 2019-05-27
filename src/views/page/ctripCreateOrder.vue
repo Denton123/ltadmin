@@ -247,9 +247,7 @@ export default {
       }
     }
   },
-  mounted() {
-    this.$getTimeRange("2019/5/22/周三", "2019/05/31/周五");
-  },
+  mounted() {},
   computed: {
     dateChange() {
       const { startValue, endValue } = this;

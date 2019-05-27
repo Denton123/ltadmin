@@ -25,7 +25,7 @@
                     </div>
                   </a-col>
                   <a-col :span="12" class="tag_col">
-                    <p v-for="(key, value) in item.tagKey" :key="key">{{key}}：</p>
+                    <p v-for="(key, value) in item.tagKey" :key="key">{{key}}：{{getData(item.tab)[value]}}</p>
                   </a-col>
                 </a-row>
               </p>
@@ -75,8 +75,8 @@ export default {
     getData(tab) {
       // console.log(tab);
       const data = {
-        success: "80%",
-        failure: "20%"
+        success: "2",
+        failure: "3"
       };
       return data;
     }
@@ -97,7 +97,7 @@ export default {
   }
   .priceMonitor_content {
     margin-top: 10px;
-    padding: 180px !important;
+    padding: 18% !important;
     padding-top: 64px !important;
   }
   .ant-card-head-title {
@@ -105,7 +105,7 @@ export default {
   }
   .feizhu_all {
     background: #4ba4dd;
-    height: 70px;
+    // height: 70px;
     border-radius: 5px;
   }
   .ant-card-body {
@@ -123,7 +123,7 @@ export default {
     padding-right: 0px !important;
     p {
       margin-bottom: 2px !important;
-      height: 34px;
+      // height: 34px;
       line-height: 34px;
       border-radius: 5px;
     }

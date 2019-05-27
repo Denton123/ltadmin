@@ -26,9 +26,9 @@
               :pagination="false"
             >
               <template slot="inputNum" slot-scope="text, record">
-                <a-input-number :min="1" :max="200" v-model="record.pricerange"/>
+                <a-input-number :min="1" :max="200" v-model="record.priceMin"/>
                 <span class="mrL10 mrR10">至</span>
-                <a-input-number :min="1" :max="200"/>
+                <a-input-number :min="1" :max="200" v-model="record.priceMax"/>
               </template>
               <template slot="ration" slot-scope="text, record">
                 <a-input-number :min="1" :max="200" v-model="record.priceration"/>
@@ -36,14 +36,14 @@
               </template>
               <template slot="switch" slot-scope="text, record">
                 <a-switch
-                  :defaultChecked="text === true || text === '金牌' ?  true : false"
+                  :defaultChecked="text === 1 || text === '金牌' ?  true : false"
                   @change="swicthChange"
                   :checkedChildren="text === '金牌' || text === '普通' ? '金牌' : '开启'"
                   :unCheckedChildren="text === '金牌' || text === '普通' ? '普通' : '关闭'"
                 />
               </template>
               <template slot="input" slot-scope="text, record">
-                <a-input/>
+                <a-input v-model="record.fixedValue"/>
               </template>
               <template slot="select" slot-scope="text, record">
                 <a-select :defaultValue="text">
@@ -64,10 +64,11 @@
             </a-table>
           </div>
           <a-button
-            v-for="(btn, index) in subitem.operationBtn"
+            v-for="(btn, idx) in subitem.operationBtn"
             :key="btn.title"
             :class="btn.btnStyle"
             class="mrT10 mrR10"
+            @click="handleBtn(btn.title,subIdx, index)"
           >{{btn.title}}</a-button>
         </div>
         <!-- 策略测试 -->
@@ -96,7 +97,11 @@
               </p>
             </div>
           </div>
-          <a-button type="primary" class="inlineBlock mrL10">提交{{item.footer.btnTitle}}策略</a-button>
+          <a-button
+            type="primary"
+            class="inlineBlock mrL10"
+            @click="submitStrategy(item.subData, item.label)"
+          >提交{{item.footer.btnTitle}}策略</a-button>
         </div>
       </div>
     </div>
@@ -120,7 +125,7 @@ export default {
       for (let i in props) {
         columnsdata[i].dataIndex = props[i];
         switch (props[i]) {
-          case "pricerange":
+          case "priceMin":
             columnsdata[i].scopedSlots = { customRender: "inputNum" };
             break;
           case "priceration":
@@ -154,6 +159,32 @@ export default {
       this.priceData[index].subData[subIdx].data = dataSource.filter(
         item => item.key !== key
       );
+    },
+    handleBtn(title, subIdx, index) {
+      if (title === "添加策略") {
+        let dataSource = [...this.priceData[index].subData[subIdx].data];
+        let count = dataSource.length;
+        let newData = {};
+        for (let i in dataSource[0]) {
+          newData[i] = 0;
+        }
+        newData["key"] = count;
+        newData["num"] = count + 1;
+        this.priceData[index].subData[subIdx].data = [...dataSource, newData];
+        count = count + 1;
+        console.log(this.priceData[index].subData[subIdx].data);
+      }
+    },
+    submitStrategy(data, label) {
+      let form = {};
+      data.forEach(v => {
+        v.title === "推送价格策略"
+          ? (form.postPriceStrategys = [...v.data])
+          : (form.validatePriceStrategys = [...v.data]);
+      });
+      form.enumDistributors = "FliggyYD";
+      form.enumGds = label;
+      console.log(form);
     }
   },
   mounted() {}
