@@ -132,7 +132,6 @@ export default {
       const allTime = this.$getTimeRange(begin, end);
       this.theads.priceTheads = allTime;
       this.props.priceProps = allTime;
-      console.log(allTime);
       this.handleTableColumns("price");
     },
     doSomething(){

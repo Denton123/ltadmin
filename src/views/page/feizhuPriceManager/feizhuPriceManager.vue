@@ -160,6 +160,7 @@ export default {
         item => item.key !== key
       );
     },
+    // 操作添加策略按钮
     handleBtn(title, subIdx, index) {
       if (title === "添加策略") {
         let dataSource = [...this.priceData[index].subData[subIdx].data];
@@ -175,6 +176,7 @@ export default {
         console.log(this.priceData[index].subData[subIdx].data);
       }
     },
+    // 提交策略操作
     submitStrategy(data, label) {
       let form = {};
       data.forEach(v => {

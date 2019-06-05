@@ -13,7 +13,7 @@
       :title="modalParams.title"
       @ok="handleModalOk"
       :confirmLoading="confirmLoading"
-      @cancel="hanldModalCancel"
+      @cancel="handleModalCancel"
       :okText="modalParams.okText"
       cancelText="取消"
     >
@@ -64,8 +64,8 @@ export default {
     handleModalOk() {
       this.$emit("handleModalOk");
     },
-    hanldModalCancel() {
-      this.$emit("hanldModalCancel");
+    handleModalCancel() {
+      this.$emit("handleModalCancel");
     }
   },
   mounted() {

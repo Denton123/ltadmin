@@ -3,7 +3,7 @@ module.exports = {
   publicPath: '/',
   // 生产构建文件目录
   outputDir: 'dist',
-  // 去除eslint
+  // eslint-loader是否在保存时候检查
   lintOnSave: false,
   // css配置
   css: {

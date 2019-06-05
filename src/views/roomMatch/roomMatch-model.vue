@@ -86,7 +86,7 @@
     <msg-modal
       :modalVisible="modalVisible"
       :modalParams="modalParams"
-      @hanldModalCancel="hanldModalCancel"
+      @handleModalCancel="handleModalCancel"
       @handleModalOk="handleModalOk"
       :confirmLoading="confirmLoading"
     />
@@ -199,7 +199,7 @@ export default {
       }, 1000);
     },
     // 取消模态框
-    hanldModalCancel() {
+    handleModalCancel() {
       this.modalVisible = false;
     },
     // 修改匹配操作

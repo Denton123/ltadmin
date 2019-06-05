@@ -140,14 +140,14 @@ export default {
     }
     return {
       form: this.$form.createForm(this),
-      // formItemLayout: {
-      //   labelCol: {
-      //     span: 6
-      //   },
-      //   wrapperCol: {
-      //     span: 18
-      //   }
-      // },
+      formItemLayout: {
+        // labelCol: {
+        //   span: 6
+        // },
+        // wrapperCol: {
+        //   span: 18
+        // }
+      },
       selectoptions: selectArr,
       // 入住人
       inputArr: 1,
@@ -225,6 +225,7 @@ export default {
     handleEndChange(date, dateString) {
       console.log(dateString);
     },
+    // 处理时间
     operateDate() {
       const begin = moment(this.startValue).format("YYYY/MM/DD/ddd");
       const end = moment(this.endValue).format("YYYY/MM/DD/ddd");

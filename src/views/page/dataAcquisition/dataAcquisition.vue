@@ -8,12 +8,12 @@
  */ 
 
  <template>
-  <div class="profitMonitor">
-    <div class="profitMonitor_title whiteblock">
+  <div class="dataAcquisition">
+    <div class="dataAcquisition_title whiteblock">
       <h2>飞猪-御道店-订单利润监控</h2>
     </div>
-    <div class="profitMonitor_content whiteblock">
-      <div class="profitMonitor_date">
+    <div class="dataAcquisition_content whiteblock">
+      <div class="dataAcquisition_date">
         <a-date-picker
           format="YYYY-MM-DD"
           v-model="startValue"
@@ -33,7 +33,7 @@
           class="mrL10"
         />
       </div>
-      <div class="profitMonitor_card">
+      <div class="dataAcquisition_card">
         <a-timeline>
           <a-timeline-item v-for="(item, idx) in profitData" :key="item.title">
             <a-card :title="item.title">
@@ -132,7 +132,7 @@ export default {
 </script>
 
  <style lang="scss">
-.profitMonitor {
+.dataAcquisition {
   &_title {
     h2 {
       font-size: 30px;
@@ -141,6 +141,7 @@ export default {
   }
   &_content {
     margin-top: 10px;
+    padding: 30px 0 0 30px !important;
   }
   &_card {
     width: 50%;
@@ -155,7 +156,10 @@ export default {
   .profit_all {
     background: #4ba4dd;
     border-radius: 5px;
-    line-height: 56px;
+    line-height: 70px;
+    p{
+      margin-bottom: 0px;
+    }
   }
   .tag_col {
     padding-left: 2px !important;
